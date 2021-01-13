@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Allow: /log/
+Allow: /archives/
+Allow: /about/
+Disallow: /assets/
+Sitemap: https://zeesain.top/sitemap.xml
+Sitemap: https://zeesain.top/baidusitemap.xml
