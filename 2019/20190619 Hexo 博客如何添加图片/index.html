@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>Hexo 博客如何添加图片 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Hexo 博客如何添加图片</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">June 9, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>如何在自己写的 <code>Markdown</code> 博客中添加自己的图片？在多词的寻找和使用后，我找到了如下的几种插入图片的方法。</p>
+<a id="more"></a>
+
+<h2 id="利用-OSS-（对象存储）"><a href="#利用-OSS-（对象存储）" class="headerlink" title="利用 OSS （对象存储）"></a>利用 OSS （对象存储）</h2><p>如果网站是托管在 GitHub、Coding 之类的平台上的话，直接将图片存在上面速度会比较慢，而且<strong>大陆内陆的网络访问起来可能不是特别顺畅</strong>。</p>
+<p>所以我们可以购买 OSS 去存储图片，并且给图片文件添加外链，然后直接在 <code>Markdown</code> 文章中添加外链即可。阿里云、腾讯云都提供了解决方案，价格再优惠后也在可接受范围内。</p>
+<p><img src="https://zeee.cc/blog/20190619Hexo%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/1.jpg"></p>
+<h2 id="利用免费图床"><a href="#利用免费图床" class="headerlink" title="利用免费图床"></a>利用免费图床</h2><p>如果不想用收费的存储方案，网络上也有<strong>免费图床</strong>可以使用，但大多数的免费方案都有<strong>时间限制</strong>，少则 24 小时，多则 7 天，付费方案还不如自己开一个 OSS 来得实惠。</p>
+<p><a target="_blank" rel="noopener" href="https://img.onl/">img.onl</a> 是一个<strong>没有固定期限</strong>的免费图床网站，当然<strong>数据的安全也没法得到保证</strong>，大家<strong>谨慎使用</strong>。</p>
+<h2 id="自有服务器"><a href="#自有服务器" class="headerlink" title="自有服务器"></a>自有服务器</h2><p>如果是自己有服务器的话，那就好办了，这也是我现在所使用的方案。</p>
+<p>首先要将 Hexo 安装到服务器上，一切都准备好后，在 blog 层级的 <code>_config.yml</code> 中修改 <code>post_asset_folder: true</code>，之后每一次创建新的文章都会<strong>另外生成一个同名文件夹</strong>，我们可以把文章所需的素材放到里面。</p>
+<blockquote>
+<p>文章中假如如果要引用 <code>1.jpg</code> 的话，在图片地址中只需要写成 <code>./1.jpg</code> 即可。<br>（因为 <code>Hexo g</code> 的时候，<strong>文件夹中的图片会与该文章页放在同一个目录里面</strong>）</p>
+</blockquote>
+<h2 id="我跳过的坑"><a href="#我跳过的坑" class="headerlink" title="我跳过的坑"></a>我跳过的坑</h2><p>我以前曾经想过，<strong>如果存放在社交网络上然后把图片的链接贴在文章里不就可以了吗</strong>？</p>
+<p>然而现实是大多数的社交网站都<strong>不支持外链</strong>，图片根本无法显示。下面分享一下我所踩过的坑：</p>
+<p><strong>微博</strong>：微博外链理论上是可以的，发的微博图片的链接基本上都能够用一段时间，如果不能用的话把链接中的 s1 或 s2、s3 换一下就能用了，但这在文章很多的时候修改会很麻烦，所以并不特别推荐。</p>
+<p><strong>QQ 空间</strong>：有次数限制，多次以后被查出来用外链就不能够使用了。</p>
+<p><strong>微云</strong>：可以通过分享文件然后提取预览图的连接，不过需要一定的 web 基础去寻找链接，也不推荐。</p>
+<p><strong>Unsplash</strong>：Unsplash 的外链目前没有翻过车，我的摄影作品都是放在上面，然后外链过来的，但<strong>仅限于摄影方面的图片</strong>并且 <strong>CC0</strong> 协议。</p>
+<p><img src="https://images.unsplash.com/photo-1559888894-7199667c0558?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Hexo/"># Hexo</a>
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190609%20%E6%A1%8C%E9%9D%A2%20-%20%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%89%EF%BC%89/">桌面 - 我的工作环境（三）</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190607%20%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%EF%BC%88%E4%B8%80%EF%BC%89%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/">车辆驾驶行为分析——比赛复盘（一）地图生成</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

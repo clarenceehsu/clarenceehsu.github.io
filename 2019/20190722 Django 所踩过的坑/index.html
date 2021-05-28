@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>Django 所踩过的坑 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Django 所踩过的坑</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">July 22, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>目前市面上流行着两个基于 Python 的 Web 框架，一个是 <strong>Django</strong>，一个是 <strong>Flask</strong>。（当然还有其他的如 Pylon 等，只是我没有接触过所以不做讨论）</p>
+<a id="more"></a>
+
+<p>由于 <strong>Hexo 博客系统的机制以及诸多的限制</strong>，我计划将我的博客从原本的<strong>基于 Hexo 静态框架</strong>转为<strong>基于 Django 框架的博客系统</strong>。</p>
+<p>总所周知， Django 的架构比较适合于<strong>大型项目的开发</strong>，Flask 则是<strong>轻量级的 Web 框架</strong>，适合于小型项目开发。处于学习目的，我这次的框架选择十分的干脆——直接上 Django，所以我就直接开始了 Django 的学习。</p>
+<p>当然，在建立这个博客系统的时候，作为一个接触 Web 较少的菜鸟，我也是踩了非常多的坑的。</p>
+<h2 id="端口开放"><a href="#端口开放" class="headerlink" title="端口开放"></a>端口开放</h2><p>这个错误就非常初级了，当时我一直以为阿里云的服务器和腾讯云的服务器一样是端口全开的，所以我就直接把开发服务器放到了 8000 端口，结果什么都没有。所以后来在阿里云控制台打开了 8000 端口的监听才成功看到 Hello World 页面。</p>
+<h2 id="Django-不同版本之间的区别"><a href="#Django-不同版本之间的区别" class="headerlink" title="Django 不同版本之间的区别"></a>Django 不同版本之间的区别</h2><p>由于 Django 迭代了很多次，它也像 Python 一样存在着版本之间的兼容性问题。Django 1 与 Django 2 之间就存在着非常多的语法以及参数上的区别，下面这个问题就困扰了我很久。</p>
+<p>在 Django 2.0 之后，定义外键和一对一关系的时候需要加 <code>on_delete</code> 选项，此参数为了避免两个表里的数据不一致问题，否则就会报错：<br><code>TypeError: __init__() missing 1 required positional argument: &#39;on_delete&#39;</code><br>所以要将 <code>category = models.ForeignKey(Category)</code> 改为 <code>category = models.ForeignKey(Category, on_delete=models.CASCADE）</code></p>
+<blockquote>
+<p>对 <code>on_delete</code> 参数的说明：</p>
+<p><strong>CASCADE</strong>：此值设置，是级联删除；<br><strong>PROTECT</strong>：此值设置，是会报完整性错误；<br><strong>SET_NULL</strong>：此值设置，会把外键设置为null，前提是允许为null；<br><strong>SET_DEFAULT</strong>：此值设置，会把设置为外键的默认值；<br>**SET()**：此值设置，会调用外面的值，可以是一个函数。</p>
+<p>一般情况下使用 <strong>CASCADE</strong> 就可以了。</p>
+</blockquote>
+<p>自觉 Django 框架还是十分强大的，的确自由度非常高，能够在网页内自由加载很多东西，我的网站也因此成功放飞了自我。不过学习路途也刚刚踏过起跑线，任重而道远。</p>
+<p><img src="https://images.unsplash.com/photo-1563713665854-e72327bf780e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/Django/"># Django</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190729%20%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8%20Go%20%E8%AF%AD%E8%A8%80/">极速入门 Go 语言</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190710%20%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%87%91%E6%B2%99%E6%B9%BE%E5%90%8E%E6%9C%9F%E8%BF%87%E7%A8%8B/">赛博朋克金沙湾后期过程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

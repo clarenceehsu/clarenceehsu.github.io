@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>Advice and Definition of Data Science | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Advice and Definition of Data Science</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">August 20, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>This article was written after a related course, which includes my comments and notes.</p>
+<a id="more"></a>
+
+<h3 id="Definition-of-Data-Science"><a href="#Definition-of-Data-Science" class="headerlink" title="Definition of Data Science"></a>Definition of Data Science</h3><p>Data Science, which was called the sexiest job in the 21st century, is widely regarded as the process of using data to analyze different things, even the world. And the definition or the name came up in the 80s and 90s when some professors were looking into the statistics curriculum, and they thought it would be better to call it Data Science. However, what is the Data Science and what kind of role it plays in our daily life?</p>
+<p>In my point of view, first of all, it’s a efficient tool for us to learn the foundation of the world’s running. It’s a study of data, like biological sciences, or the art of undercovering the insights and trends that are hiding behind it. Nowadays, compared with decades years ago, we have tons of data available on the Internet, which can be used or fetched everywhere. We used to worry about lack of data. Now we have a data deluge. Once you get data, and you have curiosity, and you work with it, and you manipulate it, and you’re exploring it. Second, we can’t live without data. Because we need data to make conclusion, to predict the trends or weathers and to take the impossible down to earth. So we should figure out the algorithm, which should be perfected with a huge amount of data. In our social life, we use data all the time, and also create data all the time. Data Science is everywhere. In a word, I think that the methods of Data Analysis or Data Science should be a fairly important place that anybody should learn. Furthermore, in the past, the software was expansive and difficult to use, but now it’s open source and free. Data is expansive and valuable on the contrary. With the blowout growth of computer arithmetic, it’s much easier today to learn and take Data Science into life.</p>
+<h3 id="Advice-for-New-Data-Scientists"><a href="#Advice-for-New-Data-Scientists" class="headerlink" title="Advice for New Data Scientists"></a>Advice for New Data Scientists</h3><p>To be curious, extremely argumentative and judgmental. </p>
+<p>Curiosity is absolute must. If you’re not curious, you would not know what to do with the data.</p>
+<p>Judgmental because if you do not have preconceived notions about things you wouldn’t know where to begin with.</p>
+<p>Argumentative because if you can argument and if you can plead a case, at least you can start somewhere and then you learn from data and then you modify your assumptions and hypotheses and your data would help you learn. And you might start at the wrong point. You may say that I thought I believed this, but now with data I know this.</p>
+<p>The other things that would need is some comfort and flexibility with analytics platforms: some software, some computing platform, but that’s secondary. The most important thing is curiosity and the ability to take positions. Once you’ve analyzed, then you’ve got some answers.</p>
+<p>And that’s the last thing that a data scientist need, and that is the ability to tell a story. When you have your analytics and your tabulations, you should be able to tell a great story from it. Because if you don’t tell a great story, your findings will remain hidden, remain buried, nobody would know.</p>
+<p>A starting point would be to see what is your competitive advantage. If you want to be a data scientist and work for an IT firm or a web-based or Internet based firm, then you need a different set of skills. And if you want to be a data scientist in the health industry, then you need different sets of skills. So figure out first what you’re interested, and what is your competitive advantage. Your competitive advantage is not necessarily going to be your analytical skills. Your competitive advantage is your understanding of some aspect of life where you exceed beyond others in understanding that. Maybe it’s film, maybe it’s retail, maybe it’s health, maybe it’s computers. Once you’ve figured out where your expertise lies, then you start acquiring analytical skills. What platforms to learn and those platforms, those tools would be specific to the industry that you’re interested in. And then once you have got some proficiency in the tools, the next thing would be to apply your skills to real problems.</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/"># 数据科学</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190822%20%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%EF%BC%88%E4%BA%8C%EF%BC%89/">车辆驾驶行为分析——比赛复盘（二）</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190819%20%E5%A6%82%E4%BD%95%E4%B8%8D%E8%AE%A9%20Hexo%20%E6%B8%B2%E6%9F%93%20Markdown%20%E5%92%8C%20HTML%20%E6%96%87%E4%BB%B6/">如何不让 Hexo 渲染 Markdown 和 HTML 文件</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

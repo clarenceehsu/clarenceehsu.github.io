@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>Photobash 练习 - 赛博朋克钟楼 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Photobash 练习 - 赛博朋克钟楼</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">January 10, 2020</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E8%AE%BE%E8%AE%A1/">设计</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>每当我抬头望着学校，后面的高楼映着前面的钟楼，一股赛博与静谧的相交融感油然而生。于是，作为一名赛博朋克的爱好者，我突然来了灵感。</p>
+<a id="more"></a>
+
+<h2 id="前期"><a href="#前期" class="headerlink" title="前期"></a>前期</h2><p>考完试，我便拿着相机登上宿舍楼顶，在之前探过的机位，找了不同的景别去拍了底图。</p>
+<p>导入 LR，选出了其中最符合我想象的一张：</p>
+<p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/6.jpg"></p>
+<h2 id="调色"><a href="#调色" class="headerlink" title="调色"></a>调色</h2><p>基于图片的内容，我选择了<strong>蓝紫调</strong>作为调色方向，然后加上了一些<strong>绿色</strong>作为底色，以提供一些<strong>胶片感</strong>：</p>
+<p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/1.jpg"></p>
+<h2 id="调光"><a href="#调光" class="headerlink" title="调光"></a>调光</h2><p>此时的图缺少了一些氛围感，并且整体光线比较平，所以<strong>压低底部的高光和钟楼的反光</strong>：</p>
+<p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/2.jpg"></p>
+<h2 id="添加赛博朋克元素"><a href="#添加赛博朋克元素" class="headerlink" title="添加赛博朋克元素"></a>添加赛博朋克元素</h2><p>我按照我的想象（一位僧侣站在钟楼上，正在被无人机追杀），添加上了相应的元素并做一定的调整：</p>
+<p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/3.jpg"></p>
+<p>除此之外，在楼群背景上的赛博朋克元素比较少，所以继续往上加：</p>
+<p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/4.jpg"></p>
+<p>这个时候，已经有内味儿了。</p>
+<h2 id="稍加修饰"><a href="#稍加修饰" class="headerlink" title="稍加修饰"></a>稍加修饰</h2><p>因为赛博朋克的一个重要标签就是<strong>环境污染严重</strong>，所以最后就是通过<strong>调整光效</strong>，加上些感觉，同时也能弥补一些图像上的不足。</p>
+<p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/5.jpg"></p>
+<h2 id="对比"><a href="#对比" class="headerlink" title="对比"></a>对比</h2><p>最后来一个原图和现图的对比：</p>
+<h3 id="原图"><a href="#原图" class="headerlink" title="原图"></a>原图</h3><p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/6.jpg"></p>
+<h3 id="后期"><a href="#后期" class="headerlink" title="后期"></a>后期</h3><p><img src="https://zeee.cc/blog/20200110Photobash%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/7.jpg"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%90%8E%E6%9C%9F/"># 后期</a>
+                    
+                        <a href="/tags/Photobash/"># Photobash</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/20200115%202019%20%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/">2019 年度总结</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20191124%20%E9%98%B2%E6%AD%A2%E8%BF%87%E6%8B%9F%E5%90%88%E5%92%8C%E6%8F%90%E9%AB%98%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8A%80%E5%B7%A7/">防止过拟合和提高泛化能力的技巧</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

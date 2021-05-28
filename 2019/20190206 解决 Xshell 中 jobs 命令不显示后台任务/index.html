@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>解决 Xshell 中 jobs 命令不显示后台任务 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">解决 Xshell 中 jobs 命令不显示后台任务</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">February 6, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>在踩了很多坑后，分享一下我在<code>XShell</code>中用<code>Nohup</code>等命令执行后台操作之后将任务释放掉的方法。</p>
+<a id="more"></a>
+
+<p>之前在折腾服务器的时候，在服务器上挂了一个 Hexo 网站，后来因为网络原因 XShell 直接断连了。好不容易解决了网络问题之后，登录服务器，输入<code>jobs</code>发现 Hexo 并没有出现在列表里面。</p>
+<p>后来差了一些资料发现，jobs 命令只能查看当前 XShell 连接服务器窗口创建的任务。由于我并没有用 nohup 去启动后台任务，所以控制台没有显示。</p>
+<p>所以后来我采用的方法是使用<code>ps aux</code>命令，然后可以查看服务器的进程情况。</p>
+<p>找到想要释放的进程名以及其对应的<code>PID</code>号，然后<code>kill -9 pid</code>号将进程杀死即可（也可以直接<code>kill pid</code>）。</p>
+<p>Peace.</p>
+<p><img src="https://images.unsplash.com/photo-1558642591-8034c042b7e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190521%20%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%20Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%20Python%20%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%B8%80%EF%BC%89%E7%AE%80%E4%BB%8B/">从零开始做 Jarvis——基于 Python 的智能语音管家（一）</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190129%202018%20%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/">2018 年度总结</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>Office 365 - 我的工作环境（一） | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Office 365 - 我的工作环境（一）</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">May 25, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>简单地和大家分享一下我的电脑的工作环境以及配置。这一部分是主要对应的是日常的学习笔记整理以及工作场合。</p>
+<a id="more"></a>
+
+<h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>因为以前收到过一些关于电脑方面的问题，所以我想着写几篇文章来和大家简单分享一下我的工作环境以及一些配置。</p>
+<p>初步设想的是分成下面三个部分：</p>
+<ul>
+<li><strong>日常</strong>，对应的是我日常学习以及在部门中的工作处理方面；</li>
+<li><strong>开发</strong>，对应着我在做开发工作的时候所使用的工作环境；</li>
+<li><strong>其他</strong>，这里主要分享一些除前两者之外的一些环境配置。</li>
+</ul>
+<p>写这些文章目的是一来可以和大家的工作环境做一个对比，取长补短而提升自己，更好地提升自己的工作效率；二来为部分小白用户作指南之用，帮助提升工作效率以及体验。</p>
+<p>我的很多观点<strong>见仁见智</strong>，不同的人有不同的情况，所以有误之处也希望各位能够明鉴，我会及时更改并虚心学习。</p>
+<blockquote>
+<p>先贴上我的硬件配置：<strong>New Surface Pro 128GB / 8GB</strong></p>
+</blockquote>
+<h2 id="办公套件-Office"><a href="#办公套件-Office" class="headerlink" title="办公套件 - Office"></a>办公套件 - Office</h2><p>无论是学习还是工作，办公套件都是必不可少的一环，而这一类的软件定位不同方向不同，所以更多的是<strong>跟随着自己的需求做选择</strong>。</p>
+<p>而对于这方面的选择我的看法是，<strong>如果你是一个以移动端文件编辑为主，或者对 WPS 情有独钟的话，WPS 是一个不错的选择</strong>；而如果平常<strong>电脑端工作较多，对多人合作编辑或者有着对文档的高级操作（宏，批处理等）的话，WPS 完全不够用，Office 才是王道</strong>（巨硬大法好）。</p>
+<p><strong>两者在普通的功能上基本上没有太大的差别</strong>，但最好是<strong>和一起工作学习的人用同一种套件</strong>，毕竟软件之间的兼容性也是十分重要的。</p>
+<blockquote>
+<p>顺便吐槽一下 WPS 的兼容性是真的不行。</p>
+</blockquote>
+<hr>
+<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559384505&di=484c73bafad1f406bbcbf3d4f737f03d&imgtype=jpg&er=1&src=http://wap.yesky.com/uploadImages/2016/202/46/OHY6692RO8I6.jpg"></p>
+<p>我目前使用的是微软的全家桶 <strong>Office 365</strong>，这就不用多解释了，还是熟悉的味道，高效简洁。</p>
+<h3 id="笔记软件-OneNote"><a href="#笔记软件-OneNote" class="headerlink" title="笔记软件 - OneNote"></a>笔记软件 - OneNote</h3><p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b10000_10000&sec=1558770376&di=b6368a3aa88323a55f76b178badff2c4&src=http://himg2.huanqiu.com/attachment2010/2013/0703/20130703093834773.jpg"></p>
+<p>OneNote 是一个让我又爱又恨的软件。以前的 OneNote 水土不服，网络同步非常糟糕，而现在 OneNote 的网络等方面的体验有了极大的改善，和其他的笔记软件相比各有千秋。</p>
+<blockquote>
+<p>OneNote 软件本身是<strong>免费</strong>的，其可存储在<strong>本地</strong>，亦或是存储在 <strong>OneDrive</strong> 上作为类似于印象笔记的网络笔记本。</p>
+</blockquote>
+<h3 id="云存储-OneDrive"><a href="#云存储-OneDrive" class="headerlink" title="云存储 - OneDrive"></a>云存储 - OneDrive</h3><p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558781566125&di=bcfed6bdc121e3113255a2e698d433b7&imgtype=0&src=http://wp.hrtechchina.com/wp-content/uploads/2014/04/Microsoft-OneDrive-For-Business1.jpg"></p>
+<p>OneDrive是Office中的一个云存储产品，默认有5GB初始空间，而<strong>Office 365计划则包含着1TB的存储空间</strong>。</p>
+<p>同时OneDrive也有<code>Free up space</code>功能，可以让文件存储在云端，而本地只有一个类似于快捷方式的文件目录，几乎不占本地空间，可谓小空间笔记本减负之神器。</p>
+<p><img src="https://zeee.cc/blog/20190525Office365-%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%80%EF%BC%89/1.jpg"></p>
+<p>当我需要使用某些文件的时候，和平常一样双击文件即可把文件拉回本地然后打开。（根据网络情况速度有所不同）</p>
+<h3 id="我的日常使用"><a href="#我的日常使用" class="headerlink" title="我的日常使用"></a>我的日常使用</h3><p>在我的日常使用中，大部分的数据存在 OneDrive 云端，随时可以拉下来进行处理（不管是电脑还是手机）。手机与电脑之间没有隔阂，而且我也<strong>再也不需要依赖于设备</strong>，就算我的电脑暂时不在身边，我也可以<strong>用手机暂时代替工作</strong>（体验没有 WPS 好但够用）。</p>
+<p>因为我的<strong>打字速度比手写的速度要快</strong>，所以在上课时合理利用 OneNote 的快速笔记功能去记录一些笔记会比手写来的方便，后期也便于整理。</p>
+<h3 id="尾巴-为什么是Office？"><a href="#尾巴-为什么是Office？" class="headerlink" title="尾巴 - 为什么是Office？"></a>尾巴 - 为什么是Office？</h3><p>为什么我选择了Office？</p>
+<p>首先是体验的问题，微软的 Office 365 套件的体验十分舒服。其次让我们从价格来简单地理一下：</p>
+<ul>
+<li>WPS会员￥179/年，其云盘大小只有365GB，比 Office 多了 PDF 转 DOC 功能和文档恢复等功能，而这些功能其实也有对应的免费解决方案，其次这些功能我根本上没有用过，算是一个痒点功能而非痛点功能。</li>
+<li>印象笔记高级账户￥140/年，每个月有存储上限，而且其高级功能 OneNote 几乎都有。</li>
+<li>除此之外，Office 套件还有 Access（没用过，我用的都是 MySQL）、以及滴答清单类似的 todo list，一个平台囊括了大多数的工作。</li>
+</ul>
+<p><img src="https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3996317431,3864151717&fm=26&gp=0.jpg"></p>
+<p>那么价格多少呢？先打开 Office 官网看看：</p>
+<p><img src="https://zeee.cc/blog/20190525Office365-%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%80%EF%BC%89/2.jpg"></p>
+<p>先别走，便宜有便宜的方法。因为<strong>家庭版可供6个人同时使用 Office 365</strong>，所以平摊下来也就80多一个人，淘宝搜索一下“<strong>Office365 家庭版 拆分</strong>”就能找到了，大概的价位是在88左右。</p>
+<p><img src="https://images.unsplash.com/photo-1558733343-464e0c041ac5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2102&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%9D%82%E8%B0%88/"># 杂谈</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190528%20%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E8%85%BE%E8%AE%AF%20AI%20%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0%20SDK/">写了一个腾讯 AI 开放平台 SDK</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190522%20%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%20Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%20Python%20%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/">从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

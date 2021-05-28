@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>【算法笔记】并查集 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【算法笔记】并查集</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">January 17, 2021</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>最近在 <strong>LeetCode 的每日一题</strong>中，大量出现了使用<strong>并查集</strong>进行算法设计的题目，如「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/redundant-connection/">684.冗余连接</a>」、「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/bricks-falling-when-hit/">803.打砖块</a>」、「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/most-stones-removed-with-same-row-or-column/">947.移除最多的同行或同列石头</a>」。并查集这一点本身并不难学习，但有时候在题目中不容易发现对应的连接关系。</p>
+<h2 id="什么是并查集？"><a href="#什么是并查集？" class="headerlink" title="什么是并查集？"></a>什么是并查集？</h2><p>并查集是一种<strong>树形的数据结构</strong>，旨在通过特定的规则，将属于同一类别的点归于一个树中，构成一个集合。其包括两种基本操作：</p>
+<ul>
+<li><strong>合并（Union）</strong>：将两个不同的集合合并为一个集合，或者将新的元素合入特定的集合</li>
+<li><strong>查找（Find）</strong>：确定两个元素是否在同一个集合中，或者确定某个元素处于哪一个子集</li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：虽然并查集是一个树形的数据结构，但考虑到内存以及时空复杂度，一般都会使用<strong>数组</strong>或者<strong>列表</strong>来实现，而非 Node 树结点。</p>
+</blockquote>
+<h2 id="建树初始化"><a href="#建树初始化" class="headerlink" title="建树初始化"></a>建树初始化</h2><p>首先，需要<strong>根据当前数据的规模</strong>来开辟空间，同时确保原始数据能够 One-Hot 地映射到创建的节点集合中，即<strong>创建的空间能够包括所有的原始数据</strong>。下面是样板代码（Python）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Union</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, N</span>):</span></span><br><span class="line">        self.p = <span class="built_in">list</span>(<span class="built_in">range</span>(N))  <span class="comment"># 初始化列表，每一个节点的值等于索引，其中 N 要根据原始数据确定</span></span><br></pre></td></tr></table></figure>
+<p>这一部分不难理解，即<strong>开辟一块额外的空间来保存并查集中的父子关系</strong>，因为现在还没有初始化关系，所以每一个点都指向自己的位置。接下来便是<strong>合并（Union）</strong>，目的是<strong>输入数据形成并查集</strong>，样板代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">self, x</span>):</span></span><br><span class="line">    <span class="keyword">if</span> x != self.p[x]:</span><br><span class="line">        self.p[x] = self.find(self.p[x])  <span class="comment"># 这里的递归是为了压缩路径，加快查找速度，下面会讲到</span></span><br><span class="line">    <span class="keyword">return</span> self.p[x]</span><br></pre></td></tr></table></figure>
+<p><code>find()</code> 会返回<strong>该点所对应集合的根（父亲）</strong>，如果两个点返回同样的根（父亲），则证明其处于同一个集合中。</p>
+<p>一般情况下合并的样本代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">union</span>(<span class="params">self, x, y</span>):</span></span><br><span class="line">    xr = self.find(x)  <span class="comment"># 找出 x 对应的根</span></span><br><span class="line">    yr = self.find(y)  <span class="comment"># 找出 y 对应的根</span></span><br><span class="line">    self.p[xr] = yr  <span class="comment"># 将 x 的根指向 y 的根，因为其属于同一个集合</span></span><br></pre></td></tr></table></figure>
+<p>不同的题目用到的数据不同，一般是某个点的坐标 <code>(x, y)</code> 之类。这类题往往都可以使用<strong>递归、DP</strong> 等方法解决，所以我经常会往递归和 DP 的方向去想，然后卡在某个状态上（暴风哭泣），从而忘了直接用更简单的并查集来解。</p>
+<h2 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h2><p>下面举两个例子：</p>
+<h4 id="「947-移除最多的同行或同列石头」"><a href="#「947-移除最多的同行或同列石头」" class="headerlink" title="「947.移除最多的同行或同列石头」"></a>「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/most-stones-removed-with-same-row-or-column/">947.移除最多的同行或同列石头</a>」</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">removeStones</span>(<span class="params">self, stones: List[List[<span class="built_in">int</span>]]</span>) -&gt; int:</span></span><br><span class="line">        uf = Union(<span class="number">20000</span>)  <span class="comment"># 开辟空间</span></span><br><span class="line">        <span class="keyword">for</span> x, y <span class="keyword">in</span> stones:</span><br><span class="line">            uf.union(x, y + <span class="number">10000</span>)  <span class="comment"># 前半部分存储 x，后半部分存储 y，防止数据冲突</span></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(stones) - <span class="built_in">len</span>(&#123;uf.find(x[<span class="number">0</span>]) <span class="keyword">for</span> x <span class="keyword">in</span> stones&#125;)</span><br></pre></td></tr></table></figure>
+<p>解释一下最后的 <code>return</code> 部分：在前面的构建并查集的过程中，我们已经把每个石头的横纵坐标一起构建了一个并查集。相同的行或者相同的列都已经归于一个集合中，所以对这些石头的坐标查找根（父亲）结点，都会返回相同的值。</p>
+<p>所以基于这个特点，<code>uf.find(x[0]) for x in stones</code> 返回的是每个石头对应的根的列表。然后套一个 <code>&#123;&#125;</code> 对列表求 set，即共有多少个不同的根，这便代表着有多少个石头<strong>不能被删除</strong>，所以 <code>len(stones) - len(&#123;uf.find(x[0]) for x in stones&#125;)</code> 即为可以删除的石头数量。</p>
+<blockquote>
+<p>因为不管是 x 还是 y，都在一个集合中，所以使用 x[0] （石头的横坐标）或者 x[1] （石头的纵坐标）来计算结果是一致的。</p>
+</blockquote>
+<h4 id="「684-冗余连接」"><a href="#「684-冗余连接」" class="headerlink" title="「684.冗余连接」"></a>「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/redundant-connection/">684.冗余连接</a>」</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 并查集 class 中的 connected 函数如下：</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">connected</span>(<span class="params">self, p, q</span>):</span></span><br><span class="line">    <span class="keyword">return</span> self.find(p) == self.find(q)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 题解</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findRedundantConnection</span>(<span class="params">self, edges: List[List[<span class="built_in">int</span>]]</span>) -&gt; List[int]:</span></span><br><span class="line">        uf = UF(<span class="number">1001</span>)  <span class="comment"># 开辟内存空间</span></span><br><span class="line">        <span class="keyword">for</span> fr, to <span class="keyword">in</span> edges:</span><br><span class="line">            <span class="keyword">if</span> uf.connected(fr, to): <span class="keyword">return</span> [fr, to]</span><br><span class="line">            uf.union(fr, to)</span><br></pre></td></tr></table></figure>
+<p>这题的意思就是根据向量 <code>[x, y]</code> 来构建一张图，然后删除其中环的一条冗余边，使其变成一个无环图。<code>connected()</code> 用来判断两个点是否属于同一个集合中，如果两点属于同一个集合，则这<strong>一条向量连接后便会形成环</strong>，因此可删除，<code>return</code> 即可；如果不是同一个集合，则<strong>将其放入并查集构建树</strong>。</p>
+<h2 id="路径压缩"><a href="#路径压缩" class="headerlink" title="路径压缩"></a>路径压缩</h2><p>路径压缩是为了使查找这一过程更快，一般使用的方法有<strong>递归合并</strong>和<strong>按秩合并</strong>。</p>
+<h4 id="递归合并"><a href="#递归合并" class="headerlink" title="递归合并"></a>递归合并</h4><p>每加入一个结点，就把该点对应的值设为其所属集合的根，这样查找就<strong>不需要每次从头递归了</strong>，大大减少了时间消耗。比如前面的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">self, x</span>):</span></span><br><span class="line">    <span class="keyword">if</span> x != self.p[x]:</span><br><span class="line">        self.p[x] = self.find(self.p[x])  <span class="comment"># 这里的递归是为了压缩路径，加快查找速度</span></span><br><span class="line">    <span class="keyword">return</span> self.p[x]</span><br></pre></td></tr></table></figure>
+<p>这样的路径压缩方法对于大多数的算法题已经够用了，但是如果遇到了对时间卡的很紧，还外加一些阴间样例的题目，这样的方法可能依旧会翻车。</p>
+<p>其原因就是在于，当<strong>一个大的集合要与小的集合合并</strong>时，如果使用递归合并，就有可能出现大的往小的集合合并的情况，此时需要就大集合的根依次改为小集合的根，这回额外消耗更多的时间。</p>
+<h4 id="按秩合并（启发式合并）"><a href="#按秩合并（启发式合并）" class="headerlink" title="按秩合并（启发式合并）"></a>按秩合并（启发式合并）</h4><p>所以针对这种情况，我们就需要另外建立一个变量“<strong>秩（Rank）</strong>”来存储每一个树的<strong>深度信息</strong>（因为只有深度会影响到递归的效率），这样我们就能够在合并集合的时候，始终让<strong>较浅的集合合并到较深的集合</strong>处，从而有效地减少所合并所消耗的时间。</p>
+<p>使用启发式合并的代码样例（注意其中的 Rank 列表）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">hitBricks</span>(<span class="params">self, grid: List[List[<span class="built_in">int</span>]], hits: List[List[<span class="built_in">int</span>]]</span>) -&gt; List[int]:</span></span><br><span class="line">        <span class="comment"># ==================== 并查集模版 =========================</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">find</span>(<span class="params">x</span>):</span></span><br><span class="line">            parent.setdefault(x,x)</span><br><span class="line">            <span class="keyword">if</span> parent[x] != x:</span><br><span class="line">                parent[x] = find(parent[x])</span><br><span class="line">            <span class="keyword">return</span> parent[x]</span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">union</span>(<span class="params">x, y</span>):</span></span><br><span class="line">            rootx, rooty = find(x), find(y)</span><br><span class="line">            <span class="keyword">if</span> rootx != rooty:</span><br><span class="line">                <span class="keyword">if</span> rank[rootx] &lt; rank[rooty]:</span><br><span class="line">                    parent[rootx] = rooty</span><br><span class="line">                    count[rooty] += count[rootx]</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    parent[rooty] = rootx</span><br><span class="line">                    count[rootx] += count[rooty]</span><br><span class="line">                    <span class="keyword">if</span> rank[rootx] == rank[rooty]: rank[rootx] += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/LeetCode/"># LeetCode</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/"># 算法笔记</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/20210121%20The%20Awakening%20of%20Feminism/">The Awakening of Feminism</a>
+            
+            
+            <a class="next" rel="next" href="/2021/20210113%202020%20%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/">2020 年度总结</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

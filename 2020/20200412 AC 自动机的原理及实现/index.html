@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>AC 自动机的原理及实现 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">AC 自动机的原理及实现</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">April 12, 2020</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <a id="more"></a>
+
+<p>在最近水论坛的时候，我发现了一个网友友问的这样一个问题：</p>
+<blockquote>
+<p>数千万篇文章，寻找其中包含成语的句子。成语有数万条。<br>目前没有对文章内容建立过全文索引，鉴于这个事情是一次性的，为此搞个索引可能也成本过高。暂时的解决方案是，把成语都放在一条 re.compile(‘乌合之众|鸡犬相闻|…’)里面去搜索文章，但效率总觉得不理想。<br>求教，是否可能有更高效的解决方案。</p>
+</blockquote>
+<p>我写过爬虫，也做过相关的一些算法，对于数据匹配无非就是正则表达式了，毕竟爬的数据量都还不大，效率方面的感知不强。</p>
+<p>但是正则的缺点就是效率低，所以这个<strong>有大规模数据匹配需求</strong>的网友就遇到了低效的问题。这时，底下的一条评论靠着简单的一个词解决了这个问题：</p>
+<p>“<strong>AC 自动机</strong>。”</p>
+<h2 id="AC-自动机是什么？"><a href="#AC-自动机是什么？" class="headerlink" title="AC 自动机是什么？"></a>AC 自动机是什么？</h2><p>AC 自动机的原理简单来说，就是<strong>根据输入的多个模式串去建立一个树模型</strong>，然后再根据这个模型作<strong>字符串匹配</strong>。那它具体是什么呢？</p>
+<p>在聊 AC 自动机之前，我们还需要了解两个基本算法：<strong>KMP</strong> 和 <strong>trie 树</strong>。</p>
+<h4 id="KMP"><a href="#KMP" class="headerlink" title="KMP"></a>KMP</h4><p>KMP 算法是一种<strong>改进的字符串匹配算法</strong>，能够高效地进行串匹配。</p>
+<p>传统的一种字符串匹配算法是类似于<strong>滑窗</strong>一样地进行逐个比对，如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">T: b a a b a b c</span><br><span class="line">   x</span><br><span class="line">W: a b a</span><br><span class="line">Wrong.</span><br><span class="line"></span><br><span class="line">T: b a a b a b c</span><br><span class="line">     √ x</span><br><span class="line">W:   a b a</span><br><span class="line">Wrong.</span><br><span class="line"></span><br><span class="line">T: b a a b a b c</span><br><span class="line">       √ √ √</span><br><span class="line">W:     a b a</span><br><span class="line">Right.</span><br></pre></td></tr></table></figure>
+<p>后来有人发现了，这样匹配多没效率啊，不如匹配错误的时候，跳过一些字符，可以减少匹配计算量。</p>
+<p>怎么跳呢？于是就有人就想出了解决办法：在模式串中通过算法找出<strong>长度最大且相等前后缀</strong>，然后构建出一组<strong>失配指针</strong>，从而哪一处匹配错误了，就根据 <strong>数组中对应的值</strong>向右移几步。</p>
+<p>这个数组又如何生成呢？方法如下，假设我们有一串 <code>&#39;ababa&#39;</code>：</p>
+<table>
+<thead>
+<tr>
+<th align="center">子串</th>
+<th align="center">前缀</th>
+<th align="center">后缀</th>
+<th align="center">取交集</th>
+<th align="center">最长相等前后缀长度</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">a</td>
+<td align="center">$\Phi$</td>
+<td align="center">$\Phi$</td>
+<td align="center">$\Phi\cap\Phi=\Phi$</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">ab</td>
+<td align="center">{a}</td>
+<td align="center">{b}</td>
+<td align="center">$\lbrace a\rbrace\cap\lbrace b\rbrace=\Phi$</td>
+<td align="center">0</td>
+</tr>
+<tr>
+<td align="center">aba</td>
+<td align="center">{a, ab}</td>
+<td align="center">{a, ba}</td>
+<td align="center">$\lbrace a, ab\rbrace\cap\lbrace a, ba\rbrace={a}$</td>
+<td align="center">1</td>
+</tr>
+<tr>
+<td align="center">abab</td>
+<td align="center">{a, ab, aba}</td>
+<td align="center">{b, ab, bab}</td>
+<td align="center">$\lbrace a, ab, aba\rbrace\cap\lbrace b, ab, bab\rbrace=\lbrace a, ab\rbrace$</td>
+<td align="center">2</td>
+</tr>
+<tr>
+<td align="center">ababa</td>
+<td align="center">{a, ab, aba, abab}</td>
+<td align="center">{a, ba, aba, baba}</td>
+<td align="center">$\lbrace a, ab, aba, abab\rbrace\cap\lbrace a, ba, aba, baba\rbrace=\lbrace a, aba\rbrace$</td>
+<td align="center">3</td>
+</tr>
+</tbody></table>
+<p>所以由上表的算法，最后可以计算出来一个数组：<code>[0, 0, 1, 2, 3]</code>,这就是<strong>部分匹配值表</strong>（Partial Match Table, PMT）</p>
+<p>为了后续编程的方便，我们还需要将该表<strong>整体右移</strong>，最左端填充 <code>-1</code>，得到最终的数组 <code>[-1, 0, 0, 1, 2]</code>，这就是 <code>next</code> 数组。它的含义是<strong>字符串当前匹配错误的元素的下一个元素</strong>所对应的模式串的位置。我们再举一个例子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">T: a b c a b a b a</span><br><span class="line">       x</span><br><span class="line">W: a b a b a</span><br><span class="line"> [-1 0 0 1 2]</span><br><span class="line">       ↑</span><br><span class="line">Wrong. 此时模式串中出错位置为 a，对应 next 数组的 0（相同位置），所以匹配出错的 c 元素下一个 a 元素对应的模式串新的位置为 0。</span><br><span class="line"></span><br><span class="line">T: a b c a b a b a</span><br><span class="line">       x</span><br><span class="line">W:     a b a b a</span><br><span class="line">     [-1 0 0 1 2]</span><br><span class="line">       ↑</span><br><span class="line">Wrong. 此时从 c 开始（上一次错误的地方）重新匹配模式串，出错位对应 -1，所以 c 对应的位置为 -1，即模式串往前移一位。</span><br><span class="line"></span><br><span class="line">T: a b c a b a b a</span><br><span class="line">         √ √ √ √ √</span><br><span class="line">W:       a b a b a</span><br><span class="line">       [-1 0 0 1 2]</span><br><span class="line">Right.</span><br><span class="line">至此匹配成功。</span><br></pre></td></tr></table></figure>
+<p>同上例，当匹配字符串出错时，我们就可以找到<strong>模式串</strong>相应位置对应的 <code>next</code> 数组值 $n$，然后向后滑动 $n$ 的地方继续匹配。</p>
+<p>简单来说，就是“<strong>按块匹配</strong>”，所以往右移的时候也是“按块右移”，从而不用像以前一样一格一格右移匹配，减少了很多的工作量。</p>
+<p>虽然 KMP 相较传统检索效率高，但是效率并不是最高的，如今各种编辑器的查找功能大多采用的是 Boyer-Moore 算法，见<a target="_blank" rel="noopener" href="http://www.ruanyifeng.com/blog/2013/05/boyer-moore_string_search_algorithm.html">这里</a>。</p>
+<h4 id="trie-树"><a href="#trie-树" class="headerlink" title="trie 树"></a>trie 树</h4><p>trie 树又称前缀树或字典树，是一种有序树，用于保存关联数组，其中的键通常是字符串。与二叉查找树不同，键不是直接保存在节点中，二是由节点在树中的位置决定。一个节点的所有子孙都有相同的前缀，也就是这个节点对应的字符串，而根节点对应空字符串。一般情况下，不是所有的节点都有对应的值，只有叶子节点和部分内部节点所对应的键才有相关的值。</p>
+<p>（内容来自<a target="_blank" rel="noopener" href="https://zh.wikipedia.org/wiki/Trie">维基百科 - Trie</a>）</p>
+<blockquote>
+<p>建立模型的算法不做过多的介绍，详情见<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000005810561">这里</a>。</p>
+</blockquote>
+<p>trie 树的算法也很直观，简单来说，就是根据输入的模式串在一个区域内建立了<strong>路标</strong>；然后<strong>每次从特定的起点</strong>出发，对上了就根据路标去下一个地点，对不上就结束，以此实现匹配来找到目的地。</p>
+<h4 id="OK，让我们继续"><a href="#OK，让我们继续" class="headerlink" title="OK，让我们继续"></a>OK，让我们继续</h4><p>在了解了上面的两个算法之后，AC 自动机就十分容易理解了。</p>
+<p>这里我们需要介绍一个概念： <strong>fail 指针</strong>，即一个地方的字符若如果匹配失败，就会跳到 fail 指针所指向的地方。比如 <code>human</code> 和 <code>mad</code> 这两个模式串，如果匹配了 <code>huma</code> 下一个不是 <code>n</code>，那么就跳到 <code>mad</code> 中的 <code>a</code> 处继续匹配。由此可见，这样的机制可以大大减小匹配的时间，但是在构建模型方面相比也会<strong>更加复杂</strong>。</p>
+<p>而 AC 自动机就是<strong>在 trie 树的基础上添加了许多的 fail 指针</strong>，实现了一个更加快速高效的模型。</p>
+<h2 id="问题的后续"><a href="#问题的后续" class="headerlink" title="问题的后续"></a>问题的后续</h2><p>当然，这个问题后来也聚集了多方大佬来讨论，于是也看到了一些有用的评论：</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p>直接套 AC 自动机, 专门搞敏感词过滤和发现的, 现成的库就挺快了, 貌似是 C 写的给 py 调；</p>
+<p>套正则, 四五万字的 “或” 条件, 还不如直接用 Python 字符串的 for 和 in。</p>
+<h4 id="qsnow6"><a href="#qsnow6" class="headerlink" title="qsnow6"></a>qsnow6</h4><p>之前在过滤 black list 时找过相关的资料，长文本的搜索适合上 AC 自动机。短文本建议直接 x in s 就完事了，Python 编译器做了优化，效率更快，写起来也方便。</p>
+<h4 id="lithbitren"><a href="#lithbitren" class="headerlink" title="lithbitren"></a>lithbitren</h4><p>说起来，当时找 ac 自动机解决方案还是有坑的，py 的对于复杂算法的模板不多，csdn 上搜到的 py 的 ac 自动机是有问题，建树竟然用 <code>remove</code> 首元素来处理队列，让队列处理在 c 层面的时间复杂度变成了 $O(N^2)$，小规模的屏蔽词过滤看不出啥，大规模词语处理时间会陡增，40 万词要处理将近四分钟，不过改数据解构用 <code>deque</code> 和 <code>popleft</code> 大概就好了。另外搜到过 2 个 <code>pipy</code> 上的开源库，一个是 py2 时代的，一个是重叠的关键字词输出会有问题，最后才决定手撸的。。</p>
+<blockquote>
+<p>下文的代码也是用的 <code>remove</code>，所以速度相对会慢一些。</p>
+</blockquote>
+<p>最后题主也出面反映解决了这个问题：</p>
+<h4 id="v2zero"><a href="#v2zero" class="headerlink" title="v2zero"></a>v2zero</h4><p>@fishCatcher 感动，一个词解决一个大难题。业余写代码，自己也实现不了这种东西，网上找了个 Python 实现。原来预计一周多的运行时间，瞬间就缩减到一天了。</p>
+<h2 id="Python-实现-AC-自动机"><a href="#Python-实现-AC-自动机" class="headerlink" title="Python 实现 AC 自动机"></a>Python 实现 AC 自动机</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> collections <span class="keyword">import</span> defaultdict</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">TrieNode</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, value=<span class="literal">None</span></span>):</span></span><br><span class="line">        self.value = value  <span class="comment"># 值</span></span><br><span class="line">        self.fail = <span class="literal">None</span>  <span class="comment"># fail指针</span></span><br><span class="line">        self.tail = <span class="number">0</span>  <span class="comment"># 尾标志：标志为i表示第i个模式串串尾，默认为0</span></span><br><span class="line">        self.children = &#123;&#125;  <span class="comment"># 子节点，&#123;value:TrieNode&#125;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Trie</span>(<span class="params"><span class="built_in">object</span></span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, words</span>):</span></span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    初始化部分</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">        self.root = TrieNode()  <span class="comment"># 根节点</span></span><br><span class="line">        self.count = <span class="number">0</span>  <span class="comment"># 模式串个数</span></span><br><span class="line">        self.words = words</span><br><span class="line">        <span class="keyword">for</span> word <span class="keyword">in</span> words:</span><br><span class="line">            self._add(word)</span><br><span class="line">        self.ac_automation()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">_add</span>(<span class="params">self, sequence</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        模型中加入字符串</span></span><br><span class="line"><span class="string">        :param sequence: 字符串</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        self.count += <span class="number">1</span></span><br><span class="line">        cur_node = self.root</span><br><span class="line">        <span class="keyword">for</span> item <span class="keyword">in</span> sequence:</span><br><span class="line">            <span class="keyword">if</span> item <span class="keyword">not</span> <span class="keyword">in</span> cur_node.children:</span><br><span class="line">                child = TrieNode(value=item)  <span class="comment"># 插入结点</span></span><br><span class="line">                cur_node.children[item] = child</span><br><span class="line">                cur_node = child</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                cur_node = cur_node.children[item]</span><br><span class="line">        cur_node.tail = self.count</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">ac_automation</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        用 fail 指针搭建失败的路径</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        queue = [self.root]</span><br><span class="line">        <span class="keyword">while</span> <span class="built_in">len</span>(queue):  <span class="comment"># BFS遍历字典树</span></span><br><span class="line">            temp_node = queue[<span class="number">0</span>]</span><br><span class="line">            queue.remove(temp_node)  <span class="comment"># 取出队首元素</span></span><br><span class="line">            <span class="keyword">for</span> value <span class="keyword">in</span> temp_node.children.values():</span><br><span class="line">                <span class="keyword">if</span> temp_node == self.root:</span><br><span class="line">                    value.fail = self.root  <span class="comment"># 根的子结点fail指向根自己</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    p = temp_node.fail  <span class="comment"># 转到 fail 指针</span></span><br><span class="line">                    <span class="keyword">while</span> p:</span><br><span class="line">                        <span class="keyword">if</span> value.value <span class="keyword">in</span> p.children:</span><br><span class="line">                            value.fail = p.children[value.value]  <span class="comment"># 若结点值在该结点的子结点中，则将fail指向该结点的对应子结点</span></span><br><span class="line">                            <span class="keyword">break</span></span><br><span class="line">                        <span class="comment"># 转到fail指针继续回溯</span></span><br><span class="line">                        p = p.fail</span><br><span class="line">                    <span class="comment"># 若为None，表示当前结点值在之前都没出现过，则其fail指向根结点</span></span><br><span class="line">                    <span class="keyword">if</span> <span class="keyword">not</span> p:</span><br><span class="line">                        value.fail = self.root</span><br><span class="line">                <span class="comment"># 将当前结点的所有子结点加到队列中</span></span><br><span class="line">                queue.append(value)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">search</span>(<span class="params">self, text</span>):</span></span><br><span class="line">        <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">        模式匹配</span></span><br><span class="line"><span class="string">        :param text: 长文本</span></span><br><span class="line"><span class="string">        &quot;&quot;&quot;</span></span><br><span class="line">        p = self.root</span><br><span class="line">        <span class="comment"># 记录匹配起始位置下标</span></span><br><span class="line">        start_index = <span class="number">0</span></span><br><span class="line">        <span class="comment"># 成功匹配结果集</span></span><br><span class="line">        rst = defaultdict(<span class="built_in">list</span>)</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(text)):</span><br><span class="line">            single_char = text[i]</span><br><span class="line">            <span class="keyword">while</span> single_char <span class="keyword">not</span> <span class="keyword">in</span> p.children <span class="keyword">and</span> p <span class="keyword">is</span> <span class="keyword">not</span> self.root:</span><br><span class="line">                p = p.fail</span><br><span class="line">            <span class="comment"># 有一点瑕疵，原因在于匹配子串的时候，若字符串中部分字符由两个匹配词组成，此时后一个词的前缀下标不会更新</span></span><br><span class="line">            <span class="comment"># 这是由于KMP算法本身导致的，目前与下文循环寻找所有匹配词存在冲突</span></span><br><span class="line">            <span class="comment"># 但是问题不大，因为其标记的位置均为匹配成功的字符</span></span><br><span class="line">            <span class="keyword">if</span> single_char <span class="keyword">in</span> p.children <span class="keyword">and</span> p <span class="keyword">is</span> self.root:</span><br><span class="line">                start_index = i</span><br><span class="line">            <span class="comment"># 若找到匹配成功的字符结点，则指向那个结点，否则指向根结点</span></span><br><span class="line">            <span class="keyword">if</span> single_char <span class="keyword">in</span> p.children:</span><br><span class="line">                p = p.children[single_char]</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                start_index = i</span><br><span class="line">                p = self.root</span><br><span class="line">            temp = p</span><br><span class="line">            <span class="keyword">while</span> temp <span class="keyword">is</span> <span class="keyword">not</span> self.root:</span><br><span class="line">                <span class="comment"># 尾标志为0不处理，但是tail需要-1从而与敏感词字典下标一致</span></span><br><span class="line">                <span class="comment"># 循环原因在于，有些词本身只是另一个词的后缀，也需要辨识出来</span></span><br><span class="line">                <span class="keyword">if</span> temp.tail:</span><br><span class="line">                    rst[self.words[temp.tail - <span class="number">1</span>]].append((start_index, i))</span><br><span class="line">                temp = temp.fail</span><br><span class="line">        <span class="keyword">return</span> rst</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    test_words = [<span class="string">&quot;你好&quot;</span>, <span class="string">&quot;我&quot;</span>]</span><br><span class="line">    test_text = <span class="string">&quot;你好我好大家好，我是 Zee。&quot;</span></span><br><span class="line">    model = Trie(test_words)</span><br><span class="line">    print(<span class="built_in">str</span>(model.search(test_text)))</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/20200416%20%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81%EF%BC%9AASCII%E3%80%81UTF8%20%E5%92%8C%20Unicode/">字符编码：ASCII、UTF8 和 Unicode</a>
+            
+            
+            <a class="next" rel="next" href="/2020/20200409%20%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9%E5%92%8C%E4%BF%A1%E6%81%AF%E7%86%B5/">数据压缩和信息熵</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

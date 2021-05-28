@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">May 22, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>让我们用Python去做一个Jarvis吧！</p>
+<p>这一部分主要是语音识别部分的Python实现，而且由于这是我利用课余时间而作，所以相对于其他的项目而言进度可能并不会特别迅速，更新缓慢且随缘。</p>
+<a id="more"></a>
+
+<h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>那我们就从前面的框架开始动手实现我们的 Jarvis，首先给大家看一下我的文件目录框架：</p>
+<p><img src="https://zeee.cc/blog/20190522_%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A_Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E_Python_%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/1.jpg"></p>
+<p>其中我把所有自己写的<code>py</code>模块统一归入<code>_module</code>文件夹，供<code>main.py</code>调取，<code>_sounds</code>文件夹存着因为语音识别以及<code>TTS</code>产生的音频文件。</p>
+<blockquote>
+<p>因为目前的结构还不是特别庞大，可能后面会因为管理或者功能增加等等的原因进行修正。如果有改动我会在后面进行补充。</p>
+</blockquote>
+<p>作为一个<del>懒人</del>程序员，并且本着<strong>不重复造轮子</strong>的原则，我决定先到网上搜一搜有没有现成的解决方案能够直接使用的。</p>
+<p>Emmm… 貌似没有，但这并不影响我们的功能实现。</p>
+<p>我们把语音识别的问题拆分开来，便是：</p>
+<ul>
+<li><strong>麦克风录音</strong></li>
+<li><strong>语音识别成文本</strong></li>
+<li><strong>返回文本</strong></li>
+</ul>
+<p>然而幸运的是，<strong>百度在语音识别方面有着成熟的API以及SDK提供使用</strong>，所以在这个方面我们真正需要自己实现的部分只有录音方面了。</p>
+<blockquote>
+<p>后期补充：目前我将这一方面的算法转用<strong>腾讯 AI 平台</strong>实现，并为此写了一套 SDK，如有需要的话可以参考<strong>我的项目</strong>。<br><strong>这并不影响下面百度平台的实现</strong>。</p>
+</blockquote>
+<h2 id="语音录入生成-wav文件"><a href="#语音录入生成-wav文件" class="headerlink" title="语音录入生成.wav文件"></a>语音录入生成.wav文件</h2><p>我将语音录入的方法写在了<code>recognition.py</code>中，与语音识别等功能放在一起便于调用和管理，后续编辑也会方便一些。</p>
+<p>在语音录入方面我们需要调用<code>Pyaudio</code>和<code>wave</code>模块，如果没有安装的话可以通过<code>pip</code>、<code>conda</code>或者<code>Pycharm</code>安装，方法这里就不赘述了。</p>
+<p>然后首先我们需要导入这两个模块：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pyaudio</span><br><span class="line"><span class="keyword">import</span> wave</span><br></pre></td></tr></table></figure>
+<p>  然后便是具体的方法实现，我写了一个<code>def audio_record</code>，这个部分的功能便完成了录音，并且会将录音保存为<code>.wav</code>格式。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">audio_record</span>(<span class="params">out_file, rec_time</span>):</span>  <span class="comment"># out_file:输出音频文件名, rec_time:音频录制时间(秒)</span></span><br><span class="line">    CHUNK = <span class="number">1024</span></span><br><span class="line">    FORMAT = pyaudio.paInt16  <span class="comment"># 16bit编码格式</span></span><br><span class="line">    CHANNELS = <span class="number">1</span>  <span class="comment"># 单声道</span></span><br><span class="line">    RATE = <span class="number">16000</span>  <span class="comment"># 16000采样频率</span></span><br><span class="line"></span><br><span class="line">    p = pyaudio.PyAudio()</span><br><span class="line">    <span class="comment"># 创建音频流</span></span><br><span class="line">    stream = p.<span class="built_in">open</span>(<span class="built_in">format</span>=FORMAT,  <span class="comment"># 音频流wav格式</span></span><br><span class="line">                    channels=CHANNELS,  <span class="comment"># 单声道</span></span><br><span class="line">                    rate=RATE,  <span class="comment"># 采样率16000</span></span><br><span class="line">                    <span class="built_in">input</span>=<span class="literal">True</span>,</span><br><span class="line">                    frames_per_buffer=CHUNK)</span><br><span class="line"></span><br><span class="line">    print(<span class="string">&quot;I&#x27;m listening...&quot;</span>)</span><br><span class="line"></span><br><span class="line">    frames = []  <span class="comment"># 录制的音频流</span></span><br><span class="line">    <span class="comment"># 录制音频数据</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="built_in">int</span>(RATE / CHUNK * rec_time)):</span><br><span class="line">        data = stream.read(CHUNK)</span><br><span class="line">        frames.append(data)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 录制完成</span></span><br><span class="line">    stream.stop_stream()</span><br><span class="line">    stream.close()</span><br><span class="line">    p.terminate()</span><br><span class="line"></span><br><span class="line">    print(<span class="string">&quot;Emmm...&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 保存音频文件</span></span><br><span class="line">    wf = wave.<span class="built_in">open</span>(out_file, <span class="string">&#x27;wb&#x27;</span>)</span><br><span class="line">    wf.setnchannels(CHANNELS)</span><br><span class="line">    wf.setsampwidth(p.get_sample_size(FORMAT))</span><br><span class="line">    wf.setframerate(RATE)</span><br><span class="line">    wf.writeframes(<span class="string">b&#x27;&#x27;</span>.join(frames))</span><br><span class="line">    wf.close()</span><br></pre></td></tr></table></figure>
+<p>这样就实现了程序自动录音然后自动保存为<code>.wav</code>文件的过程，其中的<code>rec_time</code>是<strong>录音的固定时长</strong>，经过我的多次测试最终设置为了一个较合理的<strong>5秒时长</strong>，这个见仁见智，可以根据自己的使用情况做改动。</p>
+<h2 id="STT——语音转文字"><a href="#STT——语音转文字" class="headerlink" title="STT——语音转文字"></a>STT——语音转文字</h2><p>接下来就是要让“Jarvis”听到我们说的话，也就是STT——声音转文字的功能实现。</p>
+<p>我们需要用到百度的开放平台，所以首先需要有一个百度的AI开放平台的账号，这个可以直接前往<a target="_blank" rel="noopener" href="https://ai.baidu.com/">百度AI开放平台</a>注册。</p>
+<blockquote>
+<p>这里为什么我会选择使用<strong>百度</strong>而非<strong>高德</strong>的语音识别平台呢？<br><del>识别体验大同小异，高德标点符号更完善些。</del><br><del>高德对于开发者有着<strong>500次每日</strong>的额度限制，而百度是<strong>无限次数</strong>的。</del><br><del>不用考虑了，选<strong>腾讯</strong>老大哥吧。</del><br><strong>腾讯 AI 平台现在也开始商用了</strong>，限制了开发者的 API 调用次数，如果对次数有要求的话还是<strong>百度</strong>吧</p>
+</blockquote>
+<p>注册完后需要在百度AI平台的<strong>语音技术</strong>一栏新建一个应用，并且将<strong>语音识别</strong>加入到应用的功能中，其它的功能有按需加入。</p>
+<p><img src="https://zeee.cc/blog/20190522_%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A_Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E_Python_%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/2.jpg"></p>
+<p>这个时候进入管理应用页面，就可以看到我们所创建的应用以及对应的<code>APPID</code>、<code>API Key</code>、<code>Secret Key</code>。这三个参数是我们后续接入百度平台的必备条件。</p>
+<p>然后我们开始完成<strong>语音转文字的代码</strong>部分。</p>
+<p>首先导入<code>aip</code>模块，这个模块只能通过<code>pip install aip</code>进行安装，或者自己从<strong>百度的SDK页面</strong>下载导入。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> aip <span class="keyword">import</span> AipSpeech</span><br></pre></td></tr></table></figure>
+<p>然后将其<strong>实例化</strong>并建立一个基于我们应用的对象，方便后续调用。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">APP_ID = <span class="string">&#x27;&#x27;</span>  <span class="comment"># App ID</span></span><br><span class="line">API_KEY = <span class="string">&#x27;&#x27;</span>  <span class="comment"># API Key</span></span><br><span class="line">SECRET_KEY = <span class="string">&#x27;&#x27;</span>  <span class="comment"># Secret Key</span></span><br><span class="line"></span><br><span class="line">client = AipSpeech(APP_ID, API_KEY, SECRET_KEY)</span><br></pre></td></tr></table></figure>
+<p>然后查了一下<code>aip</code>的方法中，<code>asr</code>对应的是语音识别的方法，所以我们直接调用<code>asr</code>方法就行，然后在设置一个识别失败的默认恢复。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">BaiduRecog</span>(<span class="params">fileurl</span>):</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        res = client.asr(Recognition.get_file_content(fileurl), <span class="string">&#x27;pcm&#x27;</span>, <span class="number">16000</span>, &#123;</span><br><span class="line">                <span class="string">&#x27;dev_pid&#x27;</span>: <span class="number">1537</span>,</span><br><span class="line">            &#125;)</span><br><span class="line">        <span class="keyword">return</span> res[<span class="string">&#x27;result&#x27;</span>][<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&#x27;Pardon?&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">get_file_content</span>(<span class="params">filePath</span>):</span></span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(filePath, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> fp:</span><br><span class="line">        <span class="keyword">return</span> fp.read()</span><br></pre></td></tr></table></figure>
+<p>上面代码中的<code>dev_pid</code>是一串设置的代码，每一个数字对应一个参数，在百度AI平台的<strong>SDK文档</strong>中有说明。</p>
+<blockquote>
+<p>在我先前百度过的语音识别方法中，绝大多数都是先录下来<code>wav</code>文件，然后转换为<code>mp3</code>文件再上传至百度平台进行识别，并没有其他他别好的方案。<br>考虑到算法的时效性，<code>wav</code>转换为<code>mp3</code>这一个环节的存在完全没有必要，可以去掉，所以我把算法改成了直接将录下来的<code>wav</code>传到百度平台进行分析，相较他人减少了一个步骤。</p>
+</blockquote>
+<p>我们还差最后一步，<strong>把识别到的文字显示到控制台上</strong>。若果需要一直进行语音识别可以直接套上<code>While True</code>循环。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">audio_record(<span class="string">&#x27;temp.wav&#x27;</span>, <span class="number">5</span>)</span><br><span class="line">voice = Recognition.BaiduRecog(<span class="string">&#x27;temp.wav&#x27;</span>)</span><br><span class="line">print(voice)</span><br></pre></td></tr></table></figure>
+<p>输出结果如下：</p>
+<p><img src="https://zeee.cc/blog/20190522_%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A_Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E_Python_%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/3.jpg"></p>
+<p>至此，语音识别就已经完成了。</p>
+<p><strong>下一次我会介绍一下我实现对文字的自动回复以及让“Jarvis”说话的TTS部分。</strong></p>
+<p>Peace.</p>
+<p><img src="https://images.unsplash.com/photo-1558456036-ec404043fc6f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/Jarvis/"># Jarvis</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190525%20Office%20365%20-%20%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%80%EF%BC%89/">Office 365 - 我的工作环境（一）</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190521%20%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%20Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%20Python%20%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%B8%80%EF%BC%89%E7%AE%80%E4%BB%8B/">从零开始做 Jarvis——基于 Python 的智能语音管家（一）</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>【算法笔记】meet-in-the-middle 算法 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【算法笔记】meet-in-the-middle 算法</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">February 23, 2021</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><strong>meet-in-the-middle 算法</strong>（又称折半搜索、双向搜索），属于一种优化的 DFS 或 BFS 算法。同分治算法近似，它将问题进行了拆分，然后进行合并归一，得出最后的结果。这样做的好处是<strong>在穷举解的时候能够对很多情况进行剪枝</strong>，降低了时间复杂度。</p>
+<p><code>n &lt;= 40</code> 的搜索类型题目一般都可以优化，本质上这是一种<strong>空间换时间</strong>的算法。</p>
+<blockquote>
+<p>穷举类的问题当<strong>匹配条件越多</strong>的时候，其<strong>时间复杂度便会越大</strong>，所以可以通过将多个条件拆分匹配的方式来减小复杂度。<br>简单来说，这就是“分而治之”的一种手段。</p>
+</blockquote>
+<h2 id="常见类型"><a href="#常见类型" class="headerlink" title="常见类型"></a>常见类型</h2><h4 id="求和"><a href="#求和" class="headerlink" title="求和"></a>求和</h4><p>这一部分可直接见「<strong>举个例子</strong>」部分。</p>
+<h4 id="双向搜索"><a href="#双向搜索" class="headerlink" title="双向搜索"></a>双向搜索</h4><p>这在<strong>关系网处理</strong>和<strong>图的路径规划</strong>中经常使用，且在寻路问题中表现很好。算法会同时从两个节点开始搜索，并且看什么时候这两个搜索的边界相遇。这个可以将需要扩展的节点降低到 $O(p^{k/2})$。</p>
+<h4 id="2DES-破解"><a href="#2DES-破解" class="headerlink" title="2DES 破解"></a>2DES 破解</h4><p>DES 算法为密码体制中的<strong>对称密码体制</strong>，又被称为美国数据加密标准，是 1972 年美国 IBM 公司研制的对称密码体制加密算法。明文按 64 位进行分组，密钥长 64 位，密钥事实上是 56 位参与 DES 运算（第 8、16、24、32、40、48、56、64 位是校验位， 使得每个密钥都有奇数个1），分组后的明文组和 56 位的密钥<strong>按位替代或交换的方法</strong>形成密文组的加密方法。</p>
+<p>DES 算法如今之所以被淘汰，是因为<strong>秘钥空间太小</strong>。其密钥的 $2^{56}$ 种可能性在以前是很难穷举破解的，但如今随着算力的发展，把所有可能的秘钥遍历一遍也是可以的（参考 BTC 挖矿）。在这之后的 DES 算法便开始显得力不从心，亟待升级，于是就有了 <strong>3DES 算法</strong>——使用 3 个密钥进行 3 次 DES 加密运算。</p>
+<p><strong>2DES 去哪儿了？</strong>答案是 DES 算法过后直接提升到了 3DES，直接把 2DES 给跳过了。理论上来说 2DES 具有 $2^{102}$ 的秘钥空间，已足够使用，但是为什么不用呢，原因就在于 meet-in-the-middle 算法为基础的<strong>中间人攻击</strong>（Diffile-Hellman 发明）——信息论课堂上的老朋友了，在这儿只用简单的语言介绍其原理。</p>
+<p>假设我需要通过一组 2DES 的明文与密文破解出秘钥，我并不需要遍历 $2^{102}$ 整个秘钥空间，而是使用明文枚举 $2^{56}$ 个秘钥加密，得到 $2^{56}$ 个中间值并<strong>存入哈希表</strong>；然后使用密文枚举 $2^{56}$ 个秘钥并<strong>与明文的哈希库做对比</strong>，得到的所有值中一定有一个与之前加密所得到的相等，即 $E_{ki}(p) = D_{kj}(s)$，meet-in-the-middle 结束。这整个破解过程中不难发现，<strong>只要有足够大的空间用于存储哈希表，2DES 破解密码的时间仅仅相当于破解 2 次 DES</strong>。</p>
+<p>3DES 的话就可以避免这个问题，无论如何 meet-in-the-middle，都只能够将时间复杂度给缩小到 $O(2^{102})$ 程度。</p>
+<h2 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h2><h4 id="「4-和问题」"><a href="#「4-和问题」" class="headerlink" title="「4 和问题」"></a>「4 和问题」</h4><p><strong>问题</strong>：给定一个整数数组 A，问数组中是否存在 4 个数，使得这 4 个数的和是 0（同一个元素可以被多次使用）。</p>
+<p><strong>例如</strong>：<code>A = [2, 3, 1, 0, -4, -1]</code>，可能的方案是<code>3 + 1 + 0 - 4 = 0</code> 或 <code>0 + 0 + 0 + 0 = 0</code>。</p>
+<p>该题的直观解法就是<strong>穷举</strong>，然后记录所有符合条件的方案即可，复杂度为 $O(N^4)$。当然，并不能说穷举的时间复杂度高就不好，毕竟这种解法的解题复杂度低，比赛的时候可以<strong>快速解题</strong>。</p>
+<blockquote>
+<p>一般情况下比赛都会配上阴间测试样例，暴力解极有可能错误导致加时，所以最好对算法进行优化后再提交。</p>
+</blockquote>
+<p>使用 meet-in-the-middle 算法的话也不难理解。首先我们将问题中的 <code>a + b + c + d = 0</code> 的格式化为 <code>a + b = -(c + d)</code>，这时我们就可以发现，<strong>当 <code>a + b</code> 计算出来之后，<code>c + d</code> 的值也就出来了</strong>。所以我们要做的就是穷举所有的 <code>a + b</code>（时间复杂度为 $O(N^2)$）并记录到哈希表中，然后匹配一下是否有对应的值即可。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> 4<span class="title">sum</span>(<span class="params">A</span>):</span></span><br><span class="line">  sums = &#123;&#125;</span><br><span class="line">  <span class="keyword">for</span> a <span class="keyword">in</span> A:</span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> A:</span><br><span class="line">      sums[a + b] = (a, b)</span><br><span class="line"> </span><br><span class="line">  <span class="keyword">for</span> c <span class="keyword">in</span> A:</span><br><span class="line">    <span class="keyword">for</span> d <span class="keyword">in</span> A:</span><br><span class="line">      <span class="keyword">if</span> -(c + d) <span class="keyword">in</span> sums:</span><br><span class="line">        print(sums[-(c + d)][<span class="number">0</span>], sums[-(c + d)][<span class="number">1</span>], c, d)</span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line"> </span><br><span class="line">  <span class="keyword">return</span> <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+<h4 id="「1755-最接近目标值的子序列和」"><a href="#「1755-最接近目标值的子序列和」" class="headerlink" title="「1755. 最接近目标值的子序列和」"></a>「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/closest-subsequence-sum/">1755. 最接近目标值的子序列和</a>」</h4><p><strong>解题复杂度最低</strong>的解法就是直接穷举，而且这道题 LeetCode 的测试集不够阴间，可以直接过。同时这也可以使用 meet-in-the-middle 算法剪枝，大大降低时间复杂度。</p>
+<p>算法很直观，原理就是<strong>分块穷举会比总体穷举更节省时间</strong>。首先将该数组分成左右两半，然后分别<strong>穷举出所有可能的子数组和</strong>。然后对该两个生成数组重新排序，从而方便最后的 meet-in-the-middle 算法进行判断。</p>
+<p>Python 代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">minAbsDifference</span>(<span class="params">self, nums: List[<span class="built_in">int</span>], goal: <span class="built_in">int</span></span>) -&gt; int:</span></span><br><span class="line">        n = <span class="built_in">len</span>(nums)</span><br><span class="line">        ln = n // <span class="number">2</span></span><br><span class="line"></span><br><span class="line">        <span class="comment"># make 函数是用于穷举一个列表所有可能的子数组和</span></span><br><span class="line">        <span class="comment"># 比如 [3, 5] 就会生成 [0, 3, 5, 8]；[5, -7] 就会生成 [0, 5, -7, -2]</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">make</span>(<span class="params">lis, loc, lis_out</span>):</span></span><br><span class="line">            <span class="keyword">if</span> loc == <span class="built_in">len</span>(lis):</span><br><span class="line">                <span class="keyword">return</span> lis_out</span><br><span class="line">            temp = lis_out + [k + lis[loc] <span class="keyword">for</span> k <span class="keyword">in</span> lis_out]</span><br><span class="line">            <span class="keyword">return</span> make(lis, loc + <span class="number">1</span>, temp)</span><br><span class="line"></span><br><span class="line">        <span class="comment"># ll 和 rr 实际上就是左右两半子数组和的穷举，方便后面 meet in the middle</span></span><br><span class="line">        ll = make(nums[:ln], <span class="number">0</span>, [<span class="number">0</span>])  </span><br><span class="line">        rr = make(nums[ln:], <span class="number">0</span>, [<span class="number">0</span>])</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 排个序</span></span><br><span class="line">        ll.sort()</span><br><span class="line">        rr.sort()</span><br><span class="line"></span><br><span class="line">        pl = <span class="number">0</span></span><br><span class="line">        pr = <span class="built_in">len</span>(rr) - <span class="number">1</span></span><br><span class="line">        out = <span class="built_in">float</span>(<span class="string">&quot;inf&quot;</span>)</span><br><span class="line">        <span class="comment"># pl 遍历 ll 数组，pr 遍历 rr 数组</span></span><br><span class="line">        <span class="keyword">while</span> pl &lt; <span class="number">2</span> ** ln <span class="keyword">and</span> pr &gt;= <span class="number">0</span>:</span><br><span class="line">            out = <span class="built_in">min</span>(out, <span class="built_in">abs</span>(ll[pl] + rr[pr] - goal))</span><br><span class="line">            <span class="keyword">if</span> ll[pl] + rr[pr] &gt; goal:</span><br><span class="line">                pr -= <span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                pl += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<h2 id="复杂度"><a href="#复杂度" class="headerlink" title="复杂度"></a>复杂度</h2><p>假设向外搜索 $n$ 层需要的代价为 $f(n)$。如果不用 meet-in-the-middle 那么复杂度当然是 $O(f(n))$。</p>
+<p>如果使用了 meet-in-the-middle，那么从起点开始需要搜索的代价为 $f(n/2)$，从终点开始搜索的代价也是 $f(n/2)$，总代价就是 $2*f(n/2)$，复杂度为 $O(f(n/2))$。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/LeetCode/"># LeetCode</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/"># 算法笔记</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/20210224%20%E3%80%90%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E6%8A%95%E7%A5%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">【算法笔记】基于用户投票的排序算法</a>
+            
+            
+            <a class="next" rel="next" href="/2021/20210218%20%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7%20unison%20%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7%20unison%20%E7%AE%80%E6%98%93%E6%8C%87%E5%8C%97/">文件夹同步工具 unison 简易指北</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

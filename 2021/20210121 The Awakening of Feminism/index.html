@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>The Awakening of Feminism | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">The Awakening of Feminism</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">January 21, 2021</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%9D%82%E8%B0%88/">杂谈</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p>This is one of my theses during the study of translation, as a review-like assignment after reading multiple English novels. The Feminism, facing commercialization issues nowadays, should be mentioned and respected indeed.</p>
+</blockquote>
+<h2 id="The-Awakening-of-Femanism"><a href="#The-Awakening-of-Femanism" class="headerlink" title="The Awakening of Femanism"></a>The Awakening of Femanism</h2><p>Jane Eyre is an orphan, who was born into a poor clergyman’s family and her parents died. Therefore, the little Jane Eyre was in foster care at her uncle and aunt’s house. After the death of her uncle Mr. Reed, Jane Eyre lived a tough life with discrimination and abuse for 10 years. Her aunt separated her from her own children, and from then on, her confrontation with her aunt made her sent to the Lowood orphanage.</p>
+<p>The orphanage where Jane Eyre suffered mental and physical destruction had strict rules and the dean is a cold hypocrite. Due to poor living conditions, children often die of illness, and her best friend Helen died of tuberculosis, which also made great improvements to the orphanage. Jane Eyre received six years of education in the new environment and taught in here for two years. As a result of Miss Temple’s departure, Jane Eyre was tired of life in the orphanage and advertised for a career as a tutor, and a housekeeper at Thornfield Manor hired her.</p>
+<p>One dusk, Jane Eyre went out for a walk and met the owner who was a melancholy and moody man. This was the first time they had met. One day, Jane Eyre found that Rochester’s room was on fire. Jane Eyre woke him up and helped him put out the fire.<br>Rochester often has a family dinner when he comes back. He courted a beautiful lady named Ingram at a family dinner. Jane Eyre was called into the drawing-room, but she was coldly received by Blanche’s mother and daughter, so she endured humiliation and left the drawing-room. By this time, she had fallen in love with Rochester and Rochester has also fallen in love with her. He just wanted to test Jane Eyre’s love for himself. When he proposed to Jane Eyre, she said yes. </p>
+<p>On the eve of the wedding, Jane Eyre saw an abominable woman in the gloom, wearing her wedding dress in front of the mirror. The second day, while the wedding was taking place in church, it was suddenly certified that Mr. Rochester was married 15 years ago. His wife turned out to be the crazy woman locked up in the secret room on the third floor. On a miserable and rainy night, Jane Eyre left Rochester. She camped out, begging along the way, went through all the hardships, and was finally taken in by St. John, the priest, and taught at a local primary school. Soon after, Jane Eyre learned that her uncle died and left her an inheritance. At the same time, she also found out that St. John was her cousin. Jane Eyre decided to divide the property equally with him. St. John was a fanatical believer and was going to preach in India. He asked Jane Eyre to married him and went to India together, but only on the grounds that Jane Eyre was fit to be a missionary’s wife. Jane Eyre turned him down and decided to look at Rochester again. When she returned to Thornfield Manor, the house was totally in ruins, the crazy woman set fire and fell to death, and Rochester was also injured and maimed. Jane Eyre found him and was shocked, and finally married him with her ideal happy life.</p>
+<p>When Charlotte Bronte wrote Jane Eyre, Britain was already the first industrial country in the world. However, the status of British women had not changed, and they were still in a subordinate and dependent place. The goal of women’s survival was to marry into a rich family. Even if they can’t be born into a rich family, they also tried to get wealth and status through marriage. The only choice for a woman’s career is to be a good wife and a good mother. Women who work as writers were considered to be contrary to legitimate femininity and they would be violently attacked by men. Pretending to be masculine pseudonyms from the works of the Charlotte sisters, we can imagine what kind of predicament the female writers were facing at that time. Jane Eyre was written in this passive context.</p>
+<h2 id="The-Awakening-of-Feminine-Consciousness"><a href="#The-Awakening-of-Feminine-Consciousness" class="headerlink" title="The Awakening of Feminine Consciousness"></a>The Awakening of Feminine Consciousness</h2><p>Every piece of literary, including Jane Eyre, is based on the real life. Hence the experience of Jane could also be the experience of everyone. Jane Eyre itself is a fiction, but we can also have a bite of her tough life and feel the power behind it.</p>
+<p>The experience of love and trauma comes from the experience of childhood. Due to the different origin of writers and different living environment, what they see and hear in childhood is bound to be different. The initial experience of childhood also affects the writer’s choice of subject matter. The experience of childhood love makes the writer tend to choose the subject matter related to love, while the traumatic experience of childhood makes the author more inclined to choose the subject matter of trauma, melancholy and pain.</p>
+<p>Abraham Harold Maslow, a famous American social psychologist put his Maslow’s hierarchy of needs in his 1943 thesis “Human Incentive Theory”. He divided people into five categories, which from level to level are: physical needs, security needs, belonging and love needs, respect needs and self-realization needs. Maslow believed that after the low-level needs are9o met, people will turn to seek the achievement of a higher level of needs, people achieve their own growth through the pursuit and realization of a level of needs. Female consciousness refers to women’s recognition and perception of their own value and importance as an independent individual, emphasizing that women should understand themselves, pursue independence and dignity, and realize their self-worth. Self-consciousness is related to people’s attention to their own independence, needs and so on, so the emergence of self-consciousness is closely related to the consciousness of self-need. Only when we have a clear understanding of our own needs can we have the awakening of self-consciousness. And with the gradual development of self-needs, self-awareness has also been continuously developed. Although the heroine of Jane Eyre lived in different countries and different periods of patriarchal society, Jane was different from other women of that generation. She was no longer satisfied with the role of “Family Angel” or a male vassal. With the change of living environment and the pressure of survival, she gradually realized the value of her existence. The influence of patriarchal social thought on them was weakened step by step, and women’s independent consciousness was awakened a little, and they were constantly satisfied with themselves. Their own needs, to promote the germination and development of female consciousness, although they meet the needs in different ways, but all reflect a strong sense of self. </p>
+<p>Perhaps in Jane Eyre, there states an essential aspect which is the feminism. Feminism refers to the social trend of thought in which women demand equal rights, advocating that women can enjoy equal rights with men in all fields of social life. This thought and theory are committed to breaking through the traditional sense of discourse consciousness, no longer regard women as a “special group” in society, more reflect the idea of equality between men and women and encourage women to dare and dare to pursue ideals and happiness.</p>
+<p>How the consciousness reflects in Jane Eyre? First is the resistance of the suppress of the power. Resistance to foster families led to Jane Eyre being sent to the Lowood orphanage. This is a so-called charity that destroys children from physical to spiritual religious bondage, and Jane is still rebellious as she always was. She was often scolded and flogged against her good friend Helen but never complained of great contempt and resentment. She advised Helen that if she was whipped, she would take the whip, break it to her face, and “we should fight back hard.” “fight back hard!”. This is the portrayal of Jane’s strong spirit of resistance. Jane has survived eight years of suffocating school life with her tenacious vitality, but what she has always been thinking about is “I yearn for freedom, I yearn for freedom”. All these show that Jane does not compromise with the fate of the environment, has the courage to resist the struggle, and strives for the right to be a man, which is the symbol of the awakening of the broad masses of women at that time.</p>
+<p>The second is the independence of economy. The independence of women lies first and foremost in economic independence. In the age of Jane Eyre, marriage was the only way out for women. However, in Jane Eyre’s mind, economic independence is the pillar of her personality independence. Only based on economic independence does she feel that she has her own personality and dignity, and that she is a real person. Jane experienced a painful, poor childhood, but she worked hard and finally became a teacher with extraordinary talent and was able to support herself financially. Her demand for economic independence is strong and consistent.</p>
+<p>The third is the pursuit of equal love. Jane Eyre and the male master Rochester’s love twists and turns, so that her personality has been fully reflected. When Jane Eyre found herself in love with Rochester, she was aware of the huge gap between them: Rochester was a gentleman of high society; She came from a humble background, penniless, and was just a tutor with a status similar to that of a servant. However, she was not discouraged or belittled herself, but bravely to herself! Admit your feelings to Rochester. In a love of such great disparity in social status, the performance is neither humble nor exalted. She believes that people are equal in spirit, which is undoubtedly a bold challenge to social prejudice in a hierarchical class society.</p>
+<p>Jane Eyre’s self-respect, self-improvement and self-love set an example for us. At the same time, she also made us believe that a woman who has an independent personality and can have self-esteem, self-love, self-reliance and self-confidence will also find their own eternal spring. Her image has become tall and remarkable, and she flashed a strong female consciousness like a torch in the night, igniting the light of hope for the broad masses of women.</p>
+<h2 id="Conclution"><a href="#Conclution" class="headerlink" title="Conclution"></a>Conclution</h2><p>In Jane Eyre this novel, Charlotte devoted a lot of hard work, her own experience into the novel, creating a humble, brave Jane Eyre profile. In the novel, the protagonist Jane Eyre was the representative of feminism, who adhered to herself, dared to face the dark life, resist reality and bravely pursue the desired happiness, did not forget the original ideals and aspirations, and the spirit of perseverance. Women’s rights. Doctrine has risen to a certain level, which is the concentrated embodiment of feminism. And, according to the aesthetic image of gentle, delicate, pure and kind women in previous literary works, the personality characteristics of traditional women have long been under the control of male chauvinism and the deprivation of human rights, while the novel has adopted the tradition of Jane. The characters with distinct social background interpret the special image of women’s resistance and the pursuit of freedom and equality in the new period. Jane is the representative of modern women. The emergence of Jane makes people realize the importance of women’s dignity and the value of women’s rights. Jane shows the other side of the female brilliance in the film, which adds a certain value connotation to the film.</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%86%99%E4%BD%9C/"># 写作</a>
+                    
+                        <a href="/tags/%E8%AE%BA%E6%96%87/"># 论文</a>
+                    
+                        <a href="/tags/%E5%A5%B3%E6%80%A7%E4%B8%BB%E4%B9%89/"># 女性主义</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/20210122%20%E3%80%90%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E3%80%91%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92%20&%20%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%B3%95/">【算法笔记】动态规划 & 二分搜索法</a>
+            
+            
+            <a class="next" rel="next" href="/2021/20210117%20%E3%80%90%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E3%80%91%E5%B9%B6%E6%9F%A5%E9%9B%86/">【算法笔记】并查集</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

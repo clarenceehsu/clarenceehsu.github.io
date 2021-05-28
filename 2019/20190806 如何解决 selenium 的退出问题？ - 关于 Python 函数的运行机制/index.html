@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>如何解决 selenium 的退出问题？ - 关于 Python 函数的运行机制 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">如何解决 selenium 的退出问题？ - 关于 Python 函数的运行机制</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">August 6, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>最近在搞爬虫，然后顺便写了写基于 <code>selenium</code> 框架的模拟登陆脚本供以后需要时用，然而在这时我发现了一个问题：</p>
+<a id="more"></a>
+
+<p>代码一开始是这样的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line">driver = webdriver.Chrome()</span><br><span class="line">driver.maximize_window()</span><br><span class="line"></span><br><span class="line">driver.get(<span class="string">&#x27;http://mail.163.com&#x27;</span>)</span><br><span class="line"></span><br><span class="line">driver.find_element_by_id(<span class="string">&#x27;switchAccountLogin&#x27;</span>).click()</span><br><span class="line">iframe = driver.find_element_by_xpath(<span class="string">&#x27;//*[@id=&quot;loginDiv&quot;]/iframe&#x27;</span>)  <span class="comment"># 使用Xpath选定位到iframe</span></span><br><span class="line">driver.switch_to.frame(iframe)　　　　　　　　　　<span class="comment"># 切换iframe</span></span><br><span class="line"><span class="comment"># iframe = driver.find_element_by_xpath(&quot;//iframe[contains(@id, &#x27;x-URS-iframe&#x27;)]&quot;)  # 使用Xpath提供的contains定位</span></span><br><span class="line"><span class="comment"># driver.switch_to.frame(iframe)</span></span><br><span class="line">driver.find_element_by_name(<span class="string">&#x27;email&#x27;</span>).send_keys(<span class="string">&#x27;name&#x27;</span>)</span><br><span class="line">driver.find_element_by_name(<span class="string">&#x27;password&#x27;</span>).send_keys(<span class="string">&#x27;password&#x27;</span>)</span><br><span class="line">driver.find_element_by_id(<span class="string">&#x27;dologin&#x27;</span>).click()</span><br></pre></td></tr></table></figure>
+<p>然后进行了<strong>简单的改造</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> selenium <span class="keyword">import</span> webdriver</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mail163</span>:</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, name, password</span>):</span></span><br><span class="line">        self.name = name</span><br><span class="line">        self.password = password</span><br><span class="line">        self.driver = webdriver.Chrome()</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="comment"># driver.maximize_window()</span></span><br><span class="line">        self.driver.get(<span class="string">&#x27;http://mail.163.com&#x27;</span>)</span><br><span class="line">        self.driver.find_element_by_id(<span class="string">&#x27;switchAccountLogin&#x27;</span>).click()</span><br><span class="line">        iframe = self.driver.find_element_by_xpath(<span class="string">&#x27;//*[@id=&quot;loginDiv&quot;]/iframe&#x27;</span>)  <span class="comment"># 使用Xpath选定位到iframe</span></span><br><span class="line">        self.driver.switch_to.frame(iframe)  <span class="comment"># 切换iframe</span></span><br><span class="line">        <span class="comment"># iframe = driver.find_element_by_xpath(&quot;//iframe[contains(@id, &#x27;x-URS-iframe&#x27;)]&quot;)  # 使用Xpath提供的contains定位</span></span><br><span class="line">        <span class="comment"># driver.switch_to.frame(iframe)</span></span><br><span class="line">        self.driver.find_element_by_name(<span class="string">&#x27;email&#x27;</span>).send_keys(self.name)</span><br><span class="line">        self.driver.find_element_by_name(<span class="string">&#x27;password&#x27;</span>).send_keys(self.password)</span><br><span class="line">        self.driver.find_element_by_id(<span class="string">&#x27;dologin&#x27;</span>).click()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    Mail163(<span class="string">&#x27;111&#x27;</span>, <span class="string">&#x27;aaa&#x27;</span>).run()</span><br></pre></td></tr></table></figure>
+<p>这个时候我发现，原来运行代码之后，<strong>Chrome 依然存在</strong>；而在将其函数化之后，运行完了代码 <strong>Chrome 便会直接闪退</strong>。</p>
+<p>这时我便想到，这可能跟 <strong>Python 的函数运行机制</strong>有关，所以我连忙查了一下资料，终于发现了其原理。</p>
+<p>在代码中，<code>Mail163</code> 调用时，触发了 <code>selenium/webdriver/common/service.py</code> 中 <code>Service#__del__</code> 方法；<br><code>Service#__del__</code> 调用了同类中的 <code>Service#stop</code> 方法；<br><code>Service#stop</code> 调用了同类中的 <code>Service#send_remote_shutdown_command</code> 方法；<br><code>Service#send_remote_shutdown_command</code> 中的 <code>url_request.urlopen(&quot;%s/shutdown&quot; % self.service_url)</code> 导致浏览器关闭。</p>
+<p>因此结论就很明显了，当 <code>webdriver</code> 在<strong>局部域内</strong>被定义时，其代码运行结束后会进行 <code>del</code> 的操作去做<strong>资源清理（垃圾回收）</strong>。</p>
+<p>所以如果需要在登录操作运行完后保持 Chrome 的运行，可以将 webdrive 定义部分代码 <code>drive = webdriver.Chrome()</code> <strong>放到函数体外</strong>，从而避免被清理。</p>
+<p><img src="https://images.unsplash.com/photo-1565059242721-1dc4cbad9e6c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2100&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190806%20%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE%20VS%20Code%20%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/">如何配置 VS Code 进行远程调试</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190729%20%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8%20Go%20%E8%AF%AD%E8%A8%80/">极速入门 Go 语言</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

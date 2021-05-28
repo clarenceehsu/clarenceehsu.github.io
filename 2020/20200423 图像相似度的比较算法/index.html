@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>图像相似度的比较算法 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">图像相似度的比较算法</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">April 23, 2020</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <a id="more"></a>
+
+<p>最近花了些时间研究了一下图像相似度算法，感觉还是挺有趣的，也解决了我以前的一些疑惑。</p>
+<p>目前的识别算法主要有几种，第一个是<strong>感知哈希算法</strong>，其中包括<strong>均值哈希</strong>（aHash）、<strong>感知哈希</strong>（pHash）和<strong>差异值哈希</strong>（dHash）；第二种是 <strong>SIFT</strong>。而目前主要使用的是 <strong>SIFT</strong> 和 <strong>pHash</strong>。</p>
+<p>下面简单介绍一下这几种算法的原理和优势。</p>
+<h2 id="均值哈希（aHash）"><a href="#均值哈希（aHash）" class="headerlink" title="均值哈希（aHash）"></a>均值哈希（aHash）</h2><h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h4><ol>
+<li><strong>缩放图片</strong>：将图片进行<strong>下采样</strong>至 8*8 的像素矩阵，共 64 个像素；</li>
+<li><strong>灰度图片</strong>：将图片转化为 <strong>256 阶的灰度图</strong>；<blockquote>
+<p>灰度算法有很多:<br>心理学灰度 $Gray=0.299\times R+0.587\times G+0.114\times B$<br>平均值算法 $Gray=(R+G+B)/3$<br>绿色值算法 $Gray=G$</p>
+</blockquote>
+</li>
+<li><strong>二元化图片</strong>：将图片进行<strong>二元化转换</strong>；<blockquote>
+<p>这一步简单来说，就是先<strong>计算灰度均值</strong>，然后依次遍历原像素值，高于灰度值记为 1，低于记为 0，最后生成了一个 64 bits 的数列。</p>
+</blockquote>
+</li>
+<li><strong>构造哈希</strong>：对 64 bits 的数列进行哈希，生成“感知指纹”；</li>
+<li><strong>对比指纹</strong>：对两幅图片的“指纹”计算<strong>汉明距离</strong>，距离越小则相似度越高。</li>
+</ol>
+<h4 id="算法特点"><a href="#算法特点" class="headerlink" title="算法特点"></a>算法特点</h4><p>aHash 的算法简单粗暴，速度快。但是由于对图片进行了下采样和二值化，所以自然丢失了非常多的数据，精确度也就很低。</p>
+<h2 id="感知哈希（pHash）"><a href="#感知哈希（pHash）" class="headerlink" title="感知哈希（pHash）"></a>感知哈希（pHash）</h2><h4 id="原理-1"><a href="#原理-1" class="headerlink" title="原理"></a>原理</h4><ol>
+<li><strong>缩放图片</strong>：将图片进行下采样，生成正方形的图片（图片一般大于 8*8，3*32）；</li>
+<li><strong>灰度图片</strong>：该步骤与上同；</li>
+<li><strong>计算 DCT（离散余弦变换）</strong>：DCT 计算将图片按照频率分布进行分解；</li>
+<li><strong>裁剪 DCT</strong>：经过 DCT 操作后，会生成一个 32*32 的频域矩阵，我们只需要保存左上角的 8*8 即可，这一部分是图片的<strong>低频</strong>；</li>
+<li><strong>二元化矩阵</strong>：对上一步的矩阵进行处理，算法同样是计算平均值然后二元化；</li>
+<li><strong>构造哈希</strong>：对 64 bits 的数列进行哈希，生成“感知指纹”；</li>
+<li><strong>对比指纹</strong>：对两幅图片的“指纹”计算<strong>汉明距离</strong>，距离越小则相似度越高。<blockquote>
+<p>DCT 的算法相较复杂，主要用于数据或图像的压缩，能够将空域的信号转换到频域上，具有良好的去相关性的性能。<br><strong>一维 DCT 变换</strong>：<br>$$<br>F(u)=c(u)\sum_{i=0}^{N-1}f(i)cos[\frac{(i+0.5)\pi}{N}u]<br>$$<br>$$<br>在\space Y\neq f(x)\space时，L(Y,f(x))=1<br>$$<br>$$<br>在\space Y=f(x)\space时，L(Y,f(x))=0<br>$$<br>二维 DCT 变换：<br>$$<br>F(u,v)=c(u)c(v)\sum_{i=0}^{N-1}\sum_{j=0}^{N-1}f(i,j)cos[\frac{(i+0.5)\pi}{N}u]cos[\frac{(i+0.5)\pi}{N}v]<br>$$<br>$$<br>在\space u\neq 0\space时，c(u)=\sqrt{\frac{1}{N}}<br>$$<br>$$<br>在\space u=0\space时，c(u)=\sqrt{\frac{2}{N}}<br>$$</p>
+</blockquote>
+</li>
+</ol>
+<h4 id="算法特点-1"><a href="#算法特点-1" class="headerlink" title="算法特点"></a>算法特点</h4><p>为了改善前辈 aHash 的精度，pHash 采用了 DCT（离散余弦变换），能够更好地压缩图片，并且保证一定的细节。这样的<strong>精度会高很多</strong>，但是因为要额外计算一次 DCT，所以<strong>速度也会慢一些</strong>。</p>
+<h2 id="差异值哈希（dHash）"><a href="#差异值哈希（dHash）" class="headerlink" title="差异值哈希（dHash）"></a>差异值哈希（dHash）</h2><h4 id="原理-2"><a href="#原理-2" class="headerlink" title="原理"></a>原理</h4><ol>
+<li><strong>缩放图片</strong>：将图片进行下采样，生成 9*8 的图片，共 72 个像素点；</li>
+<li><strong>灰度图片</strong>：该步骤与上同；</li>
+<li><strong>计算差异</strong>：计算相邻像素之间的差异值，每行 9 个像素可以算出 8 个差异值，总共 8*8=64 个差异值；</li>
+<li><strong>二元化矩阵</strong>：比较差异值，若前一个大于后一个则为 1，小于等于则为 0；</li>
+<li><strong>构造哈希</strong>：对 64 bits 的数列进行哈希，生成“感知指纹”；</li>
+<li><strong>对比指纹</strong>：对两幅图片的“指纹”计算<strong>汉明距离</strong>，距离越小则相似度越高。</li>
+</ol>
+<h4 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h4><p>这更像是一个<strong>性能和准确率折中的方案</strong>，运算速度比 pHash 快了很多（慢于 aHash），而精确度也比 aHash 更高（低于 pHash）。</p>
+<h2 id="SIFT-算法"><a href="#SIFT-算法" class="headerlink" title="SIFT 算法"></a>SIFT 算法</h2><p>上面介绍了感知哈希算法，三种方法大同小异，但都有一个缺点——鲁棒性不够高，以至于对图片进行了小幅度变换（调色、旋转等）就可能无法成功匹配，而这些问题 <strong>SIFT 算法</strong>就能够很好地解决。</p>
+<p>SIFT 是<strong>尺度不变特征变换</strong>，这种算法具有尺度不变性，可在图中检测出关键点作为<strong>局部特征描述子</strong>。</p>
+<p><img src="https://zeee.cc/blog/20200423%E5%9B%BE%E5%83%8F%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%9A%84%E6%AF%94%E8%BE%83%E7%AE%97%E6%B3%95/1.png"></p>
+<h4 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h4><ol>
+<li><strong>提取特征点</strong>：提取一些十分突出的不会因光照、尺度、旋转等因素而消失的点，比如角点、边缘点、暗区域的亮点以及亮区域的暗点。</li>
+<li><strong>定位关键点并确定特征方向</strong>：在每个候选的点上，通过一个拟合精细的模型来确定位置和尺度。</li>
+<li><strong>通过各关键点的特征向量</strong>：对特征进行两两比较找出相互匹配的若干对特征点，建立对应关系。</li>
+</ol>
+<h4 id="算法特点-2"><a href="#算法特点-2" class="headerlink" title="算法特点"></a>算法特点</h4><ol>
+<li><strong>具有较好的稳定性和不变性</strong>，能够适应旋转、缩放、亮度的变化，具有较好的鲁棒性；</li>
+<li><strong>区分性好</strong>，能够胸海量数据中进行区分和匹配；</li>
+<li><strong>多量性</strong>，单个物体也能够产生大量特征向量；</li>
+<li><strong>高速性</strong>，能够快速进行特征向量匹配；</li>
+<li><strong>可扩展性</strong>，能够与其他的特征向量进行联合计算。</li>
+<li><strong>可扩展性</strong>，能够与其他的特征向量进行联合计算。</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/%E5%9B%BE%E5%83%8F/"># 图像</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2020/20200527%20%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%EF%BC%88%E6%97%A0%E7%BD%91%E7%BA%BF%E3%80%81%E6%98%BE%E7%A4%BA%E5%B1%8F%E5%92%8C%E9%94%AE%E9%BC%A0%EF%BC%89/">树莓派系统安装及配置（无网线、显示屏和键鼠）</a>
+            
+            
+            <a class="next" rel="next" href="/2020/20200422%20%E8%B0%88%E8%B0%88%E6%88%91%E6%89%80%E8%AE%A4%E4%B8%BA%E7%9A%84%E4%B8%BB%E6%B5%81%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">谈谈我所认为的主流编程语言</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

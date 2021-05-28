@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>用 Python 实现一个可自动识别的文件夹单向同步功能 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">用 Python 实现一个可自动识别的文件夹单向同步功能</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">March 27, 2021</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <blockquote>
+<p><strong>写在前面</strong>：这是我对类 unison 这样猝发式同步工具的一种<strong>复现尝试</strong>；因为我平时主要就是在一个文件夹内进行操作，所以算法更为简单，并没有实现针对单个文件进行处理的双向同步。<br>我如今已经使用了更为高效易用的 FreeFileSync 去进行文件同步和备份操作，该程序已经归档。</p>
+</blockquote>
+<h2 id="为什么我想写这个算法"><a href="#为什么我想写这个算法" class="headerlink" title="为什么我想写这个算法"></a>为什么我想写这个算法</h2><p>在日常生活以及学习中，文件夹同步这一操作自然是必不可少的，一个方便使用的文件同步软件可以很好的对这种进行操作。通过我以前的文章可以了解到，我之前一直都在使用 Unison 来进行本地以及 WSL 不同的文件夹间的同步。而后来由于自己的问题，更换电脑后，由于 Unison 麻烦的配置以及自己对于文件夹同步的想法，我还是想尝试自己写一个文件夹同步的算法。</p>
+<p>文件夹同步的方式有两种，一种是 rsync 那样的单向同步，一种是 Unison 一样的双向同步（Unison 也是基于 rsync 的）；当然我更需要的是双向的，所以这就不由得涉及到了很多的同步问题，最后我还是改成实现一个<strong>自动识别主文件夹的单向同步</strong>，这同样也可以达到双向同步的效果。</p>
+<h2 id="算法细节"><a href="#算法细节" class="headerlink" title="算法细节"></a>算法细节</h2><p>算法很简单，总共分为两个层面。首先是<strong>同步的工具</strong>，我直接使用了 rsync 来进行传输的操作，然后同步两个或多个文件夹即可；第二个部分就是<strong>判断哪个文件夹为同步的主文件夹</strong>，这一部分使用了文件的时间戳作为指纹保存，在同步之后，如果有与保存的指纹不同，则可判定其做了修改，即新文件夹。</p>
+<h4 id="时间戳生成算法"><a href="#时间戳生成算法" class="headerlink" title="时间戳生成算法"></a>时间戳生成算法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">timeset</span>(<span class="params">path, data: <span class="built_in">dict</span>, prefix: <span class="built_in">str</span></span>):</span></span><br><span class="line">    source = os.getcwd()</span><br><span class="line">    path_list = os.listdir(path)</span><br><span class="line">    os.chdir(path)</span><br><span class="line">    <span class="keyword">for</span> n <span class="keyword">in</span> path_list:</span><br><span class="line">        <span class="keyword">if</span> os.path.isfile(n):</span><br><span class="line">            <span class="keyword">if</span> n != <span class="string">&#x27;syncing.json&#x27;</span>:</span><br><span class="line">                data[os.path.join(prefix, n)] = <span class="built_in">int</span>(os.path.getmtime(n))</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            timeset(n, data, os.path.join(prefix, n))</span><br><span class="line">    os.chdir(source)</span><br><span class="line">    <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+<p>而如果在数据中没有指纹，则两个文件夹为新文件夹，此时直接取时间戳最大的文件夹。在判断完哪一个文件夹为同步的主文件夹之后，直接进行 rsync 同步即可。</p>
+<h4 id="算法源码"><a href="#算法源码" class="headerlink" title="算法源码"></a>算法源码</h4><p>当然，为了保证该脚本的可用性，文件地址判定以及信息确认之类的都采用了严谨的写法，从而保证不会出现错误。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sync_folder_local</span>(<span class="params">*args, main=<span class="literal">None</span></span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># WARNING: This function only works correctly with single-folder editing</span></span><br><span class="line">    <span class="comment"># It would have a bug occured when multi folders were edited</span></span><br><span class="line"></span><br><span class="line">    database = load_json(<span class="string">f&#x27;<span class="subst">&#123; os.path.split(os.path.realpath(sys.argv[<span class="number">0</span>]))[<span class="number">0</span>] &#125;</span>/syncing.json&#x27;</span>)</span><br><span class="line">    token = <span class="built_in">str</span>(args)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># if main, then use main mode</span></span><br><span class="line">    <span class="keyword">if</span> main:</span><br><span class="line">        temp = timeset(main, &#123;&#125;, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        database[token] = timeset(main, &#123;&#125;, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">        save_json(database, <span class="string">f&#x27;<span class="subst">&#123; os.path.split(os.path.realpath(sys.argv[<span class="number">0</span>]))[<span class="number">0</span>] &#125;</span>/syncing.json&#x27;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> directory <span class="keyword">in</span> args:</span><br><span class="line">            <span class="keyword">if</span> directory != main:</span><br><span class="line">                os.system(<span class="string">f&quot;sudo rsync -ra --delete --exclude &#x27;syncing.json&#x27; &#x27;<span class="subst">&#123; main &#125;</span>/&#x27; &#x27;<span class="subst">&#123; directory &#125;</span>&#x27;&quot;</span>)</span><br><span class="line">                print((<span class="string">f&quot;| Info |  Syncing &#x27;<span class="subst">&#123; main &#125;</span>&#x27; to &#x27;<span class="subst">&#123; directory &#125;</span>&#x27;&quot;</span>))</span><br><span class="line"></span><br><span class="line">    <span class="comment"># not main mode</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        main = <span class="literal">None</span></span><br><span class="line">        </span><br><span class="line">        <span class="keyword">if</span> token <span class="keyword">in</span> database:  <span class="comment"># token was recorded in database</span></span><br><span class="line">            <span class="keyword">for</span> directory <span class="keyword">in</span> args:</span><br><span class="line">                <span class="keyword">if</span> timeset(directory, &#123;&#125;, <span class="string">&#x27;&#x27;</span>) != database[token]:</span><br><span class="line">                    main = directory</span><br><span class="line">                    <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> main:</span><br><span class="line">                <span class="built_in">input</span>(<span class="string">f&quot;| Info |  The main directory detected is <span class="subst">&#123; main &#125;</span>, proceed? [Enter]&quot;</span>)</span><br><span class="line">                temp = timeset(main, &#123;&#125;, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">                database[token] = timeset(main, &#123;&#125;, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">                save_json(database, <span class="string">f&#x27;<span class="subst">&#123; os.path.split(os.path.realpath(sys.argv[<span class="number">0</span>]))[<span class="number">0</span>] &#125;</span>/syncing.json&#x27;</span>)</span><br><span class="line"></span><br><span class="line">                <span class="keyword">for</span> directory <span class="keyword">in</span> args:</span><br><span class="line">                    <span class="keyword">if</span> directory != main:</span><br><span class="line">                        os.system(<span class="string">f&quot;sudo rsync -ra --delete --exclude &#x27;syncing.json&#x27; &#x27;<span class="subst">&#123; main &#125;</span>/&#x27; &#x27;<span class="subst">&#123; directory &#125;</span>&#x27;&quot;</span>)</span><br><span class="line">                        print(<span class="string">f&quot;| Info |  Syncing &#x27;<span class="subst">&#123; main &#125;</span>&#x27; to &#x27;<span class="subst">&#123; directory &#125;</span>&#x27;&quot;</span>)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                print(<span class="string">&quot;| Info |  The directories were synced.&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">else</span>:  <span class="comment"># token was not recorded in database</span></span><br><span class="line">            time_token = <span class="built_in">float</span>(<span class="string">&#x27;-inf&#x27;</span>)</span><br><span class="line">            <span class="keyword">for</span> directory <span class="keyword">in</span> args:</span><br><span class="line">                time = <span class="built_in">sorted</span>(timeset(directory, &#123;&#125;, <span class="string">&#x27;&#x27;</span>).items(), key=<span class="keyword">lambda</span> x : x[<span class="number">1</span>])[-<span class="number">1</span>][<span class="number">1</span>]</span><br><span class="line">                <span class="keyword">if</span> time &gt; time_token:</span><br><span class="line">                    time_token = time</span><br><span class="line">                    main = directory</span><br><span class="line"></span><br><span class="line">            <span class="built_in">input</span>(<span class="string">f&quot;| Info |  The main directory detected is <span class="subst">&#123; main &#125;</span>, proceed? [Enter]&quot;</span>)</span><br><span class="line"></span><br><span class="line">            temp = timeset(main, &#123;&#125;, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            database[token] = timeset(main, &#123;&#125;, <span class="string">&#x27;&#x27;</span>)</span><br><span class="line">            save_json(database, <span class="string">f&#x27;<span class="subst">&#123; os.path.split(os.path.realpath(sys.argv[<span class="number">0</span>]))[<span class="number">0</span>] &#125;</span>/syncing.json&#x27;</span>)</span><br><span class="line">            </span><br><span class="line">            <span class="keyword">for</span> directory <span class="keyword">in</span> args:</span><br><span class="line">                <span class="keyword">if</span> directory != main:</span><br><span class="line">                    os.system(<span class="string">f&quot;sudo rsync -ra --delete --exclude &#x27;syncing.json&#x27; &#x27;<span class="subst">&#123; main &#125;</span>/&#x27; &#x27;<span class="subst">&#123; directory &#125;</span>&#x27;&quot;</span>)</span><br><span class="line">                    print((<span class="string">f&quot;| Info |  Syncing &#x27;<span class="subst">&#123; main &#125;</span>/&#x27; to &#x27;<span class="subst">&#123; directory &#125;</span>&#x27;&quot;</span>))</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/20210428%20%E3%80%90%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E3%80%91%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/">【算法笔记】布隆过滤器</a>
+            
+            
+            <a class="next" rel="next" href="/2021/20210224%20%E3%80%90%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E3%80%91%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E6%8A%95%E7%A5%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/">【算法笔记】基于用户投票的排序算法</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Allow: /log/
+Allow: /archives/
+Allow: /about/
+Disallow: /assets/

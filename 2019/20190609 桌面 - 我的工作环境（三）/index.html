@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>桌面 - 我的工作环境（三） | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">桌面 - 我的工作环境（三）</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">June 9, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E7%94%9F%E6%B4%BB/">生活</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>作为一个极简主义者，我的所有设备都会一切从简，并且用最少的设备满足最多的需求。</p>
+<p>所以接下来是一个极简主义者打造的电脑。</p>
+<a id="more"></a>
+
+<blockquote>
+<p>我的硬件配置：<strong>New Surface Pro 128GB / 8GB</strong></p>
+</blockquote>
+<h3 id="桌面"><a href="#桌面" class="headerlink" title="桌面"></a>桌面</h3><p>先放一下桌面截图：</p>
+<p><img src="https://zeee.cc/blog/20190609%E6%A1%8C%E9%9D%A2-%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%89%EF%BC%89/1.jpg"></p>
+<p>这就是我的桌面，在一般的情况下，桌面上都只会有一个回收站。而当我有工作或者作业时，我才会<strong>把临时需要频繁使用的文件放在桌面上</strong>（比如 doc、psd、项目文件夹等）。</p>
+<p><strong>任务栏隐藏在右端</strong>，当鼠标移上去时就会弹出：</p>
+<p><img src="https://zeee.cc/blog/20190609%E6%A1%8C%E9%9D%A2-%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%89%EF%BC%89/2.jpg"></p>
+<p>我觉得电脑的桌面就像<strong>现实生活中的桌面</strong>一样，要保持干净齐整。图标快捷方式这些我一般都会放在 Start 里面，频繁使用的会<strong>绑定快捷键</strong>，使用起来不比双击图标来得慢。</p>
+<p>所以，桌面这么简单，就一定会有一套交互逻辑来支撑它，我对于桌面的调整都围绕着这个方面展开。</p>
+<h3 id="Auto-HotKey-AHK"><a href="#Auto-HotKey-AHK" class="headerlink" title="Auto HotKey (AHK)"></a>Auto HotKey (AHK)</h3><p>第一个便是 AHK：</p>
+<p><img src="https://zeee.cc/blog/20190609%E6%A1%8C%E9%9D%A2-%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%89%EF%BC%89/3.png"></p>
+<p>AHK 是一个热键（快捷键）小体量程序，我们可以通过编辑脚本<strong>绑定快捷键</strong>，从而通过键盘快速打开文件或者程序，甚至<strong>执行一段脚本程序</strong>。</p>
+<p>我习惯上会通过热键设置将 Win 键绑定<strong>各种系统的软件及操作</strong>，而 Alt 键绑定<strong>自己常用的软件</strong>。</p>
+<p>网上有很多教程，基本的设置操作也十分简单容易上手。</p>
+<h3 id="PicPick"><a href="#PicPick" class="headerlink" title="PicPick"></a>PicPick</h3><p>第二个是一个截图软件 —— PicPick，可以设置快捷键对应<strong>全屏截图</strong>、<strong>区域截图</strong>、<strong>矩形截图</strong>等等不同的截图操作，而且也可以进行一定程度的图像编辑。</p>
+<p>这个软件比官方的截图工具要好用，而且<strong>相对于其他的截图软件体量要小</strong>。</p>
+<h3 id="Quick-Look"><a href="#Quick-Look" class="headerlink" title="Quick Look"></a>Quick Look</h3><p>这是一个在 GitHub 开源的预览软件，它支持非常多的格式的预览。选中文件并按下空格键便可以用 Quick Look 打开，速度也是十分的快，十分适合<strong>简单的预览</strong>。</p>
+<h3 id="JetBrains-ToolBox"><a href="#JetBrains-ToolBox" class="headerlink" title="JetBrains ToolBox"></a>JetBrains ToolBox</h3><p><img src="https://zeee.cc/blog/20190609%E6%A1%8C%E9%9D%A2-%E6%88%91%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%8E%AF%E5%A2%83%EF%BC%88%E4%B8%89%EF%BC%89/4.jpg"></p>
+<p>这个在前文中介绍过，我用它来管理我的一部分项目以及 J 系的 IDE。</p>
+<h3 id="日常使用优缺点"><a href="#日常使用优缺点" class="headerlink" title="日常使用优缺点"></a>日常使用优缺点</h3><p>通过多个软件的相互配合，我能够在十分便捷地打开各种软件的同时也能够保持桌面的齐整，并随着我自己的需求不断改进，最终形成了我自己的一套系统的操作逻辑以及风格。</p>
+<p>当然这也会导致一个不好的后果，不熟悉的人可能会像在使用另一个操作系统一样，效率直线下降。（借给同学请谨慎）</p>
+<hr>
+<p>终于填完了一个坑，感觉十分舒适。</p>
+<p>Peace.</p>
+<p><img src="https://images.unsplash.com/photo-1559930884-6a0ae6952aad?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2200&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%9D%82%E8%B0%88/"># 杂谈</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190617%20%E4%B8%BA%E7%BD%91%E7%AB%99%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D%E5%B9%B6%E4%B8%94%E6%B7%BB%E5%8A%A0%20SSL%20%E8%AF%81%E4%B9%A6/">为网站设置域名并且添加 SSL 证书</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190619%20Hexo%20%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/">Hexo 博客如何添加图片</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

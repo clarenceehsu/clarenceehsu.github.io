@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>LeetCode Weekly Contest 204 Review | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">LeetCode Weekly Contest 204 Review</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">August 30, 2020</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <a id="more"></a>
+
+<blockquote>
+<p>因为 30 日当天返校，要处理很多事情，所以当天搁置了，此为后来补上的文章。</p>
+</blockquote>
+<h2 id="第一题：重复至少-K-次且长度为-M-的模式"><a href="#第一题：重复至少-K-次且长度为-M-的模式" class="headerlink" title="第一题：重复至少 K 次且长度为 M 的模式"></a>第一题：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/detect-pattern-of-length-m-repeated-k-or-more-times/">重复至少 K 次且长度为 M 的模式</a></h2><p>给你一个正整数数组 <code>arr</code>，请你找出一个长度为 <code>m</code> 且在数组中至少重复 <code>k</code> 次的模式。</p>
+<p>模式 是由一个或多个值组成的子数组（连续的子序列），<strong>连续</strong>重复多次但<strong>不重叠</strong>。 模式由其长度和重复次数定义。</p>
+<p>如果数组中存在至少重复 <code>k</code> 次且长度为 <code>m</code> 的模式，则返回 <code>true</code>，否则返回 <code>false</code>。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：arr &#x3D; [1,2,4,4,4,4], m &#x3D; 1, k &#x3D; 3</span><br><span class="line">输出：true</span><br><span class="line">解释：模式 (4) 的长度为 1 ，且连续重复 4 次。注意，模式可以重复 k 次或更多次，但不能少于 k 次。</span><br></pre></td></tr></table></figure>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>这道题用 Python 的话就是一道秒解题，直接匹配即可。</p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><h4 id="Python"><a href="#Python" class="headerlink" title="Python"></a>Python</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">containsPattern</span>(<span class="params">self, arr: List[<span class="built_in">int</span>], m: <span class="built_in">int</span>, k: <span class="built_in">int</span></span>) -&gt; bool:</span></span><br><span class="line">        i = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(arr):</span><br><span class="line">            p = arr[i:i+m]</span><br><span class="line">            <span class="keyword">if</span> p * k == arr[i:i+m*k]:</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">True</span></span><br><span class="line">            i += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">False</span></span><br></pre></td></tr></table></figure>
+<h2 id="第二题：乘积为正数的最长子数组长度"><a href="#第二题：乘积为正数的最长子数组长度" class="headerlink" title="第二题：乘积为正数的最长子数组长度"></a>第二题：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/maximum-length-of-subarray-with-positive-product/">乘积为正数的最长子数组长度</a></h2><p>给你一个整数数组 <code>nums</code> ，请你求出乘积为正数的最长子数组的长度。</p>
+<p>一个数组的子数组是由原数组中零个或者更多个连续数字组成的数组。</p>
+<p>请你返回乘积为正数的最长子数组长度。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">输入：nums &#x3D; [1,-2,-3,4]</span><br><span class="line">输出：4</span><br><span class="line">解释：数组本身乘积就是正数，值为 24 。</span><br></pre></td></tr></table></figure>
+<h3 id="分析-1"><a href="#分析-1" class="headerlink" title="分析"></a>分析</h3><p>这道题有点贪心算法的影子在里面，为了自己拿数量最大化，所以最好的情况是 <strong>Alice 拿最多的，同时 Bob 必须拿最少的</strong>，所以就依照这个条件来进行遍历求和即可。</p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><h4 id="Python-1"><a href="#Python-1" class="headerlink" title="Python"></a>Python</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxCoins</span>(<span class="params">self, piles: List[<span class="built_in">int</span>]</span>) -&gt; int:</span></span><br><span class="line">        piles.sort()  <span class="comment"># 从小到大排序，方便后续处理</span></span><br><span class="line">        left = <span class="number">0</span></span><br><span class="line">        right = <span class="built_in">len</span>(piles) - <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        <span class="keyword">while</span> left &lt; right:</span><br><span class="line">            <span class="keyword">if</span> right - <span class="number">1</span> &gt;= left:  <span class="comment"># 如果自己还能够拿一份的话，等于是因为自己比 Bob 先拿</span></span><br><span class="line">                count += piles[right - <span class="number">1</span>]  <span class="comment"># 求和</span></span><br><span class="line">                right -= <span class="number">2</span>  <span class="comment"># 我和 Alice 拿完</span></span><br><span class="line">                left += <span class="number">1</span>  <span class="comment"># Bob 拿完</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+<h4 id="C"><a href="#C" class="headerlink" title="C++"></a>C++</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">maxCoins</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; piles)</span> </span>&#123;</span><br><span class="line">        sort(piles.begin(), piles.end(), [](<span class="keyword">int</span> l, <span class="keyword">int</span> r) -&gt; <span class="keyword">bool</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> l &gt; r;</span><br><span class="line">        &#125;);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> anw = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; piles.size()/<span class="number">3</span>; i++) &#123;</span><br><span class="line">            anw += piles[i*<span class="number">2</span>+<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> anw;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="第三题：查找大小为-M-的最新分组"><a href="#第三题：查找大小为-M-的最新分组" class="headerlink" title="第三题：查找大小为 M 的最新分组"></a>第三题：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/find-latest-group-of-size-m/">查找大小为 M 的最新分组</a></h2><p>给你一个数组 <code>arr</code>，该数组表示一个从 <code>1</code> 到 <code>n</code> 的数字排列。有一个长度为 <code>n</code> 的二进制字符串，该字符串上的所有位最初都设置为 <code>0</code> 。</p>
+<p>在从 <code>1</code> 到 <code>n</code> 的每个步骤 <code>i</code> 中（假设二进制字符串和 <code>arr</code> 都是从 <code>1</code> 开始索引的情况下），二进制字符串上位于位置 <code>arr[i]</code> 的位将会设为 <code>1</code> 。</p>
+<p>给你一个整数 <code>m</code> ，请你找出二进制字符串上存在长度为 <code>m</code> 的一组 <code>1</code> 的最后步骤。一组 <code>1</code> 是一个连续的、由 <code>1</code> 组成的子串，且左右两边不再有可以延伸的 <code>1</code> 。</p>
+<p>返回存在长度<strong>恰好</strong>为 <code>m</code> 的<strong>一组 <code>1</code></strong> 的最后步骤。如果不存在这样的步骤，请返回 <code>-1</code> 。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">输入：arr &#x3D; [3,5,1,2,4], m &#x3D; 1</span><br><span class="line">输出：4</span><br><span class="line">解释：</span><br><span class="line">步骤 1：&quot;00100&quot;，由 1 构成的组：[&quot;1&quot;]</span><br><span class="line">步骤 2：&quot;00101&quot;，由 1 构成的组：[&quot;1&quot;, &quot;1&quot;]</span><br><span class="line">步骤 3：&quot;10101&quot;，由 1 构成的组：[&quot;1&quot;, &quot;1&quot;, &quot;1&quot;]</span><br><span class="line">步骤 4：&quot;11101&quot;，由 1 构成的组：[&quot;111&quot;, &quot;1&quot;]</span><br><span class="line">步骤 5：&quot;11111&quot;，由 1 构成的组：[&quot;11111&quot;]</span><br><span class="line">存在长度为 1 的一组 1 的最后步骤是步骤 4 。</span><br></pre></td></tr></table></figure>
+<h3 id="分析-2"><a href="#分析-2" class="headerlink" title="分析"></a>分析</h3><p>一开始我直接按着描述，又写了一个典型的超时例子：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findLatestStep</span>(<span class="params">self, arr: List[<span class="built_in">int</span>], m: <span class="built_in">int</span></span>) -&gt; int:</span></span><br><span class="line">        count = <span class="number">0</span></span><br><span class="line">        numstr = <span class="string">&#x27;0&#x27;</span> * <span class="built_in">len</span>(arr)</span><br><span class="line">        <span class="keyword">for</span> n <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(arr)):</span><br><span class="line">            numstr = numstr[:arr[n] - <span class="number">1</span>] + <span class="string">&#x27;1&#x27;</span> + numstr[arr[n]:]</span><br><span class="line">            temp = numstr.split(<span class="string">&#x27;0&#x27;</span>)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;1&#x27;</span> * m <span class="keyword">in</span> temp:</span><br><span class="line">                count = n + <span class="number">1</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> count == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> count</span><br></pre></td></tr></table></figure>
+<p>后来找到了另一种解决方法，就是<strong>把原来的列表反过来匹配</strong>，这样速度会更快；相当于每一次从列表中把一个 1 变为 0，然后每次变换都检查一遍即可。</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><h4 id="Python-2"><a href="#Python-2" class="headerlink" title="Python"></a>Python</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">findLatestStep</span>(<span class="params">self, arr: List[<span class="built_in">int</span>], m: <span class="built_in">int</span></span>) -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> m == <span class="built_in">len</span>(arr):</span><br><span class="line">            <span class="keyword">return</span> m</span><br><span class="line">        l = [<span class="number">0</span>, <span class="built_in">len</span>(arr) + <span class="number">1</span>]</span><br><span class="line">        <span class="keyword">for</span> i, t <span class="keyword">in</span> <span class="built_in">enumerate</span>(arr[::-<span class="number">1</span>]):</span><br><span class="line">            idx = bisect.bisect(l, t)  <span class="comment"># 利用 bisect 找到插入位置</span></span><br><span class="line">            l.insert(idx, t)</span><br><span class="line">            <span class="keyword">if</span> l[idx + <span class="number">1</span>] - l[idx] - <span class="number">1</span> == m <span class="keyword">or</span> l[idx] - l[idx-<span class="number">1</span>] - <span class="number">1</span> == m:</span><br><span class="line">            <span class="comment"># 满足条件即最后一个，可直接返回</span></span><br><span class="line">                <span class="keyword">return</span> <span class="built_in">len</span>(arr) - i - <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h4 id="C-1"><a href="#C-1" class="headerlink" title="C++"></a>C++</h4><p>C++ 因为时间问题，就没有写了。</p>
+<h2 id="第四题：石子游戏-V"><a href="#第四题：石子游戏-V" class="headerlink" title="第四题：石子游戏 V"></a>第四题：<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/stone-game-v/">石子游戏 V</a></h2><p>几块石子<strong>排成一行</strong>，每块石子都有一个关联值，关联值为整数，由数组 <code>stoneValu</code>e 给出。</p>
+<p>游戏中的每一轮：Alice 会将这行石子分成两个<strong>非空行</strong>（即，左侧行和右侧行）；Bob 负责计算每一行的值，即此行中所有石子的值的总和。Bob 会丢弃值最大的行，Alice 的得分为剩下那行的值（每轮累加）。如果两行的值相等，Bob 让 Alice 决定丢弃哪一行。下一轮从剩下的那一行开始。</p>
+<p>只<strong>剩下一块石子</strong>时，游戏结束。Alice 的分数最初为 <code>0</code> 。</p>
+<p>返回<strong>Alice 能够获得的最大分数</strong>。</p>
+<p>示例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">输入：stoneValue &#x3D; [6,2,3,4,5,5]</span><br><span class="line">输出：18</span><br><span class="line">解释：在第一轮中，Alice 将行划分为 [6，2，3]，[4，5，5] 。左行的值是 11 ，右行的值是 14 。Bob 丢弃了右行，Alice 的分数现在是 11 。</span><br><span class="line">在第二轮中，Alice 将行分成 [6]，[2，3] 。这一次 Bob 扔掉了左行，Alice 的分数变成了 16（11 + 5）。</span><br><span class="line">最后一轮 Alice 只能将行分成 [2]，[3] 。Bob 扔掉右行，Alice 的分数现在是 18（16 + 2）。游戏结束，因为这行只剩下一块石头了。</span><br></pre></td></tr></table></figure>
+<h3 id="分析-3"><a href="#分析-3" class="headerlink" title="分析"></a>分析</h3><p>这一道题没有做出来，自己一开始的想法就想错了（还是太菜了），我用 DFS 发现做不出结果，最后看了大家的代码发现应该使用 DP 去求解（逃）。</p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><h4 id="Python-3"><a href="#Python-3" class="headerlink" title="Python"></a>Python</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.setrecursionlimit(<span class="number">999999999</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">stoneGameV</span>(<span class="params">self, stoneValue: List[<span class="built_in">int</span>]</span>) -&gt; int:</span></span><br><span class="line">        n = <span class="built_in">len</span>(stoneValue)</span><br><span class="line">        S = [val <span class="keyword">for</span> val <span class="keyword">in</span> stoneValue]</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n):</span><br><span class="line">            S[i] += S[i - <span class="number">1</span>]</span><br><span class="line"></span><br><span class="line"><span class="meta">        @lru_cache(<span class="params">typed=<span class="literal">False</span>, maxsize=<span class="number">128000000</span></span>)</span></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">dp</span>(<span class="params">i, j</span>):</span></span><br><span class="line">            <span class="keyword">if</span> i == j:</span><br><span class="line">                <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line">            start_val = <span class="number">0</span> <span class="keyword">if</span> i == <span class="number">0</span> <span class="keyword">else</span> S[i - <span class="number">1</span>]</span><br><span class="line">            total = S[j] - start_val</span><br><span class="line"></span><br><span class="line">            ans = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span> mid <span class="keyword">in</span> <span class="built_in">range</span>(i, j):</span><br><span class="line">                part1 = S[mid] - start_val</span><br><span class="line">                part2 = total - part1</span><br><span class="line"></span><br><span class="line">                tmp = <span class="literal">None</span></span><br><span class="line">                <span class="keyword">if</span> part1 &lt; part2:</span><br><span class="line">                    tmp = part1 + dp(i, mid)</span><br><span class="line">                <span class="keyword">elif</span> part1 &gt; part2:</span><br><span class="line">                    tmp = part2 + dp(mid + <span class="number">1</span>, j)</span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    tmp = <span class="built_in">max</span>( part1 + dp(i, mid), part2 + dp(mid + <span class="number">1</span>, j) )</span><br><span class="line"></span><br><span class="line">                ans = <span class="built_in">max</span>(ans, tmp)</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> ans</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> dp(<span class="number">0</span>, n - <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="C-2"><a href="#C-2" class="headerlink" title="C++"></a>C++</h4><p>C++ 因为时间问题，就没有写了。</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/LeetCode/"># LeetCode</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/20210107%20%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E4%BD%BF%E7%94%A8%20WSL2/">如何优雅地使用 WSL2</a>
+            
+            
+            <a class="next" rel="next" href="/2020/20200823%20LeetCode%20Weekly%20Contest%20203%20Review/">LeetCode Weekly Contest 203 Review</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

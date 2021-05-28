@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>从零开始做 Jarvis——基于 Python 的智能语音管家（一） | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">从零开始做 Jarvis——基于 Python 的智能语音管家（一）</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">May 21, 2019</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>让我们用 Python 去做一个 Jarvis 吧！</p>
+<p>这一部分主要是先前的大体介绍，而且由于这是我利用课余时间而作，所以相对于其他的项目而言进度可能并不会特别及时，更新缓慢且随缘。</p>
+<a id="more"></a>
+
+<h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>先简单地做一下项目介绍。</p>
+<p>在一次比赛现场与朋友攀谈，并由此激发了一个一直存于我内心的想法——做出像钢铁侠的 Jarvis 一般的智能助手。它能够在日常生活和工作学习中为我及时提供建议以及我所需要的信息，还能够帮我管理我的社交网络以及我的各种数码设备等等。</p>
+<p><img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1317591883,1645244105&fm=26&gp=0.jpg"></p>
+<p>当时与朋友聊完这个宏大愿景后，我便留下了不学无术的泪水（毕竟能力有限 TAT）。所以结合目前的状况，我简单地对其可行性进行了进一步的思考和完善。</p>
+<p>其实，从技术上实现一个在生活辅助方面的智能语音助手并不难。而现有的产品之所以功能并非如此强大，更多是公司的<strong>商业考量</strong>和<strong>对用户隐私的保护</strong>。</p>
+<p><img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1558451577533&di=0f1bb90a90ae41ea54be624fd7d34fb9&imgtype=0&src=http://d.ifengimg.com/q100/img1.ugc.ifeng.com/newugc/20180801/9/wemedia/df8979e065d9f3efb2b4c9ed9560b506c2d7aff0_size396_w1800_h1200.jpg"></p>
+<h2 id="所以，怎么做？"><a href="#所以，怎么做？" class="headerlink" title="所以，怎么做？"></a>所以，怎么做？</h2><p>迫于技术上的压力，我目前的<strong>暂时性目标</strong>，是做出一个“<strong>简易版</strong>”的 Jarvis。它离真正的“人工智能”有着一定的距离，定位是一个在日常的工作和学习中能够帮得上忙的（至少比我手机上的小爱要来的有用的）“<strong>智能程序</strong>”。</p>
+<p>所以围绕着这个，我产生了以下的想法：</p>
+<ul>
+<li>首先要做到的是我们的 Jarvis 能够对我们说的话有<strong>基本的反应行为</strong>，比如查查天气、问些问题、聊聊天，诸如此类。其次便是一些高级的操作，比如随时检索我们彼时工作或者学习等方面所需要的任何信息；根据我们的情况作出合理的决策；跨设备交互和智能的设备控制和管理等等。</li>
+</ul>
+<p>然后便是怎么做？截至我写作的时间，由于我的 <code>Python</code> 方面做过的项目比较多，所以选择了 <code>Python</code> 作为主要语言。</p>
+<ul>
+<li>从结构上来看，我们如果要实现一个闭环，就需要做到<strong>语音识别</strong>，<strong>NLP</strong>，<strong>信息处理和分析</strong>，<strong>语音（或者画面）反馈</strong>。由于我有着 Jarvis 情怀，所以我会倾向于先完成语音部分的反馈环节。</li>
+</ul>
+<p>至此，我们完成了整个项目的大致框架，显然，我们后续的程序框架以及整体思路也会依照这个来展开。</p>
+<p><strong>下一个部分，我会介绍语音识别部分实现。</strong></p>
+<p>Peace.</p>
+<p><img src="https://images.unsplash.com/photo-1558417942-4aca90f81642?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2042&q=80"></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/Jarvis/"># Jarvis</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2019/20190522%20%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A%20Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E%20Python%20%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/">从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别</a>
+            
+            
+            <a class="next" rel="next" href="/2019/20190206%20%E8%A7%A3%E5%86%B3%20Xshell%20%E4%B8%AD%20jobs%20%E5%91%BD%E4%BB%A4%E4%B8%8D%E6%98%BE%E7%A4%BA%E5%90%8E%E5%8F%B0%E4%BB%BB%E5%8A%A1/">解决 Xshell 中 jobs 命令不显示后台任务</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="Zeesain Tsui">
+
+
+
+    <meta name="description" content="大梦初醒啊。">
+
+
+
+<title>【算法笔记】动态规划 &amp; 二分搜索法 | Zeesain Tsui</title>
+
+
+
+    <link rel="icon" href="/image/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+    MathJax.Hub.Config({
+        CommonHTML: {
+          scale: 95
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+<meta name="generator" content="Hexo 5.3.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">Zeesain Tsui</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">Zeesain Tsui</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/">首页</a>
+                
+                    <a class="menu-item" href="/archives">博客</a>
+                
+                    <a class="menu-item" href="/category">索引</a>
+                
+                    <a class="menu-item" href="/log">日志</a>
+                
+                    <a class="menu-item" href="/pic">图库</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">【算法笔记】动态规划 &amp; 二分搜索法</h1>
+            
+                <div class="post-meta">
+                    <!-- 
+                        Author: <a itemprop="author" rel="author" href="/">Zeesain Tsui</a>
+                     -->
+
+                    
+                        <span class="post-time">
+                        <a href="#">January 22, 2021</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                        &nbsp;&nbsp;
+                        
+                            <a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a>
+                        
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p><strong>动态规划（DP, Dynamic Programming）</strong>由于需要对问题进行抽象拆分，然后化简，因此具有一定的难度和乐趣。它属于一种算法设计的技巧，即<strong>对暴力遍历中的各种情况（重叠子问题）进行合理地剪枝</strong>，从而达到<strong>减小时间复杂度</strong>的目标。</p>
+<p>动态规划的一般流程为：<strong>递归的暴力解法 → 带备忘录的递归解法 → 非递归的动态规划解法</strong>。也就是说，平时使用动态规划的方法来解决一个特定的问题时，并不是一蹴而就的，而是从暴力的问题出发进行一步步优化而来的。</p>
+<p>此外，本文除了会对动态规划及其相关的应用进行阐述之外，还会介绍对动态规划问题进行优化的<strong>二分搜索法</strong>。</p>
+<blockquote>
+<p>一个问题是该用递推、贪心、搜索还是动态规划，完全是由<strong>这个问题本身阶段间状态的转移方式</strong>决定的。</p>
+</blockquote>
+<h2 id="缓存、重叠子问题、记忆化"><a href="#缓存、重叠子问题、记忆化" class="headerlink" title="缓存、重叠子问题、记忆化"></a>缓存、重叠子问题、记忆化</h2><p>以 Fibonacci 数列为例，直接写出来的代码是这样的：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">fib</span>(<span class="params">n:<span class="built_in">int</span></span>) -&gt; int:</span></span><br><span class="line">    <span class="keyword">if</span> n == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">    <span class="keyword">elif</span> n == <span class="number">1</span> <span class="keyword">or</span> n == <span class="number">2</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> fib(n - <span class="number">1</span>) + fib(n - <span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+<p>这是使用了递归的 Fibonacci 数列求解算法。因为是递归，所以该解法中一定会存在着重复部分，计算机还是会傻傻地对其重新计算一次，这便是需要进行优化剪枝的<strong>重叠子问题</strong>。我们可以在计算 <code>fib(n)</code> 之后，使用 LRU Cache 或者创建一个列表来把 <code>fib(n)</code> 给缓存起来，这样就可以避免对其进行重复运算，从而节省时间。</p>
+<p>这便是动态规划最基本的运用，即通过一张表作为“<strong>备忘录</strong>”，从而减少递归的次数。</p>
+<blockquote>
+<p>原本暴力求解的时间复杂度为 $O(n^2)$，经过优化后的时间复杂度仅为 $O(n)$。但是空间复杂度增大为了 $O(n)$，这本质上就是一个空间换时间的过程。</p>
+</blockquote>
+<h2 id="举个例子"><a href="#举个例子" class="headerlink" title="举个例子"></a>举个例子</h2><p>下面用几个例子来归纳动态规划的原理：</p>
+<h4 id="凑零钱问题：「322-零钱兑换」"><a href="#凑零钱问题：「322-零钱兑换」" class="headerlink" title="凑零钱问题：「322.零钱兑换」"></a>凑零钱问题：「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/coin-change/">322.零钱兑换</a>」</h4><p>这一题其实可以通过递归的方法来解决，但是自从 LeetCode 改了测试集之后，递归解法就一定会超时（无论如何神优化都会超），所以只得从 DP 来入手。此题和背包问题一致，即求<strong>在固定的容量下能够装得下的最小（最大）数量</strong>。方法在于通过一个 DP Table 的形式来对最小硬币数量来进行记录，首先需要分析它的转移方程，当容量为 1（<code>amount == 1</code>）时的最优值一致往下推，等于 2 等于 3 等于 4……，最后等于 <code>amount</code> 的时候便可以得出最终的结果了。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">coinChange</span>(<span class="params">self, coins: List[<span class="built_in">int</span>], amount: <span class="built_in">int</span></span>) -&gt; int:</span></span><br><span class="line">        dp = [<span class="built_in">float</span>(<span class="string">&quot;inf&quot;</span>)] * (amount + <span class="number">1</span>)  <span class="comment"># 初始的 DP Table</span></span><br><span class="line">        dp[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, amount + <span class="number">1</span>):  <span class="comment"># 从 1 到 amount 递推</span></span><br><span class="line">            <span class="keyword">for</span> coin <span class="keyword">in</span> coins:</span><br><span class="line">                <span class="keyword">if</span> coin &lt;= i <span class="keyword">and</span> dp[i - coin] + <span class="number">1</span> &lt; dp[i]:  <span class="comment"># 如果 coin 满足要求，则进行兑换；&lt; dp[i] 是因为要求最小值，小则进行替换</span></span><br><span class="line">                    dp[i] = dp[i - coin] + <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> dp[amount] <span class="keyword">if</span> dp[amount] != <span class="built_in">float</span>(<span class="string">&quot;inf&quot;</span>) <span class="keyword">else</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<h4 id="最长递增子序列（LIS-Longest-Increasing-Subsequence）问题：「300-最长递增子序列」"><a href="#最长递增子序列（LIS-Longest-Increasing-Subsequence）问题：「300-最长递增子序列」" class="headerlink" title="最长递增子序列（LIS, Longest Increasing Subsequence）问题：「300. 最长递增子序列」"></a>最长递增子序列（LIS, Longest Increasing Subsequence）问题：「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/longest-increasing-subsequence/">300. 最长递增子序列</a>」</h4><p>从动态规划的角度出发，首先对该问题进行化简；当前点与前面的点所组成的数组所对应的最长递增子序列，取决于前面的数字中能够与该点一起形成最长子序列的最大长度。所以可以得出状态转移方程（文字叙述）：<strong>每一个点对应的最长递增子序列的长度 = max(前面比该点小的点对应的最长递增子序列的长度) + 1</strong>，之所以要取 <code>max()</code> 是因为要求最长的子序列，然后新开辟一个数组空间（设为 <code>temp</code>）用来记录<strong>当前点与前面的数字组成的数列</strong>所对应的最长子序列即可。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lengthOfLIS</span>(<span class="params">self, nums: List[<span class="built_in">int</span>]</span>) -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> nums:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        length = <span class="built_in">len</span>(nums)</span><br><span class="line">        dp = [<span class="number">1</span>] * length  <span class="comment"># DP Table</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(length):</span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i):</span><br><span class="line">                <span class="keyword">if</span> nums[j] &lt; nums[i]:</span><br><span class="line">                    dp[i] = <span class="built_in">max</span>(dp[i], dp[j] + <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(dp)  <span class="comment"># 返回最长的的子序列长度</span></span><br></pre></td></tr></table></figure>
+<p>其实这样还是不够快，因为从代码的结构中可以看出，两层 <code>for</code> 里面没有任何剪枝条件，时间基本上会顶满 $O(n^2)$。</p>
+<p>当然，对于这种情况还有优化的算法，便是<strong>二分搜索法</strong>（时间复杂度为 $O(n\log_2n)$）。这种方法属于不做一次根本想不到的方法，并且结果——为什么输出这个就是答案了——也涉及一定的数学证明，需要一定时间推敲。本文不会涉及相关内容，只是简单对该算法进行介绍作为拓展，平时使用动态规划进行解题足够。</p>
+<p>代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">lengthOfLIS</span>(<span class="params">self, nums: [<span class="built_in">int</span>]</span>) -&gt; int:</span></span><br><span class="line">        tails, res = [<span class="number">0</span>] * <span class="built_in">len</span>(nums), <span class="number">0</span>  <span class="comment"># base case</span></span><br><span class="line">        <span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">            i, j = <span class="number">0</span>, res</span><br><span class="line">            <span class="keyword">while</span> i &lt; j:  <span class="comment"># 二分查找</span></span><br><span class="line">                m = (i + j) // <span class="number">2</span></span><br><span class="line">                <span class="keyword">if</span> tails[m] &lt; num: i = m + <span class="number">1</span> <span class="comment"># 如果要求非严格递增，将此行 &#x27;&lt;&#x27; 改为 &#x27;&lt;=&#x27; 即可。</span></span><br><span class="line">                <span class="keyword">else</span>: j = m</span><br><span class="line">            tails[i] = num</span><br><span class="line">            <span class="keyword">if</span> j == res: res += <span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> res</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>LeetCode 用了一些比较阴间的样例来测试，所以直接使用动态规划算法的时间（3600+ ms）会明显长于二分查找法 + 动态规划的时间（60+ ms）。</p>
+</blockquote>
+<h4 id="「354-俄罗斯套娃信封问题」"><a href="#「354-俄罗斯套娃信封问题」" class="headerlink" title="「354. 俄罗斯套娃信封问题」"></a>「<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/russian-doll-envelopes/">354. 俄罗斯套娃信封问题</a>」</h4><p>这一道问题看起来有些复杂，其实可以对信件的宽先进行排序，排序之后就会发现其实就是对高求解<strong>最长递增子序列（LIS, Longest Increasing Subsequence）问题</strong>。</p>
+<p><strong>纯动态规划</strong>的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxEnvelopes</span>(<span class="params">self, envelopes: List[List[<span class="built_in">int</span>]]</span>) -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> envelopes:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(envelopes)</span><br><span class="line">        envelopes.sort(key=<span class="keyword">lambda</span> x:(x[<span class="number">0</span>], -x[<span class="number">1</span>]))  <span class="comment"># 注意这里，第一个元素升序排列，第二个元素降序排列</span></span><br><span class="line">        dp = [<span class="number">1</span>] * n</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n):  <span class="comment"># 对第二个元素进行 LIS 求解</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> <span class="built_in">range</span>(i):</span><br><span class="line">                <span class="keyword">if</span> envelopes[i][<span class="number">1</span>] &gt; envelopes[j][<span class="number">1</span>]:</span><br><span class="line">                    dp[i] = <span class="built_in">max</span>(dp[i], dp[j]+<span class="number">1</span>)</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">max</span>(dp)</span><br></pre></td></tr></table></figure>
+<p>名字是套娃问题，实际上也就是套娃问题，只需要<strong>注意同宽的情况下降序排列即可</strong>（注释处）。</p>
+<p>第二个方法是<strong>二分查找法 + 动态规划</strong>，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">maxEnvelopes</span>(<span class="params">self, envelopes: List[List[<span class="built_in">int</span>]]</span>) -&gt; int:</span></span><br><span class="line">        <span class="keyword">if</span> <span class="keyword">not</span> envelopes:</span><br><span class="line">            <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line">        n = <span class="built_in">len</span>(envelopes)</span><br><span class="line">        envelopes.sort(key=<span class="keyword">lambda</span> x:(x[<span class="number">0</span>], -x[<span class="number">1</span>]))</span><br><span class="line">        arr=[envelopes[<span class="number">0</span>][<span class="number">1</span>]]</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">def</span> <span class="title">bin_search</span>(<span class="params">target</span>):</span></span><br><span class="line">            l, r = <span class="number">0</span>, <span class="built_in">len</span>(arr) - <span class="number">1</span></span><br><span class="line">            <span class="keyword">while</span> l &lt;= r:</span><br><span class="line">                mid = l + (r - l) // <span class="number">2</span></span><br><span class="line">                <span class="keyword">if</span> arr[mid] == target:</span><br><span class="line">                    <span class="keyword">return</span> mid</span><br><span class="line">                <span class="keyword">elif</span> arr[mid] &lt; target:</span><br><span class="line">                    l = mid + <span class="number">1</span></span><br><span class="line">                <span class="keyword">else</span>:</span><br><span class="line">                    r = mid - <span class="number">1</span></span><br><span class="line">            <span class="keyword">return</span> l</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, n):</span><br><span class="line">            w, h = envelopes[i]</span><br><span class="line">            index = bin_search(h)</span><br><span class="line">            <span class="keyword">if</span> index == <span class="built_in">len</span>(arr):</span><br><span class="line">                arr.append(h)</span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                arr[index] = h</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">len</span>(arr)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>同样，这一道题 LeetCode 也放了对纯 DP 不友好的阴间样例，所以只使用 DP 的话会比 DP + 二分查找优化要慢很多。</p>
+</blockquote>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Zeesain Tsui</span>
+                    </p>
+                
+                
+                
+                    <p class="copyright-item">
+                        <span></span>
+                        <span>Copyright (c) 2020 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%8A%80%E6%9C%AF/"># 技术</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95/"># 算法</a>
+                    
+                        <a href="/tags/LeetCode/"># LeetCode</a>
+                    
+                        <a href="/tags/%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/"># 算法笔记</a>
+                    
+                        
+                </span>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/2021/20210210%20%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8%20Obsidian%20%E6%90%AD%E5%BB%BA%E5%86%85%E5%AE%B9%E5%BA%93/">为什么使用 Obsidian 搭建内容库</a>
+            
+            
+            <a class="next" rel="next" href="/2021/20210121%20The%20Awakening%20of%20Feminism/">The Awakening of Feminism</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 2020 By Zeesain Tsui with ❤</span>
+    </div>
+</footer>
+
+
+<!-- <script type="text/javascript" color="0,0,0" opacity='0.4' zIndex="-2" count="100" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script> -->
+
+    </div>
+</body>
+</html>
