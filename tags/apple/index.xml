@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Apple on Zee Tsui</title>
+    <link>/tags/apple/</link>
+    <description>Recent content in Apple on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 01 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/apple/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【瞎扯 4】苹果新品发布会 | 平板笔记本会不会合并？</title>
+      <link>/posts/2021/20210501-%E7%9E%8E%E6%89%AF-4%E8%8B%B9%E6%9E%9C%E6%96%B0%E5%93%81%E5%8F%91%E5%B8%83%E4%BC%9A-_-%E5%B9%B3%E6%9D%BF%E7%AC%94%E8%AE%B0%E6%9C%AC%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%90%88%E5%B9%B6/</link>
+      <pubDate>Sat, 01 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210501-%E7%9E%8E%E6%89%AF-4%E8%8B%B9%E6%9E%9C%E6%96%B0%E5%93%81%E5%8F%91%E5%B8%83%E4%BC%9A-_-%E5%B9%B3%E6%9D%BF%E7%AC%94%E8%AE%B0%E6%9C%AC%E4%BC%9A%E4%B8%8D%E4%BC%9A%E5%90%88%E5%B9%B6/</guid>
+      <description>最近在科技圈最为热门的就是苹果的新品发布会了，这次主要发布了以下几件产品，下面来展开介绍，顺便阐释一下自己的观点。
+紫色 iPhone 12/12 mini &amp;amp; Apple TV 4K 一个是因为市场表现而进行的颜色更新，一个是常规的升级迭代，这里就不过多赘述了。
+iPad Pro iPad Pro 的升级可以说来了一记重锤——把地表最强 ARM 芯片 M1 直接下放到了平板上，让平板这一级别的设备也有了桌面端的强大算力。不过考虑到 M1 芯片就是以前 A 系列的换名升级（可能是为了突出统一的硬件环境）然后添加了片载内存和提高了性能等，所以这一操作并不会太出人意料，就是感觉有点早。
+目前的缺陷肯定有，因为平板的电源管理比较激进，M1 肯定不能像 MBP 那样 43W 满载运行，所以性能肯定是会差上一截的。另外，最拉胯的毫无疑问就是 iPadOS 系统，这个系统真的乏善可陈——娱乐体验顶天但生产力不足——甚至我觉得这个系统就应该改名为爱奇艺系统（狗头）。软件环境以及系统特色的桎梏让目前的 iPad 生产力只能满足轻度的文字处理、视频剪辑、美术绘画等工作，而软件开发、重度视频处理、科学分析建模之类的就几乎没有用武之地。
+但这并不意味着我就是在唱衰 iPad 了，因为 M1 让硬件环境实现了统一，这就意味着将来 MacOS 上运行的（ARM 或者 Rossetta 转译）工具都能够在平板上正常运行。不过，正如 MKBHD 所说的那样，最好还是别因为将来可能出现的软件生态而去盲目超前购买这类硬件。毕竟现在苹果的 ARM 生态还算不上完整、bug 也十分多，如果为了生产力还是老老实实用上自己熟悉的硬件环境吧（尤其是理工科）。
+新款 iMac 新款的 iMac 厚度已经与日常常见的显示屏无异，再也不用在发布会上侧着放了（笑）。有人吐槽它的下巴还是和以前的一样厚，但我觉得苹果也是有合理性在的。一个是为了保持以前的 ID 设计——如果没了下巴，那么正面辨识度就不会像现在的设计那般明显了。第二个原因就是为了缩减厚度而做的妥协，毕竟外置电源都整出来了，可见苹果对厚度设计上的要求。把元器件全部堆叠在屏幕后方其实也十分合理，但是可能就没有现在来得那么惊艳。“有传承感”这样的出发点在苹果身上也是十分常见的，因此我更倾向于前者。
+AirTag 防丢追踪器 AirTag 简直就是在背后摆了 Tile 一道，一样的功能和实现方式加上了苹果官方的 Buff 后可以说直接断掉了 Tile 的后路。哪怕苹果并没有和 Tile 竞争的欲望，但强大的生态体系和 builtin 的舒适的体验绝对会让绝大部分的 Tile 用户倒戈——除非 AirTag 翻车。</description>
+    </item>
+    
+  </channel>
+</rss>

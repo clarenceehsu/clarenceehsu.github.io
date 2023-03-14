@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>NLP on Zee Tsui</title>
+    <link>/tags/nlp/</link>
+    <description>Recent content in NLP on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 03 Mar 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/nlp/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ASC20 比赛记录 - 3</title>
+      <link>/posts/2020/20200303-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-3/</link>
+      <pubDate>Tue, 03 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200303-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-3/</guid>
+      <description>ASC20 比赛因为疫情的原因，proposal 的提交延期了一个多月，所以中间我也休息了一段时间。最近随着诸多工作的完成，ASC 20 的比赛之旅也渐渐到了尾声。
+题目 这一次的赛题是有关 NLP 方向的，要在只使用 Pytorch 框架的情况下完成 Cloze 下游任务的设计，并且以准确率作为最终的分数计算。
+主办方并未提供 baseline，只提供了数据集，格式为 json，具体如下：
+{ &amp;#39;article&amp;#39;: &amp;#39;...&amp;#39;, &amp;#39;options&amp;#39;: [[words * 4] * 20], &amp;#39;answers&amp;#39;: [&amp;#39;A&amp;#39;,&amp;#39;B&amp;#39;... * 20] } 目前的进展及思路 在之前的训练的过程中出现了一个比较恼人的问题，最早我采用的是 4 分类，但是网络会出现不收敛的问题，我尝试了许多的手段（正如之前所提到的那样）也是没有办法去解决。后来经过检查和与师兄的讨论才发现作 4 分类本身就比较难作拟合——可能根本就没有拟合，毕竟样本太少，每一部分的文字又太多，导致 embedding 出来的矩阵差距较小。
+后来采用了 2 分类效果就好了很多，因此目前训练的成果已经成功追上了 1 队。而且由于 Transformers 在训练的时候能够自动判断 GPU 的环境使用分布式训练，所以还是很顺畅地做了分布式训练。</description>
+    </item>
+    
+    <item>
+      <title>ASC20 比赛记录 - 2</title>
+      <link>/posts/2020/20200208-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-2/</link>
+      <pubDate>Sat, 08 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200208-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-2/</guid>
+      <description>ASC20 比赛已经到了中段，是时候给最近的工作做一下总结了。
+题目 这一次的赛题是有关 NLP 方向的，要在只使用 Pytorch 框架的情况下完成 Cloze 下游任务的设计，并且以准确率作为最终的分数计算。
+主办方并未提供 baseline，只提供了数据集，格式为 json，具体如下：
+{ &amp;#39;article&amp;#39;: &amp;#39;...&amp;#39;, &amp;#39;options&amp;#39;: [[words * 4] * 20], &amp;#39;answers&amp;#39;: [&amp;#39;A&amp;#39;,&amp;#39;B&amp;#39;... * 20] } 目前的进展及思路 之前所尝试过的预先填词的方法可行性不高，所以只能够将所有的词填进去。我们的算法是以每个空的四个选项去生成四句话，如果出现了一句话多个空的情况，则留空不填，然后以此生成了总共空数 * [ 4, 预填空句子 ] 的矩阵。
+然后就得提取特征了，用 BERT 的预训练模型 bert-base-uncased 生成向量矩阵，其中每一句话都会生成一个 [1, 768] 的向量，然后存入 .npy 文件中。把答案的 ABCD 转换为 [1, 4] 的 onehot 向量，也存入另一个 .npy 文件中，供后面训练使用。
+训练我们使用的是 BiLSTM + Attention Net，通过注意力机制来提高准确率。
+存在问题 目前训练了几波，存在这一些问题：
+out of memory 这个是老生常谈的问题了，主要的原因是 batch_size 设置得过大，从而导致显存使用过高。第二个是未终止之前的训练过程，之前通过 nohup 等手段运行的训练不会自动退出，需要主动 kill 掉。</description>
+    </item>
+    
+    <item>
+      <title>如何利用 BERT 提取句向量</title>
+      <link>/posts/2020/20200118-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8-bert-%E6%8F%90%E5%8F%96%E5%8F%A5%E5%90%91%E9%87%8F/</link>
+      <pubDate>Sat, 18 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200118-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8-bert-%E6%8F%90%E5%8F%96%E5%8F%A5%E5%90%91%E9%87%8F/</guid>
+      <description>BERT 在 NLP 方向中是一个十分具有里程碑的模型，那么如何通过 BERT 提取一个句子的句向量呢？
+网络上的资料还是很多的，由于比赛要求只使用 Pytorch 框架，所以很多基于 TF 的教程和库就没办法用了。在查询了部分资料后，我终于总结出了一个提取的方法：
+这一篇总结我会尽力写得通俗易懂，一读就明白。
+算法解释 import torch from pytorch_pretrained_bert import BertTokenizer, BertModel, BertForMaskedLM 导入 torch 和 pytorch_pretrained_bert 库，站在巨人的肩膀上，直接缩短大量的训练时间。
+tokenizer = BertTokenizer.from_pretrained(&amp;#39;bert-base-uncased&amp;#39;) # 导入预训练模型 tokenized_text = tokenizer.tokenize(text) # tokenize 输入的文本 indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text) # 向量化 这一部分的代码主要是将输入的文本转化为 tokenized 的文本，然后再把该文本给向量化。
+问题来了，什么是 tokenized 和向量化？ tokenized 即标记化，把输入的句子进行标记划的操作，举个小例子：
+tokenized_text = tokenizer.tokenize(&amp;#39;Hello world !&amp;#39;) &amp;gt;&amp;gt;&amp;gt; [&amp;#39;hello&amp;#39;, &amp;#39;world&amp;#39;, &amp;#39;!&amp;#39;] 大家可能注意到了，为什么字母全部为小写了？这是因为我们使用的模型 bert_base_uncased 是不分大小写的，所以输出的 tokenized_text 会全由小写表示。
+其实 BERT 还支持输入两个句子，但是需要放在同一个字符串中，并通过一个标记来表示一个句子的开始和结束，再举个小例子：
+tokenized_text = tokenizer.tokenize(&amp;#39;[CLS] Hello world!</description>
+    </item>
+    
+    <item>
+      <title>ASC20 比赛记录</title>
+      <link>/posts/2020/20200116-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200116-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/</guid>
+      <description>ASC20 比赛在 1 月 6 号正式开始了，我在 1 月 10 号也正是接题开始了比赛的相关工作。因为这是我第一次以学校的名义参加全球性的赛事，所以特地记录下这段时间内的学习历程和思路。
+题目 这一次的赛题是有关 NLP 方向的，要在只使用 Pytorch 框架的情况下完成 Cloze 下游任务的设计，并且以准确率作为最终的分数计算。
+主办方并未提供 baseline，只提供了数据集，格式为 json，具体如下：
+{ &amp;#39;article&amp;#39;: &amp;#39;...&amp;#39;, &amp;#39;options&amp;#39;: [[words * 4] * 20], &amp;#39;answers&amp;#39;: [&amp;#39;A&amp;#39;,&amp;#39;B&amp;#39;... * 20] } 学习 这一次的路线就非常直观了，需要走 NLP 方向，而 NLP 目前最为热门的网络模型就是 BERT。类似 ResNet 之于图像识别的网络，这是一个 NLP 中炙手可热，同时也十分常用的模型，而我们可以通过这个模型达到 word2vec 的效果，提取出文字中的向量信息，并输送到下层网络以完成下游任务。
+所以我就打算使用 BERT 作为网络中的 embedding 部分，然后下层在进行 Cloze 的填空操作。在网上简单查找并且学习了 NLP的一些实现细节，我发现了 transformer 这个网红模型，并且有了许多的预训练模型，所以我便选择了以 transformer 为基础去完成题目。
+目前的进展及思路 目前我已经基本看完了 transformer 中的 example 代码文件，并且对其工作原理有了基础的了解，可以开始准备数据集进行训练了。
+我此外则有着以下的一些不成熟的小想法：
+以我在观摩别人打比赛和自己比赛的经验，我会偏向于直接使用 pretrained 模型或者以其为底作迁移学习； 通过 BERT 提取特征并且进行猜词，然后与选项进行比对，如果不存在于选项中则需要通过比对 similarity，然后比较取最为相似的单词作为选择。 把选项放入原句中，然后通过 MRPC 下游任务计算句子的连贯性，取连贯性最高者。 考虑到上下文（比如 He or She 性别判断之类的选择），可能还需要通过另一个网络提取关键信息。 我针对第 2 点完成了基本的代码工作，但是目前就成果和效率来看，还是存在一定的不足，后续会对其进行改进，同时也会往多个方向进行探索~~，毕竟现在时间还多~~。</description>
+    </item>
+    
+  </channel>
+</rss>

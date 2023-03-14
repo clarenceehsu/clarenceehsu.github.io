@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hexo on Zee Tsui</title>
+    <link>/tags/hexo/</link>
+    <description>Recent content in Hexo on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 19 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/hexo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何不让 Hexo 渲染 Markdown 和 HTML 文件</title>
+      <link>/posts/2019/20190819-%E5%A6%82%E4%BD%95%E4%B8%8D%E8%AE%A9-hexo-%E6%B8%B2%E6%9F%93-markdown-%E5%92%8C-html-%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Mon, 19 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190819-%E5%A6%82%E4%BD%95%E4%B8%8D%E8%AE%A9-hexo-%E6%B8%B2%E6%9F%93-markdown-%E5%92%8C-html-%E6%96%87%E4%BB%B6/</guid>
+      <description>最近想用 Hexo 搞一个测试页面和 Cheatsheet，用作日后的快捷参考和查询，而这个时候我发现了一个问题：
+我尝试着把 html 页面单独放到 source 文件夹里面，因为在 source 文件夹里面的内容会被全部放到 public 里面部署。而这个时候，我发现了我原本放的 html 页面排版完全错了，打开文件发现多了很多重复的无关内容。
+于是我发现了，可能我的 html 页面又被 Hexo 渲染了一遍。
+后来查了一下，发现 Hexo 的确会将 source 里面的 html 以及 md 文件渲染一遍形成新的 html ，并找到了其解决方法：
+防止渲染 Markdown 在站点配置文件 _config.yml 中找到 skip_render 参数，地址以 source_dir 为基准，一般为 source 文件夹。
+防止渲染 HTML 在 html 文件添加以下代码：
+--- layout: false --- 以上便可以保留原本放置于 source 文件夹中的文件。</description>
+    </item>
+    
+    <item>
+      <title>Hexo 博客如何添加图片</title>
+      <link>/posts/2019/20190619-hexo-%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/</link>
+      <pubDate>Sun, 09 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190619-hexo-%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/</guid>
+      <description>如何在自己写的 Markdown 博客中添加自己的图片？在多词的寻找和使用后，我找到了如下的几种插入图片的方法。
+利用 OSS （对象存储） 如果网站是托管在 GitHub、Coding 之类的平台上的话，直接将图片存在上面速度会比较慢，而且大陆内陆的网络访问起来可能不是特别顺畅。
+所以我们可以购买 OSS 去存储图片，并且给图片文件添加外链，然后直接在 Markdown 文章中添加外链即可。阿里云、腾讯云都提供了解决方案，价格再优惠后也在可接受范围内。
+利用免费图床 如果不想用收费的存储方案，网络上也有免费图床可以使用，但大多数的免费方案都有时间限制，少则 24 小时，多则 7 天，付费方案还不如自己开一个 OSS 来得实惠。
+img.onl 是一个没有固定期限的免费图床网站，当然数据的安全也没法得到保证，大家谨慎使用。
+自有服务器 如果是自己有服务器的话，那就好办了，这也是我现在所使用的方案。
+首先要将 Hexo 安装到服务器上，一切都准备好后，在 blog 层级的 _config.yml 中修改 post_asset_folder: true，之后每一次创建新的文章都会另外生成一个同名文件夹，我们可以把文章所需的素材放到里面。
+文章中假如如果要引用 1.jpg 的话，在图片地址中只需要写成 ./1.jpg 即可。 （因为 Hexo g 的时候，文件夹中的图片会与该文章页放在同一个目录里面）
+我跳过的坑 我以前曾经想过，如果存放在社交网络上然后把图片的链接贴在文章里不就可以了吗？
+然而现实是大多数的社交网站都不支持外链，图片根本无法显示。下面分享一下我所踩过的坑：
+微博：微博外链理论上是可以的，发的微博图片的链接基本上都能够用一段时间，如果不能用的话把链接中的 s1 或 s2、s3 换一下就能用了，但这在文章很多的时候修改会很麻烦，所以并不特别推荐。
+QQ 空间：有次数限制，多次以后被查出来用外链就不能够使用了。
+微云：可以通过分享文件然后提取预览图的连接，不过需要一定的 web 基础去寻找链接，也不推荐。
+Unsplash：Unsplash 的外链目前没有翻过车，我的摄影作品都是放在上面，然后外链过来的，但仅限于摄影方面的图片并且 CC0 协议。</description>
+    </item>
+    
+    <item>
+      <title>重建 Hexo，新的开始</title>
+      <link>/posts/2018/20180714-%E9%87%8D%E5%BB%BA-hexo%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/</link>
+      <pubDate>Sat, 14 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2018/20180714-%E9%87%8D%E5%BB%BA-hexo%E6%96%B0%E7%9A%84%E5%BC%80%E5%A7%8B/</guid>
+      <description>经过几个月的沉寂，我打算重新用Hexo写我的博客。
+这一段时间一直在忙着别的事儿，所以自然也就把博客放在了一边。
+曾经三分钟热度，用GitHub做了一个博客。由于某些原因，我的文章也一篇未放在这儿，空留“Hello World”和landscape。
+我之前的文章不是基于Markdown的，所以搬运过来还是需要一些时间，而且因为我最近把主题从Landscape换到了Tranquilpeak，这关主题里面有很多关于写作的语法功能我还没有试过，所以这个主题的文章编写我还不是特别熟练。
+以后慢慢把文章放上来吧。
+Peace.</description>
+    </item>
+    
+  </channel>
+</rss>

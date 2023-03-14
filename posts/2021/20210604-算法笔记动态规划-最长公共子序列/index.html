@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>【算法笔记】动态规划 &amp; 最长公共子序列 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2021/20210604-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="【算法笔记】动态规划 &amp; 最长公共子序列"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2021/20210604-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>【算法笔记】动态规划 &amp; 最长公共子序列<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <blockquote>
+<p>突然发现自己有很长一段时间没有学习和更新算法相关的内容了。当然这并不完全是因为懒，主要还是临近毕业事务较多没能顾得上，做题的也感觉生分了许多。</p>
+</blockquote>
+<h2 id="什么是最长公共子序列lcs-longest-common-sequence">什么是最长公共子序列（LCS, Longest Common Sequence）</h2>
+<blockquote>
+<p>关于 LCS 网络上有两种不同的含义，一个是“最长公共字符串（Longest Common String）”，一个是“最长公共子序列（Longest Commo Sequence）”。二者存在一定的差别，本文单独就后者进行相关的讨论。</p>
+</blockquote>
+<p><strong>最长公共子序列</strong>是动态规划中的一个经典的问题，即给定序列 A 和序列 B，然后求出两个序列中<strong>最大的公共子序列的长度</strong>，且该公共子序列中的元素可以不相邻。这类型的题目如果使用暴力解法一般都会直接顶满指数级的 $O(n^2)$ 复杂度，因此一般都会使用动态规划的写法来求解。</p>
+<h2 id="问题解法">问题解法</h2>
+<p>LeetCode 上的对应题目见【<a href="https://leetcode-cn.com/problems/longest-common-subsequence/">1143. 最长公共子序列</a>】。</p>
+<p>首先介绍一下常规的暴力解法，直接通过递归来遍历所有可能的情况。代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">lcs</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">s1</span> <span class="o">==</span> <span class="s2">&#34;&#34;</span> <span class="ow">or</span> <span class="n">s2</span> <span class="o">==</span> <span class="s2">&#34;&#34;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="k">elif</span> <span class="n">s1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">s2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">lcs</span><span class="p">(</span><span class="n">s1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">s2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">lcs</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span> <span class="n">s2</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">lcs</span><span class="p">(</span><span class="n">s1</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">s2</span><span class="p">))</span>
+</span></span></code></pre></div><p>这一写法显然存在着不足，即<strong>递归的部分会大量的重复</strong>，从而导致时间上的开销过大。因此，我们引入动态规划算法并建立矩阵进行相关数据的存储。假设两个字符串分别为 text1 和 text2，并定义<code>dp[i][j]</code> 为 text1 在 <code>[0, i]</code> 范围内的子串和 text2 在 <code>[0, j]</code> 范围内的子串的<strong>最长公共子序列</strong>。</p>
+<ul>
+<li><strong>状态转移</strong>：如果 <code>text1[i-1]==text2[j-1]</code>，那么说明我们找到了公共子串中的一个字符，则 <code>dp[i][j] = dp[i-1][j-1] + 1</code>；否则，如果 <code>text1[i-1]!=text2[j-1]</code>，则 <code>dp[i][j] = max(dp[i-1][j], dp[i][j-1])</code>；</li>
+<li><strong>边界条件</strong>：如果两个字符串有一个为空，则 LCS 的长度就为 0，也就是 <code>dp[0][.] = dp[.][0] = 0</code>；</li>
+</ul>
+<p>根据这样的思路，直接写出代码即可：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">longestCommonSubsequence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text1</span><span class="p">,</span> <span class="n">text2</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">M</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">text1</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">text2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">dp</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>  <span class="c1"># 初始化 DP 矩阵</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">M</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="n">text1</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">text2</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]:</span>  <span class="c1"># 若匹配，则等于上一个状态 + 1</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span> <span class="o">-</span> <span class="mi">1</span><span class="p">])</span>  <span class="c1"># 不匹配则取最大值</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">dp</span><span class="p">[</span><span class="n">M</span><span class="p">][</span><span class="n">N</span><span class="p">]</span>
+</span></span></code></pre></div><p>可以看出，这和背包问题也有一定的相似度，属于比较经典的动态规划问题。</p>
+<h2 id="其实还有一把梭的解法">其实还有一把梭的解法</h2>
+<p>当然，动态规划的本质就是“<strong>更有效率地递归</strong>”，因此大部分地动态规划题也是可以通过<strong>暴力解 + LRU Cache</strong> 的方式来降低时间复杂度的。这一道题中的 DP 矩阵当然也可以使用 LRU Cache 的方式来代替，即在暴力解法中对 <code>lcs(s1,s2)</code> 进行缓存即可，同样也可以得到一个十分不错的时间复杂度，甚至与动态规划相近。</p>
+<p>在平常刷 LeetCode 的时候，我也发现大部分通过动态规划简化时间复杂度的问题里都会有大神通过 LRU Cache 来达到相同的效果。这其实属于一种一把梭的解法了，神乎其技且十分简单暴力，就是 LRU Cache 使用的地方经常需要考究（我曾经就找错过函数，结果没有任何优化效果）。</p>
+<p>当然，这样做的代价也是有的，因为 LRU Cache 的本质上是在维护一个由<strong>输入参数作为键，函数返回值作为值</strong>的字典，因此比 DP 的矩阵要大上不少，空间复杂度相应也要高一些。</p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

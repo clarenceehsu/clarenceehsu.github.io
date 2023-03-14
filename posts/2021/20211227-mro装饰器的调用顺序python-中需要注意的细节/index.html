@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>MRO、装饰器的调用顺序——Python 中需要注意的细节 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2021/20211227-mro%E8%A3%85%E9%A5%B0%E5%99%A8%E7%9A%84%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8Fpython-%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%BB%86%E8%8A%82/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="MRO、装饰器的调用顺序——Python 中需要注意的细节"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2021/20211227-mro%E8%A3%85%E9%A5%B0%E5%99%A8%E7%9A%84%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8Fpython-%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%BB%86%E8%8A%82/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>MRO、装饰器的调用顺序——Python 中需要注意的细节<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <h3 id="1-重载运算符的调用顺序">1. 重载运算符的调用顺序</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Foo</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">other</span> <span class="ow">is</span> <span class="bp">self</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Bar</span><span class="p">(</span><span class="n">Foo</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Foo1</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">foo</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">bar</span> <span class="o">=</span> <span class="n">Bar</span><span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">foo1</span> <span class="o">=</span> <span class="n">Foo1</span><span class="p">(</span><span class="s2">&#34;Hello&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">foo</span> <span class="o">==</span> <span class="n">bar</span><span class="p">)</span>  <span class="c1"># True, 调用了 bar 的 __eq__</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">bar</span> <span class="o">==</span> <span class="n">foo</span><span class="p">)</span>  <span class="c1"># True, 调用了 bar 的 __eq__</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">foo</span> <span class="o">==</span> <span class="n">foo1</span><span class="p">)</span>  <span class="c1"># False, 调用了 foo 的 __eq__</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="n">foo1</span> <span class="o">==</span> <span class="n">foo</span><span class="p">)</span>  <span class="c1"># True, 调用了 foo1 的 __eq__</span>
+</span></span></code></pre></div><p>Python 中，如果 <code>==</code> 符号两端变量属于<strong>具有继承关系的类</strong>，则会优先调用子类的重载方法；如果 <code>==</code> 符号两端变量分别属于两个完全不同的类，则会调用左端类的重载进行判断（见代码中<code>print</code>部分的后两个）</p>
+<p>如果一个没有重载，一个有重载，则会优先调用有重载的类的重载方法。</p>
+<h3 id="2-多继承类的-mro-method-resolution-order">2. 多继承类的 MRO (Method Resolution Order)</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">GrandParent</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Grandparent&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Parent</span><span class="p">(</span><span class="n">GrandParent</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;parent&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Son</span><span class="p">(</span><span class="n">Parent</span><span class="p">,</span> <span class="n">GrandParent</span><span class="p">):</span> <span class="c1"># 反过来会报错</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;son&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">a</span> <span class="o">=</span> <span class="n">Son</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># parent</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># son</span>
+</span></span></code></pre></div><p>参考文章：<a href="https://www.educative.io/edpresso/what-is-mro-in-python">https://www.educative.io/edpresso/what-is-mro-in-python</a></p>
+<p>这个参考文章比较详细，但是讲的有点复杂了。简单来说就是 CPython 在解析多个类继承的时候，会在继承的类里从左到右进行 DFS 查找，直到找到对应的方法为止。</p>
+<h3 id="3-装饰器的调用顺序">3. 装饰器的调用顺序</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="mf">10.1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">func1</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="mf">11.1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">func1_inter</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="mf">11.2</span><span class="p">,</span> <span class="n">func1_inter</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">function</span><span class="p">()</span>  <span class="c1"># func2_inter</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="mf">11.4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">function</span><span class="p">()</span>  <span class="c1"># func2_inter</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="mf">11.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="mf">11.6</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">func1_inter</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">func2</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="mf">12.1</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">func2_inter</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="mf">12.2</span><span class="p">,</span> <span class="n">func2_inter</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">function</span><span class="p">()</span>  <span class="c1"># my_func</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="mf">12.3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">function</span><span class="p">()</span>  <span class="c1"># my_func</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="mf">12.5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="mf">12.6</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="n">func2_inter</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="mf">10.2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nd">@func1</span>
+</span></span><span class="line"><span class="cl"><span class="nd">@func2</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">my_func</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="mf">10.3</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="mf">10.4</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">my_func</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl"><span class="nb">print</span><span class="p">(</span><span class="mf">10.5</span><span class="p">)</span>
+</span></span></code></pre></div><p>这个例子比较全面地展示了 Python 装饰器之间的调用关系。</p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Jarvis on Zee Tsui</title>
+    <link>/tags/jarvis/</link>
+    <description>Recent content in Jarvis on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 22 May 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/jarvis/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别</title>
+      <link>/posts/2019/20190522-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%BA%8C%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/</link>
+      <pubDate>Wed, 22 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190522-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%BA%8C%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/</guid>
+      <description>让我们用Python去做一个Jarvis吧！
+这一部分主要是语音识别部分的Python实现，而且由于这是我利用课余时间而作，所以相对于其他的项目而言进度可能并不会特别迅速，更新缓慢且随缘。
+序 那我们就从前面的框架开始动手实现我们的 Jarvis，首先给大家看一下我的文件目录框架：
+其中我把所有自己写的py模块统一归入_module文件夹，供main.py调取，_sounds文件夹存着因为语音识别以及TTS产生的音频文件。
+因为目前的结构还不是特别庞大，可能后面会因为管理或者功能增加等等的原因进行修正。如果有改动我会在后面进行补充。
+作为一个懒人程序员，并且本着不重复造轮子的原则，我决定先到网上搜一搜有没有现成的解决方案能够直接使用的。
+Emmm&amp;hellip; 貌似没有，但这并不影响我们的功能实现。
+我们把语音识别的问题拆分开来，便是：
+麦克风录音 语音识别成文本 返回文本 然而幸运的是，百度在语音识别方面有着成熟的API以及SDK提供使用，所以在这个方面我们真正需要自己实现的部分只有录音方面了。
+后期补充：目前我将这一方面的算法转用腾讯 AI 平台实现，并为此写了一套 SDK，如有需要的话可以参考我的项目。 这并不影响下面百度平台的实现。
+语音录入生成.wav文件 我将语音录入的方法写在了recognition.py中，与语音识别等功能放在一起便于调用和管理，后续编辑也会方便一些。
+在语音录入方面我们需要调用Pyaudio和wave模块，如果没有安装的话可以通过pip、conda或者Pycharm安装，方法这里就不赘述了。
+然后首先我们需要导入这两个模块：
+import pyaudio import wave 然后便是具体的方法实现，我写了一个def audio_record，这个部分的功能便完成了录音，并且会将录音保存为.wav格式。
+def audio_record(out_file, rec_time): # out_file:输出音频文件名, rec_time:音频录制时间(秒) CHUNK = 1024 FORMAT = pyaudio.paInt16 # 16bit编码格式 CHANNELS = 1 # 单声道 RATE = 16000 # 16000采样频率 p = pyaudio.PyAudio() # 创建音频流 stream = p.open(format=FORMAT, # 音频流wav格式 channels=CHANNELS, # 单声道 rate=RATE, # 采样率16000 input=True, frames_per_buffer=CHUNK) print(&amp;#34;I&amp;#39;m listening.</description>
+    </item>
+    
+    <item>
+      <title>从零开始做 Jarvis——基于 Python 的智能语音管家（一）</title>
+      <link>/posts/2019/20190521-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%B8%80%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Tue, 21 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190521-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%B8%80%E7%AE%80%E4%BB%8B/</guid>
+      <description>让我们用 Python 去做一个 Jarvis 吧！
+这一部分主要是先前的大体介绍，而且由于这是我利用课余时间而作，所以相对于其他的项目而言进度可能并不会特别及时，更新缓慢且随缘。
+序 先简单地做一下项目介绍。
+在一次比赛现场与朋友攀谈，并由此激发了一个一直存于我内心的想法——做出像钢铁侠的 Jarvis 一般的智能助手。它能够在日常生活和工作学习中为我及时提供建议以及我所需要的信息，还能够帮我管理我的社交网络以及我的各种数码设备等等。
+当时与朋友聊完这个宏大愿景后，我便留下了不学无术的泪水（毕竟能力有限 TAT）。所以结合目前的状况，我简单地对其可行性进行了进一步的思考和完善。
+其实，从技术上实现一个在生活辅助方面的智能语音助手并不难。而现有的产品之所以功能并非如此强大，更多是公司的商业考量和对用户隐私的保护。
+所以，怎么做？ 迫于技术上的压力，我目前的暂时性目标，是做出一个“简易版”的 Jarvis。它离真正的“人工智能”有着一定的距离，定位是一个在日常的工作和学习中能够帮得上忙的（至少比我手机上的小爱要来的有用的）“智能程序”。
+所以围绕着这个，我产生了以下的想法：
+首先要做到的是我们的 Jarvis 能够对我们说的话有基本的反应行为，比如查查天气、问些问题、聊聊天，诸如此类。其次便是一些高级的操作，比如随时检索我们彼时工作或者学习等方面所需要的任何信息；根据我们的情况作出合理的决策；跨设备交互和智能的设备控制和管理等等。 然后便是怎么做？截至我写作的时间，由于我的 Python 方面做过的项目比较多，所以选择了 Python 作为主要语言。
+从结构上来看，我们如果要实现一个闭环，就需要做到语音识别，NLP，信息处理和分析，语音（或者画面）反馈。由于我有着 Jarvis 情怀，所以我会倾向于先完成语音部分的反馈环节。 至此，我们完成了整个项目的大致框架，显然，我们后续的程序框架以及整体思路也会依照这个来展开。
+下一个部分，我会介绍语音识别部分实现。
+Peace.</description>
+    </item>
+    
+  </channel>
+</rss>

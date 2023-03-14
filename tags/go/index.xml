@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Go on Zee Tsui</title>
+    <link>/tags/go/</link>
+    <description>Recent content in Go on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 29 Jul 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/go/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>极速入门 Go 语言</title>
+      <link>/posts/2019/20190729-%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8-go-%E8%AF%AD%E8%A8%80/</link>
+      <pubDate>Mon, 29 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190729-%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8-go-%E8%AF%AD%E8%A8%80/</guid>
+      <description>Go 语言可以称为是 21 世纪的 C 语言了，其不仅具有诸多十分优秀的特性，而且也保持了简洁干练，运行效率也与 C++ 看齐。那么再有其他的语言基础下，如何快速入门 Go 呢？
+这篇文章其实更多地是 Go 与其他语言之间的对比，并由此初探 Go，从而达到快速入门的目的。 本文只是 Go 语言入门，其他的 Go 特性操作还需要多加学习。 语言基础要求：C、Python（入门即可）
+首先是一个正常的 Hello World 代码
+package main import &amp;#34;fmt&amp;#34; func main() { var a string = &amp;#34;Hello, World!&amp;#34; b, c := 2, 3 if(b &amp;gt; c &amp;amp;&amp;amp; b &amp;lt; c) { fmt.Println(a) } } package：该文件的包名，同样报名的文件会划归为同一个包，且一个文件夹里面（除去子文件夹）只允许有一个包存在 import：Python 中的 import func：定义 function 函数的关键词，与 def 类似 main：主程序，作用和地位与 C 相似，传参也和 C 相似 var a string：定义一个类型为 string 的变量 a，这是 Go 语言中的格式 &amp;amp;&amp;amp;：Go 的运算符和 C 类似 fmt.</description>
+    </item>
+    
+  </channel>
+</rss>

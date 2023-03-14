@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>图像 on Zee Tsui</title>
+    <link>/tags/%E5%9B%BE%E5%83%8F/</link>
+    <description>Recent content in 图像 on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 23 Apr 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%9B%BE%E5%83%8F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>图像相似度的比较算法</title>
+      <link>/posts/2020/20200423-%E5%9B%BE%E5%83%8F%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%9A%84%E6%AF%94%E8%BE%83%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Thu, 23 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200423-%E5%9B%BE%E5%83%8F%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%9A%84%E6%AF%94%E8%BE%83%E7%AE%97%E6%B3%95/</guid>
+      <description>最近花了些时间研究了一下图像相似度算法，感觉还是挺有趣的，也解决了我以前的一些疑惑。
+目前的识别算法主要有几种，第一个是感知哈希算法，其中包括均值哈希（aHash）、感知哈希（pHash）和差异值哈希（dHash）；第二种是 SIFT。而目前主要使用的是 SIFT 和 pHash。
+下面简单介绍一下这几种算法的原理和优势。
+均值哈希（aHash） 原理 缩放图片：将图片进行下采样至 8*8 的像素矩阵，共 64 个像素； 灰度图片：将图片转化为 256 阶的灰度图； 灰度算法有很多: 心理学灰度 $Gray=0.299\times R+0.587\times G+0.114\times B$ 平均值算法 $Gray=(R+G+B)/3$ 绿色值算法 $Gray=G$
+二元化图片：将图片进行二元化转换； 这一步简单来说，就是先计算灰度均值，然后依次遍历原像素值，高于灰度值记为 1，低于记为 0，最后生成了一个 64 bits 的数列。
+构造哈希：对 64 bits 的数列进行哈希，生成“感知指纹”； 对比指纹：对两幅图片的“指纹”计算汉明距离，距离越小则相似度越高。 算法特点 aHash 的算法简单粗暴，速度快。但是由于对图片进行了下采样和二值化，所以自然丢失了非常多的数据，精确度也就很低。
+感知哈希（pHash） 原理 缩放图片：将图片进行下采样，生成正方形的图片（图片一般大于 8*8，3*32）； 灰度图片：该步骤与上同； 计算 DCT（离散余弦变换）：DCT 计算将图片按照频率分布进行分解； 裁剪 DCT：经过 DCT 操作后，会生成一个 32*32 的频域矩阵，我们只需要保存左上角的 8*8 即可，这一部分是图片的低频； 二元化矩阵：对上一步的矩阵进行处理，算法同样是计算平均值然后二元化； 构造哈希：对 64 bits 的数列进行哈希，生成“感知指纹”； 对比指纹：对两幅图片的“指纹”计算汉明距离，距离越小则相似度越高。 DCT 的算法相较复杂，主要用于数据或图像的压缩，能够将空域的信号转换到频域上，具有良好的去相关性的性能。 一维 DCT 变换： $$ F(u)=c(u)\sum_{i=0}^{N-1}f(i)cos[\frac{(i+0.</description>
+    </item>
+    
+  </channel>
+</rss>

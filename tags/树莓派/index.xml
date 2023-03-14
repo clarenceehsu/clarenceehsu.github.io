@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>树莓派 on Zee Tsui</title>
+    <link>/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/</link>
+    <description>Recent content in 树莓派 on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sun, 14 Jun 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%A0%91%E8%8E%93%E6%B4%BE/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>DHT11 温湿度传感器在树莓派上的通信</title>
+      <link>/posts/2020/20200614-dht11-%E6%B8%A9%E6%B9%BF%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E4%B8%8A%E7%9A%84%E9%80%9A%E4%BF%A1/</link>
+      <pubDate>Sun, 14 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200614-dht11-%E6%B8%A9%E6%B9%BF%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E4%B8%8A%E7%9A%84%E9%80%9A%E4%BF%A1/</guid>
+      <description>最近因为嵌入式的课程设计，买了一些硬件，显示屏跟着官方文档可以基本上没有问题完成所有的设置并正常使用；可是到了 DHT11 这儿就出现了问题，我在网上找了好几个版本的代码，都没有办法能够直接正常从传感器那儿获取数据。
+比如下面这个，原地址在这儿：
+#!/usr/bin/python #-*- coding:utf-8 -*- import RPi.GPIO as GPIO import time channel = 7 #引脚号Pin7 data = [] #温湿度值 j = 0 #计数器 GPIO.setmode(GPIO.BOARD) #以BOARD编码格式 time.sleep(1) #时延一秒 GPIO.setup(channel, GPIO.OUT) GPIO.output(channel, GPIO.LOW) time.sleep(0.02) #给信号提示传感器开始工作 GPIO.output(channel, GPIO.HIGH) GPIO.setup(channel, GPIO.IN) while GPIO.input(channel) == GPIO.LOW: continue while GPIO.input(channel) == GPIO.HIGH: continue while j &amp;lt; 40: k = 0 while GPIO.input(channel) == GPIO.LOW: continue while GPIO.input(channel) == GPIO.HIGH: k += 1 if k &amp;gt; 100: break if k &amp;lt; 8: #通过计数的方式判断是数据位高电平长短，以置0或1。（此方式有待商榷） data.</description>
+    </item>
+    
+    <item>
+      <title>树莓派系统安装及配置（无网线、显示屏和键鼠）</title>
+      <link>/posts/2020/20200527-%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%E6%97%A0%E7%BD%91%E7%BA%BF%E6%98%BE%E7%A4%BA%E5%B1%8F%E5%92%8C%E9%94%AE%E9%BC%A0/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200527-%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%E6%97%A0%E7%BD%91%E7%BA%BF%E6%98%BE%E7%A4%BA%E5%B1%8F%E5%92%8C%E9%94%AE%E9%BC%A0/</guid>
+      <description>为啥要折腾？ 因为最近有课程设计需要使用到树莓派，所以我花了好大的精力联系学姐和辅导员，把板子从学校给寄了回来。
+寄回来之后，我发现没有显示器和额外的键盘，完全没办法直接使用（哭）。然后我就尝试 SSH 连接树莓派，但是似乎连接设置出现了问题无法连接，所以最后只能够重新安装树莓派的系统了。
+我之前安装树莓派的时候是有显示器和额外的一套键鼠的，整体安装过程十分简单直观。这一次因为没有这些额外的硬件，所以我也是查了许多的教程，才摸索出了一个比较正常和方便的安装过程，而且全称可以完全无头，即无网线、显示屏和键盘，只用一条电源线即可。
+开始前的软件准备 系统镜像，可以去官网的下载页面下载，我是用的是 Buster Lite； SD Card Formatter 工具 Win32 Disk Imager 安装系统 将下载下来的系统镜像 .img 文件解压出来； 使用 SD Card Formatter 工具格式化 SD 卡； 使用 Win32 Disk Imager 工具将系统镜像写入 SD 卡； 至此系统已经安装完成，但还需要两步操作，使树莓派在上电开机后能够自动连接上 WiFi 网络。
+在电脑上打开 SD 卡的 /boot 分区（Windows 系统上只能够看到这个分区），在根目录下新建一个名字为 ssh 的空文件；
+再新建一个 wpa_supplicant.conf 文件，写入如下内容：
+country=GB ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev update_config=1 network={ ssid=&amp;#34;WiFi 名称，注意大小写&amp;#34; psk=&amp;#34;WiFi 密码&amp;#34; } 这个文件会写入树莓派系统中的 /etc/wpa_supplicant/wpa_supplicant.conf，所以一般设置一次，后面就不用设置了，可以开机自动接入网络。 这一个配置文件的 network 还有其他的配置项，详情可以见这篇博客。
+搞定上述操作之后，就可以把 SD 卡插入树莓派，然后上电开机了。
+远程连接树莓派 远程连接树莓派这一步简单一些，直接找到树莓派的 IP，然后 SSH 连接即可。</description>
+    </item>
+    
+  </channel>
+</rss>

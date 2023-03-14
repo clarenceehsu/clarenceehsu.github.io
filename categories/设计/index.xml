@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>设计 on Zee Tsui</title>
+    <link>/categories/%E8%AE%BE%E8%AE%A1/</link>
+    <description>Recent content in 设计 on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 10 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E8%AE%BE%E8%AE%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Photobash 练习 - 赛博朋克钟楼</title>
+      <link>/posts/2020/20200110-photobash-%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/</link>
+      <pubDate>Fri, 10 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200110-photobash-%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%92%9F%E6%A5%BC/</guid>
+      <description>每当我抬头望着学校，后面的高楼映着前面的钟楼，一股赛博与静谧的相交融感油然而生。于是，作为一名赛博朋克的爱好者，我突然来了灵感。
+前期 考完试，我便拿着相机登上宿舍楼顶，在之前探过的机位，找了不同的景别去拍了底图。
+导入 LR，选出了其中最符合我想象的一张：
+调色 基于图片的内容，我选择了蓝紫调作为调色方向，然后加上了一些绿色作为底色，以提供一些胶片感：
+调光 此时的图缺少了一些氛围感，并且整体光线比较平，所以压低底部的高光和钟楼的反光：
+添加赛博朋克元素 我按照我的想象（一位僧侣站在钟楼上，正在被无人机追杀），添加上了相应的元素并做一定的调整：
+除此之外，在楼群背景上的赛博朋克元素比较少，所以继续往上加：
+这个时候，已经有内味儿了。
+稍加修饰 因为赛博朋克的一个重要标签就是环境污染严重 + 下雨，所以再调整光效，并加上一些烟雾、雨水去修饰，不仅氛围感就有了：
+对比 最后来一个原图和现图的对比：
+原图 后期 </description>
+    </item>
+    
+    <item>
+      <title>赛博朋克金沙湾后期过程</title>
+      <link>/posts/2019/20190710-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%87%91%E6%B2%99%E6%B9%BE%E5%90%8E%E6%9C%9F%E8%BF%87%E7%A8%8B/</link>
+      <pubDate>Wed, 10 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190710-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%87%91%E6%B2%99%E6%B9%BE%E5%90%8E%E6%9C%9F%E8%BF%87%E7%A8%8B/</guid>
+      <description>考完了期末考试，闲来无事写一下赛博朋克金沙湾的后期过程以及修图的思路。
+首先还是看一下原图：
+选择它的原因是这张图的结构较简单而且元素较少。我们需要在此基础上进行图像整体的设计（就是知道要怎么进行后期），并以此为依据寻找素材图。
+于是找到了一张赛博朋克风格的图片，然后把它放到了画布中：
+接着把空白处填充满，改善一下光影效果：
+此时我觉得整个画面的上方有点空，所以我又找了几张图，添加了一些未来感的细节：
+然后背景部分就基本上完成了，接下来把原图的城市部分抠出来放到下面：
+此时我调整了两幅图之间的透视，从而使得前后景透视关系正确。但是此时色调还不统一，所以接下来统一一下色调：
+最后一个步骤，加上光效，这一步不仅可以完善画面，风格进一步向赛博朋克靠近，也能够遮瑕，把处理不好的地方遮住：</description>
+    </item>
+    
+    <item>
+      <title>Photobash 练习 - 大漠发射台</title>
+      <link>/posts/2018/20180816-photobash-%E7%BB%83%E4%B9%A0_%E5%A4%A7%E6%BC%A0%E5%8F%91%E5%B0%84%E5%8F%B0/</link>
+      <pubDate>Thu, 16 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2018/20180816-photobash-%E7%BB%83%E4%B9%A0_%E5%A4%A7%E6%BC%A0%E5%8F%91%E5%B0%84%E5%8F%B0/</guid>
+      <description>Photobash的第二次练习。
+最终效果：
+最初图：
+Peace.</description>
+    </item>
+    
+    <item>
+      <title>Photobash 练习 - 赛博朋克金沙湾</title>
+      <link>/posts/2018/20180723-photobash-%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%87%91%E6%B2%99%E6%B9%BE/</link>
+      <pubDate>Mon, 23 Jul 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2018/20180723-photobash-%E7%BB%83%E4%B9%A0-%E8%B5%9B%E5%8D%9A%E6%9C%8B%E5%85%8B%E9%87%91%E6%B2%99%E6%B9%BE/</guid>
+      <description>Photobash的第一次练习。
+最终效果：
+最初图：
+Peace.</description>
+    </item>
+    
+    <item>
+      <title>CD 封面设计</title>
+      <link>/posts/2018/20180517-cd-%E5%B0%81%E9%9D%A2%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Thu, 17 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2018/20180517-cd-%E5%B0%81%E9%9D%A2%E8%AE%BE%E8%AE%A1/</guid>
+      <description>这次做了一个 CD 的封面设计，自我感觉还行。
+Peace.</description>
+    </item>
+    
+    <item>
+      <title>城市天际线 游戏截图后期</title>
+      <link>/posts/2018/20180517-%E5%9F%8E%E5%B8%82%E5%A4%A9%E9%99%85%E7%BA%BF-%E6%B8%B8%E6%88%8F%E6%88%AA%E5%9B%BE%E5%90%8E%E6%9C%9F/</link>
+      <pubDate>Thu, 17 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2018/20180517-%E5%9F%8E%E5%B8%82%E5%A4%A9%E9%99%85%E7%BA%BF-%E6%B8%B8%E6%88%8F%E6%88%AA%E5%9B%BE%E5%90%8E%E6%9C%9F/</guid>
+      <description>最近迷上了城市天际线这个游戏，安装了巨多的插件之后画面十分好看，所以我截了一些图做后期练习用。
+Peace.</description>
+    </item>
+    
+  </channel>
+</rss>

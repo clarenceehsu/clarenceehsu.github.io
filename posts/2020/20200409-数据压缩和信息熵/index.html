@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>数据压缩和信息熵 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2020/20200409-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9%E5%92%8C%E4%BF%A1%E6%81%AF%E7%86%B5/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="数据压缩和信息熵"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2020/20200409-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9%E5%92%8C%E4%BF%A1%E6%81%AF%E7%86%B5/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>数据压缩和信息熵<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <!-- more -->
+<h2 id="压缩的原理及有限性">压缩的原理及有限性</h2>
+<p>在计算机导论中简要介绍过几种压缩的算法，原理十分简单，便是利用<strong>更短、熵更高的字符串</strong>来代替一些<strong>重复率高，熵较低的字符串</strong>，从而实现缩短字节量，减小文件的体积的目的。步骤大致如下：</p>
+<ol>
+<li>得到文件的概率分布，统计频次高的以及频次低的部分；</li>
+<li>结合统计结果对源文件重新编码，用短字符代替重复的长字符。</li>
+</ol>
+<p>举个例子：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">AAAAAAAAAA =&gt; 10A  // 用 3 个字符代表 10 个字符，压缩比 30%
+</span></span><span class="line"><span class="cl">ABCABCABCABCABCABCABCABC =&gt; 8ABC  // 用 4 个字符代表 24 个字符，压缩比 16.7%
+</span></span></code></pre></div><p>显而易见，越是重复率高的文件，就意味着能够压缩的量就越大，体积也自然能够越小；反之，如果一个文件的重复率低，也就越难压缩。所以每一个文件的熵不同，压缩比率也会不尽相同。</p>
+<h4 id="那么压缩有一定的限度吗">那么，压缩有一定的限度吗？</h4>
+<p>当然，在信息论中我们学到过，<strong>无损压缩实现的前提是输出和输入必须要严格一一对应</strong>，也就是不能够出现多对一的映射。我们可以假设任意文件都能够压缩到 $n$ bits，那么就能够产生 $2^n$ 种可能的压缩结果。这便意味着如果有 $2^n+m$ 个不同的文件，就会导致有 $m+1$ 个文件出现了重复，所以<strong>压缩一定存在着极限</strong>。</p>
+<h2 id="压缩的极限">压缩的极限</h2>
+<p>一个文件的压缩极限可以通过<strong>计算文件的平均信息熵大小</strong>，从而推导出来。当然这个最小值仅仅是<strong>理论最小值</strong>，并不一定能够达到，下面我将用浅显的方式做一些推导。</p>
+<p>在不同的文件格式中可能存在着不同的计算方法，比如文本文件可能就会根据文本中的字符计算信息熵，图片会使用 RGB 排列来计算信息熵等。我这里使用了一个<strong>通用的方法——将任意文件按字节的形式进行读取，统计不同字节的信息熵</strong>。</p>
+<p>计算平均信息熵的公式为：</p>
+<p>$$H(X)=\sum P_n * \log(\frac{1}{P_n})$$</p>
+<p>$P_n$ 为每一个字节在文件中出现的概率，计算方法如下：</p>
+<p>$$P_n=\frac{N_{freq}}{N_{all}}$$</p>
+<p>$N_{freq}$ 为该字节在文件中出现的次数，$N_{all}$ 文件的总字节量。</p>
+<blockquote>
+<p>其中的 $log$ 在信息论中是默认<strong>以 2 为底</strong>的（在通信原理中是默认以 10 为底），通常会做省略处理。</p>
+</blockquote>
+<p>最后求出来的 $H(X)$ 是文件每一个字节的平均信息熵，如果乘以总字节数就可以得到<strong>理论的压缩极限大小</strong>：</p>
+<p>$$Size_{min}=H(X) * N_{all}$$</p>
+<h2 id="信息熵的含义">信息熵的含义</h2>
+<ol>
+<li><strong>信息熵只反映内容的随机性，与内容本身无关</strong>。不管是什么文件，服从同样的概率分布就会得到同样的信息熵。</li>
+<li><strong>信息熵越大，表示占用的二进制位越长，可以表达更多的符号</strong>。即信息熵越大，信息量就越大，但这并不代表所获得的的信息越大。</li>
+</ol>
+<h2 id="代码实现-python">代码实现 (Python)</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">sys</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">log</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span>
+</span></span><span class="line"><span class="cl"><span class="kn">from</span> <span class="nn">os.path</span> <span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">abspath</span><span class="p">,</span> <span class="n">realpath</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># Initialization</span>
+</span></span><span class="line"><span class="cl">    <span class="n">real_path</span> <span class="o">=</span> <span class="n">dirname</span><span class="p">(</span><span class="n">realpath</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parser</span> <span class="o">=</span> <span class="n">ArgumentParser</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;address&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">path</span> <span class="o">=</span> <span class="n">abspath</span><span class="p">(</span><span class="n">real_path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">args</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">file_format</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># Read the file</span>
+</span></span><span class="line"><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;rb&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">byteArr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fileSize</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">byteArr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="k">except</span> <span class="ne">IOError</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">path</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">address</span>
+</span></span><span class="line"><span class="cl">        <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&#34;rb&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">byteArr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</span></span><span class="line"><span class="cl">        <span class="n">fileSize</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">byteArr</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># core algorithm for shannon entropy</span>
+</span></span><span class="line"><span class="cl">    <span class="n">ent</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">256</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ctr</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">byte</span> <span class="ow">in</span> <span class="n">byteArr</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">byte</span> <span class="o">==</span> <span class="n">b</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">ctr</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="n">freq</span> <span class="o">=</span> <span class="n">ctr</span> <span class="o">/</span> <span class="n">fileSize</span>
+</span></span><span class="line"><span class="cl">        <span class="k">if</span> <span class="n">freq</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">ent</span> <span class="o">=</span> <span class="n">ent</span> <span class="o">-</span> <span class="n">freq</span> <span class="o">*</span> <span class="n">log</span><span class="p">(</span><span class="n">freq</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="c1"># print the information</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">==================== File Information ====================&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Location: &#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Format: &#39;</span><span class="p">,</span> <span class="n">file_format</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;    Size: &#39;</span><span class="p">,</span> <span class="n">fileSize</span><span class="p">,</span> <span class="s1">&#39;Bytes&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">================= Amount of Information =================&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Average: &#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ent</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;  Total: &#39;</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ent</span> <span class="o">*</span> <span class="n">fileSize</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="n">main</span><span class="p">()</span>
+</span></span></code></pre></div><blockquote>
+<p>代码直接使用命令行运行即可，格式为 <code>python main.py test.txt</code>。其中 <code>test.txt</code> 为你需要计算信息熵的文件。
+代码对地址作了处理，使用绝对路径和相对路径皆可。</p>
+</blockquote>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

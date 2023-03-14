@@ -1,0 +1,918 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>技术 on Zee Tsui</title>
+    <link>/categories/%E6%8A%80%E6%9C%AF/</link>
+    <description>Recent content in 技术 on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 15 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基于 syncthing 的云盘容器搭建方案（发现 &#43; 中继 &#43; 同步）</title>
+      <link>/temp/20230215-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</link>
+      <pubDate>Wed, 15 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/temp/20230215-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</guid>
+      <description>整体结构 遇到的问题 中继选择顺序 中继与发现服务 Nginx 反向代理 </description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 开源容器平台结构简介</title>
+      <link>/posts/2023/20230125-kubernetes-%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E5%B9%B3%E5%8F%B0%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Wed, 25 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230125-kubernetes-%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E5%B9%B3%E5%8F%B0%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B/</guid>
+      <description>经典结构图 containerd &amp;amp; kubernetes &amp;amp; runc 角色分工和层级 Kubernetes：部署容器的平台，属于最上层与用户交互的角色。
+主要承担的功能：负责集群成员管理，以及自动化的 Pod 的调度维护。 containerd：容器平台（Docker、Kubernetes）的低一层，底层运行时（runc、kata）的高一层，属于中间负责 Pod 级别管理的角色。
+主要承担的功能：镜像管理（镜像导入导出删除）、容器管理（容器创建删除停止），文件系统的快照管理。 runc：底层运行时，属于直接与底层操作系统交互的角色；类似的 runtime 还有 kata、Firecracker、gVisor 等，用于不同的操作系统平台且遵循 OCI 规范。
+主要承担的功能：根据镜像配置，使用系统提供的 cgroups 之类的资源隔离组件，为不同的容器创建运行环境，然后调起 endpoint。 containerd 和 kubernetes 都通过 systemd 维护进程，二者之间通过 gRPC 进行通信（遵循 OCI 规范）
+containerd 和 runc 是直接通过进程调用的方式进行交互和绑定。大白话就是 containerd 为每个容器开了一个 shim 进程；然后 shim 进程拼了一个 runc 命令跑容器，并作为主进程接管所有的 runc 僵尸进程，然后监控容器的状态。
+从 kubernetes 到 runc 的流程 kuberlet 通过 gRPC 向 containerd 发送命令调用 以前是 kuberlet 调用 CRI-containerd，然后 CRI-containerd 再调用 contaienrd；后来 cri 直接作为一个插件集成进了 containerd，调用链缩短为了 kubelet -&amp;gt; containerd -&amp;gt; runc 源码也可以看到，cri 现在在 containerd 的内部是作为插件进行加载的。 containerd 收到请求，创建 containerd-shim 实例 containerd-shim 实例才会真正操作容器，负责管理一个容器的整个声明周期，并且对其状态进行监控和上报；容器进程需要一个父进程来做状态收集、维持 stdin 等 fd 打开等工作，假如这个父进程就是 containerd，那如果 containerd 挂掉的话，整个宿主机上所有的容器都得退出了，引入 containerd-shim 可以规避这个问题。 创建 shim 进程（通过 runtime/shim 的 newInit() 初始化） newInit() 中会调用 process.</description>
+    </item>
+    
+    <item>
+      <title>containerd 默认配置参数解析</title>
+      <link>/posts/2023/20230123-containerd-%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Mon, 23 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230123-containerd-%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90/</guid>
+      <description>该配置文件的所有配置项，都会加载到 Config 结构体中（坐标：services/server/config/config.go）。
+该文档可以配合 containerd 服务加载流程对照使用。
+TOML 快速入门，可见博客文章 TOML 配置格式详解 disabled_plugins = [] # 禁用的插件名列表 imports = [] # 导入其他的 toml 配置并应用（import 的 toml 配置文件 version 参数不能大于此 toml 配置） oom_score = 0 # containerd 主进程的 OOM Score（/proc/&amp;lt;pid&amp;gt;/oom_score_adj），范围 -1000 到 1000，OOM Killer 会根据该值回收进程 # 可见 https://learning-kernel.readthedocs.io/en/latest/mem-management.html plugin_dir = &amp;#34;&amp;#34; # 插件的路径 required_plugins = [] # 需要引入的插件名列表 root = &amp;#34;/var/lib/containerd&amp;#34; # containerd 的根目录，用来保存持久化数据，包括 Snapshots, Content, Metadata 以及各种插件的数据，每一个插件都有自己单独的目录 # 默认所有的 container 文件都会存于该路径下 # containerd 所有功能都来自于已加载的插件 state = &amp;#34;/run/containerd&amp;#34; # containerd 的状态目录 temp = &amp;#34;&amp;#34; version = 2 # toml 配置文件的版本 [cgroup] # Linux cgroup 的定制化参数（与创建 container 相关） path = &amp;#34;&amp;#34; # 指定 cgroup 的路径，默认 &amp;#34;&amp;#34; 值则会找默认的 cgroup [debug] # 配置 containerd socket 连接的 debug 监听端口，一般生产环境用不到 address = &amp;#34;&amp;#34; # socket 地址，默认 &amp;#34;&amp;#34; 值则会找 /run/containerd/debug.</description>
+    </item>
+    
+    <item>
+      <title>contaienrd 简介及安装运行</title>
+      <link>/posts/2023/20230121-contaienrd-%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Sat, 21 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230121-contaienrd-%E7%AE%80%E4%BB%8B/</guid>
+      <description>一、什么是 containerd Containerd 是一个工业级标准的容器运行时，它强调简单性、健壮性和可移植性。Containerd 可以在宿主机中管理完整的容器生命周期，核心功能有：
+管理容器的生命周期(从创建容器到销毁容器) 拉取/推送容器镜像 存储管理(管理镜像及容器数据的存储) 调用 runC 运行容器(与 runC 等容器运行时交互) 管理容器网络接口及网络 二、安装并运行 containerd 官网安装步骤 从官网下载 containerd-&amp;lt;VERSION&amp;gt;-&amp;lt;OS&amp;gt;-&amp;lt;ARCH&amp;gt;.tar.gz 包，并解压到 /usr/local 目录：
+$ tar Cxzvf /usr/local containerd-1.6.2-linux-amd64.tar.gz bin/ bin/containerd-shim-runc-v2 bin/containerd-shim bin/ctr bin/containerd-shim-runc-v1 bin/containerd bin/containerd-stress 可以使用 systemd 启动 containerd 服务，从 https://raw.githubusercontent.com/containerd/containerd/main/containerd.service 下载 containerd.service 并放置到 /usr/local/lib/systemd/system/containerd.service，使用如下命令运行：
+systemctl daemon-reload systemctl enable --now containerd containerd 运行依赖 runc，可以从 https://github.com/containernetworking/plugins/releases 下载 cni-plugins-&amp;lt;OS&amp;gt;-&amp;lt;ARCH&amp;gt;-&amp;lt;VERSION&amp;gt;.tgz 包，并把 runc 文件放置到 /usr/local/sbin/runc 路径下：
+$ install -m 755 runc.amd64 /usr/local/sbin/runc 三、containerd 上下游生态 北向：containerd通过实现Kubernetes的CRI（容器运行时接口）接口与Kubernetes进行交互</description>
+    </item>
+    
+    <item>
+      <title>数据库操作命令速查</title>
+      <link>/posts/2022/20220109-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5/</link>
+      <pubDate>Sun, 09 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2022/20220109-%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5/</guid>
+      <description>增 insert into man (id, name, age) value (1, &amp;#39;jack&amp;#39;, 27) # 按照结构插入数据 insert man values (4, &amp;#39;a&amp;#39;, 1), (5, &amp;#39;b&amp;#39;, null) # 插入多条数据 删 delete form man delete * form man # 删除整张表 delete from man where id = 2 # 删除表中的指定数据 truncate man #不可逆删除 改 update man set id = 2 where name = &amp;#39;jack&amp;#39; # 更新 man 表中为 jack 的数据，将 id 改为 2 update man set age = 30 where id = 5 or id = 4 # 更新 man 表中 id 为 4 或 5 的数据，将 age 改为 30 查 desc man # 看 man 表的数据格式 desc bus.</description>
+    </item>
+    
+    <item>
+      <title>MRO、装饰器的调用顺序——Python 中需要注意的细节</title>
+      <link>/posts/2021/20211227-mro%E8%A3%85%E9%A5%B0%E5%99%A8%E7%9A%84%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8Fpython-%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%BB%86%E8%8A%82/</link>
+      <pubDate>Mon, 27 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20211227-mro%E8%A3%85%E9%A5%B0%E5%99%A8%E7%9A%84%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8Fpython-%E4%B8%AD%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E7%BB%86%E8%8A%82/</guid>
+      <description>1. 重载运算符的调用顺序 class Foo: def __init__(self, name): self._name = name def __str__(self): return self._name def __eq__(self, other): return other is self class Bar(Foo): def __eq__(self, other): return str(self) == str(other) class Foo1: def __init__(self, name): self._name = name def __str__(self): return self._name def __eq__(self, other): return str(self) == str(other) foo = Foo(&amp;#34;Hello&amp;#34;) bar = Bar(&amp;#34;Hello&amp;#34;) foo1 = Foo1(&amp;#34;Hello&amp;#34;) print(foo == bar) # True, 调用了 bar 的 __eq__ print(bar == foo) # True, 调用了 bar 的 __eq__ print(foo == foo1) # False, 调用了 foo 的 __eq__ print(foo1 == foo) # True, 调用了 foo1 的 __eq__ Python 中，如果 == 符号两端变量属于具有继承关系的类，则会优先调用子类的重载方法；如果 == 符号两端变量分别属于两个完全不同的类，则会调用左端类的重载进行判断（见代码中print部分的后两个）</description>
+    </item>
+    
+    <item>
+      <title>XML 转 JSON 的 TypeScript 简易实现</title>
+      <link>/posts/2021/20211003-xml-%E8%BD%AC-json-%E7%9A%84-typescript-%E7%AE%80%E6%98%93%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Sun, 03 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20211003-xml-%E8%BD%AC-json-%E7%9A%84-typescript-%E7%AE%80%E6%98%93%E5%AE%9E%E7%8E%B0/</guid>
+      <description>为什么重复写脚本？ 最近在参与的一个 TypeScript 项目上出现了一个功能，即通过读取 xml 文件的属性信息来检查特定的动作是否执行完成。当然作为一名合格的模块战士，最好的方式就是用第三方库来解析 xml 文件，但作为一个折腾玩家，自己实现的功能才更加具有可控性。
+json 相较于 xml 更加通用和方便，虽然 npm 上已经有 sax 这个开源库提供现成的 xml 解析方案了，但这些方案由于需要兼容很多“阴间” xml 样例，不得已会存在很多匹配上的的冗余代码。因此，考虑到项目中的 xml 并不存在特殊格式，所以可以简化很多步骤，在执行速度以及体积大小上会存在一定的优势。
+方案简要 这一次的算法实现，我并没有过多地考虑性能优化——这并不只是因为我偷懒——主要还是先实现一个可用的 Demo 为主。xml 的内容解析类似于文本分析，所以在实现时很自然地就往递归遍历想了，简单粗暴，效果拔群。具体思路就是正确找出标签的开头位置和结尾位置进行解析，然后中间的内容递归到下一层进行匹配解析。
+从这个角度出发，要解决的问题就分为了三个：标签文本拆分，json 对象构建，内容解析。
+标签文本拆分 xml 始终以 &amp;lt;&amp;gt; 为标签进行内容分割，夹着子文本和子标签。所以如果要正确进行后续的匹配，只需要按照 &amp;lt;&amp;gt; 标记进行内容上的分割即可，然后将生成的字符串列表交给下一层进行处理。最终的实现效果是这样的：
+源文本： &amp;#34; &amp;lt;/param&amp;gt; Hello World!&amp;lt;a&amp;gt;test&amp;lt;/a&amp;gt;Cest la vie &amp;lt;/param&amp;gt;&amp;#34; // 使用 .trim() 去除两边多余的空格回车 目标字符串列表： [ &amp;#34;&amp;lt;/param&amp;gt;&amp;#34;, &amp;#34;Hello World!&amp;#34;, &amp;#34;&amp;lt;a&amp;gt;&amp;#34;, &amp;#34;test&amp;#34;, &amp;#34;&amp;lt;/a&amp;gt;&amp;#34;, &amp;#34;Cest la vie&amp;#34;, &amp;#34;&amp;lt;/param&amp;gt;&amp;#34; ] 这样便可以方便得按照标签为单位进行处理了，这一部分在实现上没有考虑太多，直接新开辟了一个容器（再次偷懒），然后双指针遍历一遍匹配 &amp;lt;&amp;gt; 存入内存即可。后续再根据该列表的内容以及对应的规则进行 json 对象构建和参数匹配。
+json 对象构建 内容解析部分需要根据 xml 的文本内容来构建 json 结构。首先是捣鼓这个结构到底长啥样，不仅需要具有通用性，而且不能够丢失原文本的信息（能够反向还原回去）。</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】动态规划 &amp; 最长公共子序列</title>
+      <link>/posts/2021/20210604-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</link>
+      <pubDate>Fri, 04 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210604-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</guid>
+      <description>突然发现自己有很长一段时间没有学习和更新算法相关的内容了。当然这并不完全是因为懒，主要还是临近毕业事务较多没能顾得上，做题的也感觉生分了许多。
+什么是最长公共子序列（LCS, Longest Common Sequence） 关于 LCS 网络上有两种不同的含义，一个是“最长公共字符串（Longest Common String）”，一个是“最长公共子序列（Longest Commo Sequence）”。二者存在一定的差别，本文单独就后者进行相关的讨论。
+最长公共子序列是动态规划中的一个经典的问题，即给定序列 A 和序列 B，然后求出两个序列中最大的公共子序列的长度，且该公共子序列中的元素可以不相邻。这类型的题目如果使用暴力解法一般都会直接顶满指数级的 $O(n^2)$ 复杂度，因此一般都会使用动态规划的写法来求解。
+问题解法 LeetCode 上的对应题目见【1143. 最长公共子序列】。
+首先介绍一下常规的暴力解法，直接通过递归来遍历所有可能的情况。代码如下：
+def lcs(s1, s2): if s1 == &amp;#34;&amp;#34; or s2 == &amp;#34;&amp;#34;: return 0 elif s1[-1] == s2[-1]: return lcs(s1[:-1], s2[:-1])+1 else: return max(lcs(s1, s2[:-1]), lcs(s1[:-1], s2)) 这一写法显然存在着不足，即递归的部分会大量的重复，从而导致时间上的开销过大。因此，我们引入动态规划算法并建立矩阵进行相关数据的存储。假设两个字符串分别为 text1 和 text2，并定义dp[i][j] 为 text1 在 [0, i] 范围内的子串和 text2 在 [0, j] 范围内的子串的最长公共子序列。
+状态转移：如果 text1[i-1]==text2[j-1]，那么说明我们找到了公共子串中的一个字符，则 dp[i][j] = dp[i-1][j-1] + 1；否则，如果 text1[i-1]!</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】布隆过滤器</title>
+      <link>/posts/2021/20210428-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</link>
+      <pubDate>Wed, 28 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210428-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</guid>
+      <description>话不多说，这次直接切入主题，介绍一种牺牲准确性的哈希加速方法——布隆过滤器。这种数据结构及其算法原理较为简单，所以内容不会过于复杂。
+什么是布隆过滤器（Bloom Filter） 布隆过滤器（英语：Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。
+上面是来自维基百科的介绍，详情可见布隆过滤器 - 维基百科。
+说白了，布隆过滤器就类似与 set() 的操作，可以用于匹配特定键是否在集合之中。其原理也很简单，就是使用了多个哈希函数对键进行哈希得出多个值，然后将内存中对应位置设置为 1，如下图所示（来源见水印）：
+当我们有一个 obj1 和 obj2 时，首先用 3 个 Hash 函数进行哈希得出对应的地址，然后依次设为 1，即可实现写入布隆过滤器的过程。
+归纳一下具体的算法步骤：
+初始化 k 个 Hash 函数，同时保证其能够分别哈希到不同的内存位置； 初始化一个长度为 n 比特的数组（bitarray/bitmap），每个位都设置为 0； 加入 key 时，先散列出 k 个地址，并将该位置的数据设置为 1； 查找 key 时，同样散列出 k 个地址，然后查询内存对应的内存位置，若全为 1 可认为在集合中，若有 0 则一定不在集合中。 该算法的缺点十分明显，因为位置存在重复性，所以不能够进行删除操作；同时，由于查询出来的内存位置此时可能已经有了其他的键 Hash 出来的 1，所以全为 1 的时候存在一定的误判率——当然，有 0 就已经可以证明该键并没有经过哈希了，不会发生误判。
+这时候相信很多人会有一个疑问：为什么不用直接用哈希表呢？正常情况下，为了保证哈希表 $O(1)$ 的复杂度以及防止哈希冲突，哈希表的存储效率通常在 50% 以下，这就意味着哈希表往往都会较大，而布隆过滤器不用存键值，而且更加“紧凑”，所以可以在相对于小的内存里提供较好的查找性能。但代价就是存在一定的误判率，业务中也需要进行该方面的考量。
+当数据量较小的时候，直接使用哈希表便可以优雅地解决问题了；此时使用布隆过滤器反而还需要承担额外不必要的错误率，得不偿失。
+常用场景 实际的应用场景中，布隆过滤器广泛地应用于网页黑名单系统、垃圾邮件过滤系统、网页 URL 去重、垃圾邮件识别、大集合中重复元素的判断和缓存穿透等。下面是一些详细的场景：
+数据库防止穿库。 Google Bigtable，HBase 和 Cassandra 以及 Postgresql 使用BloomFilter来减少不存在的行或列的磁盘查找。避免代价高昂的磁盘查找会大大提高数据库查询操作的性能。 业务场景中判断用户是否阅读过某视频或文章，比如抖音或头条，当然会导致一定的误判，但不会让用户看到重复的内容。 缓存宕机、缓存击穿场景，一般判断用户是否在缓存中，如果在则直接返回结果，不在则查询db，如果来一波冷数据，会导致缓存大量击穿，造成雪崩效应，这时候可以用布隆过滤器当缓存的索引，只有在布隆过滤器中，才去查询缓存，如果没查询到，则穿透到db。如果不在布隆器中，则直接返回。 WEB拦截器，如果相同请求则拦截，防止重复被攻击。用户第一次请求，将请求参数放入布隆过滤器中，当第二次请求时，先判断请求参数是否被布隆过滤器命中。可以提高缓存命中率。Squid 网页代理缓存服务器在 cache digests 中就使用了布隆过滤器。Google Chrome浏览器使用了布隆过滤器加速安全浏览服务 Venti 文档存储系统也采用布隆过滤器来检测先前存储的数据。 SPIN 模型检测器也使用布隆过滤器在大规模验证问题时跟踪可达状态空间。 （摘自愚公要移山的答案）</description>
+    </item>
+    
+    <item>
+      <title>用 Python 实现一个可自动识别的文件夹单向同步功能</title>
+      <link>/posts/2021/20210327-%E7%94%A8-python-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8F%AF%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%95%E5%90%91%E5%90%8C%E6%AD%A5%E5%8A%9F%E8%83%BD/</link>
+      <pubDate>Sat, 27 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210327-%E7%94%A8-python-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%8F%AF%E8%87%AA%E5%8A%A8%E8%AF%86%E5%88%AB%E7%9A%84%E6%96%87%E4%BB%B6%E5%A4%B9%E5%8D%95%E5%90%91%E5%90%8C%E6%AD%A5%E5%8A%9F%E8%83%BD/</guid>
+      <description>写在前面：这是我对类 unison 这样猝发式同步工具的一种复现尝试；因为我平时主要就是在一个文件夹内进行操作，所以算法更为简单，并没有实现针对单个文件进行处理的双向同步。 我如今已经使用了更为高效易用的 FreeFileSync 去进行文件同步和备份操作，该程序已经归档。
+为什么我想写这个算法 在日常生活以及学习中，文件夹同步这一操作自然是必不可少的，一个方便使用的文件同步软件可以很好的对这种进行操作。通过我以前的文章可以了解到，我之前一直都在使用 Unison 来进行本地以及 WSL 不同的文件夹间的同步。而后来由于自己的问题，更换电脑后，由于 Unison 麻烦的配置以及自己对于文件夹同步的想法，我还是想尝试自己写一个文件夹同步的算法。
+文件夹同步的方式有两种，一种是 rsync 那样的单向同步，一种是 Unison 一样的双向同步（Unison 也是基于 rsync 的）；当然我更需要的是双向的，所以这就不由得涉及到了很多的同步问题，最后我还是改成实现一个自动识别主文件夹的单向同步，这同样也可以达到双向同步的效果。
+算法细节 算法很简单，总共分为两个层面。首先是同步的工具，我直接使用了 rsync 来进行传输的操作，然后同步两个或多个文件夹即可；第二个部分就是判断哪个文件夹为同步的主文件夹，这一部分使用了文件的时间戳作为指纹保存，在同步之后，如果有与保存的指纹不同，则可判定其做了修改，即新文件夹。
+时间戳生成算法 def timeset(path, data: dict, prefix: str): source = os.getcwd() path_list = os.listdir(path) os.chdir(path) for n in path_list: if os.path.isfile(n): if n != &amp;#39;syncing.json&amp;#39;: data[os.path.join(prefix, n)] = int(os.path.getmtime(n)) else: timeset(n, data, os.path.join(prefix, n)) os.chdir(source) return data 而如果在数据中没有指纹，则两个文件夹为新文件夹，此时直接取时间戳最大的文件夹。在判断完哪一个文件夹为同步的主文件夹之后，直接进行 rsync 同步即可。
+算法源码 当然，为了保证该脚本的可用性，文件地址判定以及信息确认之类的都采用了严谨的写法，从而保证不会出现错误。
+def sync_folder_local(*args, main=None): # WARNING: This function only works correctly with single-folder editing # It would have a bug occured when multi folders were edited database = load_json(f&amp;#39;{ os.</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】基于用户投票的排序算法</title>
+      <link>/posts/2021/20210224-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E6%8A%95%E7%A5%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Wed, 24 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210224-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%9F%BA%E4%BA%8E%E7%94%A8%E6%88%B7%E6%8A%95%E7%A5%A8%E7%9A%84%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</guid>
+      <description>这是一篇拖了很久的文章，其实很早之前便想把它写出来，但无奈只能拖到了现在。希望现在趁着还有些闲心，可以把以前记录过的坑全给填齐了。
+基于用户投票的排序算法十分多样，不同社交平台的机制（点赞，点踩，热度等）会基于不同变量的排序算法。为了保证算法的普遍适用性，文章仅对一般的基于用户投票的算法模型进行介绍，全文使用“主题”作为排序的元素。
+牛顿冷却算法 这是一个常用的基于时间和投票的排序算法，使用了指数式衰减的牛顿冷却公式为基础。其最为直观的结果就是投票高且时间较近的主题的排名会更为靠前，然后随着时间的增加，该主题便会“冷却”，排名逐渐降低。
+公式如下：
+$$T&amp;rsquo;(t)=-\alpha(T(t)-H)$$
+$T(t)$：温度 $T$ 的时间 $t$ 的函数 $T&amp;rsquo;(t)$：温度 $T$ 的时间 $t$ 的导数 $H$ 代表室温，$T(t)-H$ 就是当前温度与室温之间的温差 常数 $\alpha(\alpha&amp;gt;0)$：室温与降温速率之间的比例关系，不同的物质有不同的 $\alpha$ 值。 基于这样的式子，我们可以进一步将其化简，得出我们最终在排序算法中所使用的式子：
+$$T=T_0e^{-\alpha(t-t_0)}$$
+$T$ 和 $t$：当前时刻的温度和时间 $T_0$ 和 $t_0$：之前的某一时刻的温度和时间 $\alpha$ ：冷却系数，一般根据需求计算得出，且 $\alpha$ 越大，同一时间衰减的速度越快 可以看出，牛顿冷却算法在需要考虑时间和票数两种因素的情况下，可以做一个很好的权衡。
+威尔逊区间 因为“牛顿冷却算法”的指数衰减特性，其只适用于一段时间内的排序，而“威尔逊区间” 则适用于对整体的主题进行排序。
+为什么需要“威尔逊区间”算法来进行排序呢，直接赞的数量减去踩的数量不好吗？这就涉及到样本空间的问题了。
+假设现在有两个主题，一个有 500 赞和 450 踩，另一个有 60 赞和 0 踩，那么按照直观的解法 $60 - 0 &amp;gt; 500 - 450$，第二个放在了前面。实际上这样并不合理，因为明显第一个主题的讨论更高，这便意味着该主题的权重应该更高，更具有代表性，所以理应让第一个主题排序靠前。同理，$Score=\frac{赞成票}{总票数}$ 在有很多小样本的情况下也十分不准确。
+基于这样的想法，有了下面这个太长不看的公式：
+$$\frac{\bar{p}+\frac{1}{2n}z_{1-\frac{\alpha}{2}}^2\pm z_{1-\frac{\alpha}{2}}\sqrt{\frac{\bar{p}(1-\bar{p})}{n}+\frac{z_{1-\frac{\alpha}{2}}^2}{4n^2}}}{1+\frac{1}{n}z_{1-\frac{\alpha}{2}}^2}$$
+$\bar{p}$：赞成票比例 $n$：样本大小 $z_{1-\frac{\alpha}{2}}$：对应某个置信水平的 $z$ 统计量（参考概率论） 通过式子我们可以看出，最大值为 $\frac{\bar{p}+\frac{1}{2n}z_{1-\frac{\alpha}{2}}^2+z_{1-\frac{\alpha}{2}}\sqrt{\frac{\bar{p}(1-\bar{p})}{n}+\frac{z_{1-\frac{\alpha}{2}}^2}{4n^2}}}{1+\frac{1}{n}z_{1-\frac{\alpha}{2}}^2}$，最小值为 $\frac{\bar{p}+\frac{1}{2n}z_{1-\frac{\alpha}{2}}^2-z_{1-\frac{\alpha}{2}}\sqrt{\frac{\bar{p}(1-\bar{p})}{n}+\frac{z_{1-\frac{\alpha}{2}}^2}{4n^2}}}{1+\frac{1}{n}z_{1-\frac{\alpha}{2}}^2}$（就是取了个正负号）。当 n 足够大时，最小值便会趋向于 $\bar{p}$，反之在样本量小时，该值便会远远小于 $\bar{p}$。这就达到了样本量大的权重更高这一要求。</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】meet-in-the-middle 算法</title>
+      <link>/posts/2021/20210223-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0meet-in-the-middle-%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210223-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0meet-in-the-middle-%E7%AE%97%E6%B3%95/</guid>
+      <description>meet-in-the-middle 算法（又称折半搜索、双向搜索），属于一种优化的 DFS 或 BFS 算法。同分治算法近似，它将问题进行了拆分，然后进行合并归一，得出最后的结果。这样做的好处是在穷举解的时候能够对很多情况进行剪枝，降低了时间复杂度。
+n &amp;lt;= 40 的搜索类型题目一般都可以优化，本质上这是一种空间换时间的算法。
+穷举类的问题当匹配条件越多的时候，其时间复杂度便会越大，所以可以通过将多个条件拆分匹配的方式来减小复杂度。 简单来说，这就是“分而治之”的一种手段。
+常见类型 求和 这一部分可直接见「举个例子」部分。
+双向搜索 这在关系网处理和图的路径规划中经常使用，且在寻路问题中表现很好。算法会同时从两个节点开始搜索，并且看什么时候这两个搜索的边界相遇。这个可以将需要扩展的节点降低到 $O(p^{k/2})$。
+2DES 破解 DES 算法为密码体制中的对称密码体制，又被称为美国数据加密标准，是 1972 年美国 IBM 公司研制的对称密码体制加密算法。明文按 64 位进行分组，密钥长 64 位，密钥事实上是 56 位参与 DES 运算（第 8、16、24、32、40、48、56、64 位是校验位， 使得每个密钥都有奇数个1），分组后的明文组和 56 位的密钥按位替代或交换的方法形成密文组的加密方法。
+DES 算法如今之所以被淘汰，是因为秘钥空间太小。其密钥的 $2^{56}$ 种可能性在以前是很难穷举破解的，但如今随着算力的发展，把所有可能的秘钥遍历一遍也是可以的（参考 BTC 挖矿）。在这之后的 DES 算法便开始显得力不从心，亟待升级，于是就有了 3DES 算法——使用 3 个密钥进行 3 次 DES 加密运算。
+2DES 去哪儿了？答案是 DES 算法过后直接提升到了 3DES，直接把 2DES 给跳过了。理论上来说 2DES 具有 $2^{102}$ 的秘钥空间，已足够使用，但是为什么不用呢，原因就在于 meet-in-the-middle 算法为基础的中间人攻击（Diffile-Hellman 发明）——信息论课堂上的老朋友了，在这儿只用简单的语言介绍其原理。
+假设我需要通过一组 2DES 的明文与密文破解出秘钥，我并不需要遍历 $2^{102}$ 整个秘钥空间，而是使用明文枚举 $2^{56}$ 个秘钥加密，得到 $2^{56}$ 个中间值并存入哈希表；然后使用密文枚举 $2^{56}$ 个秘钥并与明文的哈希库做对比，得到的所有值中一定有一个与之前加密所得到的相等，即 $E_{ki}(p) = D_{kj}(s)$，meet-in-the-middle 结束。这整个破解过程中不难发现，只要有足够大的空间用于存储哈希表，2DES 破解密码的时间仅仅相当于破解 2 次 DES。</description>
+    </item>
+    
+    <item>
+      <title>文件夹同步工具 unison 简易指北</title>
+      <link>/posts/2021/20210218-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E7%AE%80%E6%98%93%E6%8C%87%E5%8C%97/</link>
+      <pubDate>Thu, 18 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210218-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E7%AE%80%E6%98%93%E6%8C%87%E5%8C%97/</guid>
+      <description>unison 是一款跨 Windows/Linux/MacOS 平台的双向文件同步工具，不仅支持本地对本地同步，也支持通过 SSH、RSH 和 Socket 等网络协议进行同步；但需要注意的是，unison 无法实现实时双向同步，仅支持猝发实时同步。
+unison 安装 Linux unison 可以直接安装预编译包：sudo apt-get install unison
+Others Windows、MacOS 以及其它平台和源码，都能够在官方 Github 仓库的 Release 页面下载。
+两个文件夹之间双向同步文件 在两台主机之间进行文件夹同步，需要确保主机都正确安装了 unison，并部署了 ssh 服务。unison 会开启一个监听端口，使用 unison dir1 ssh://username@remotehostname(ip)//absolute/path/to/dir2 结构的命令即可进行文件同步。
+注意：两个文件夹的顺序是任意的，且只能够在远程和本地、本地和本地之间进行同步，不能够对两台远程机进行操作。
+本地文件夹进行同步，直接使用 unison dir1 dir2 进行同步即可。
+unison 的配置选项 unison 会在用户目录创建一个 .unison 文件夹来保存相关的配置，里面一般会存有 defalut.prf 作为默认配置。在平时可以通过 unison default dir1 dir2 来选择 default 作为配置文件进行同步。除了使用配置文件外，unison 命令还可以接受如下的一些参数：
+-testserver 测试连通性，连接到服务器即退出；如果服务器端 unison 可执行文件不在默认目录下，甚至没有 unison 命令（需要你编译一个上传到服务器），则需要使用 -servercmd 参数告诉要执行的服务器 unison 命令位置。 使用 -testserver 参数，则成功链接即退出，也不会去执行目录的比较等后续操作。 -auto 接受缺省的动作，然后等待用户确认是否执行。 -batch batch mode, 全自动模式，接受缺省动作，并执行。 -ignore xxx 增加 xxx 到忽略列表中 -ignorecase [true|false|default] 是否忽略文件名大小写 -follow xxx 是否支持对符号连接指向内容的同步； 例如在我的 ~/.</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】动态规划 &amp; 二分搜索法</title>
+      <link>/posts/2021/20210122-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%B3%95/</link>
+      <pubDate>Fri, 22 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210122-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%B3%95/</guid>
+      <description>动态规划（DP, Dynamic Programming）由于需要对问题进行抽象拆分，然后化简，因此具有一定的难度和乐趣。它属于一种算法设计的技巧，即对暴力遍历中的各种情况（重叠子问题）进行合理地剪枝，从而达到减小时间复杂度的目标。
+动态规划的一般流程为：递归的暴力解法 → 带备忘录的递归解法 → 非递归的动态规划解法。也就是说，平时使用动态规划的方法来解决一个特定的问题时，并不是一蹴而就的，而是从暴力的问题出发进行一步步优化而来的。
+此外，本文除了会对动态规划及其相关的应用进行阐述之外，还会介绍对动态规划问题进行优化的二分搜索法。
+一个问题是该用递推、贪心、搜索还是动态规划，完全是由这个问题本身阶段间状态的转移方式决定的。
+缓存、重叠子问题、记忆化 以 Fibonacci 数列为例，直接写出来的代码是这样的：
+def fib(n:int) -&amp;gt; int: if n == 0: return 0 elif n == 1 or n == 2: return 1 else: return fib(n - 1) + fib(n - 2) 这是使用了递归的 Fibonacci 数列求解算法。因为是递归，所以该解法中一定会存在着重复部分，计算机还是会傻傻地对其重新计算一次，这便是需要进行优化剪枝的重叠子问题。我们可以在计算 fib(n) 之后，使用 LRU Cache 或者创建一个列表来把 fib(n) 给缓存起来，这样就可以避免对其进行重复运算，从而节省时间。
+这便是动态规划最基本的运用，即通过一张表作为“备忘录”，从而减少递归的次数。
+原本暴力求解的时间复杂度为 $O(n^2)$，经过优化后的时间复杂度仅为 $O(n)$。但是空间复杂度增大为了 $O(n)$，这本质上就是一个空间换时间的过程。
+举个例子 下面用几个例子来归纳动态规划的原理：
+凑零钱问题：「322.零钱兑换」 这一题其实可以通过递归的方法来解决，但是自从 LeetCode 改了测试集之后，递归解法就一定会超时（无论如何神优化都会超），所以只得从 DP 来入手。此题和背包问题一致，即求在固定的容量下能够装得下的最小（最大）数量。方法在于通过一个 DP Table 的形式来对最小硬币数量来进行记录，首先需要分析它的转移方程，当容量为 1（amount == 1）时的最优值一致往下推，等于 2 等于 3 等于 4……，最后等于 amount 的时候便可以得出最终的结果了。</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】并查集</title>
+      <link>/posts/2021/20210117-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B9%B6%E6%9F%A5%E9%9B%86/</link>
+      <pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210117-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B9%B6%E6%9F%A5%E9%9B%86/</guid>
+      <description>最近在 LeetCode 的每日一题中，大量出现了使用并查集进行算法设计的题目，如「684.冗余连接」、「803.打砖块」、「947.移除最多的同行或同列石头」。并查集这一点本身并不难学习，但有时候在题目中不容易发现对应的连接关系。
+什么是并查集？ 并查集是一种树形的数据结构，旨在通过特定的规则，将属于同一类别的点归于一个树中，构成一个集合。其包括两种基本操作：
+合并（Union）：将两个不同的集合合并为一个集合，或者将新的元素合入特定的集合 查找（Find）：确定两个元素是否在同一个集合中，或者确定某个元素处于哪一个子集 注意：虽然并查集是一个树形的数据结构，但考虑到内存以及时空复杂度，一般都会使用数组或者列表来实现，而非 Node 树结点。
+建树初始化 首先，需要根据当前数据的规模来开辟空间，同时确保原始数据能够 One-Hot 地映射到创建的节点集合中，即创建的空间能够包括所有的原始数据。下面是样板代码（Python）：
+class Union: def __init__(self, N): self.p = list(range(N)) # 初始化列表，每一个节点的值等于索引，其中 N 要根据原始数据确定 这一部分不难理解，即开辟一块额外的空间来保存并查集中的父子关系，因为现在还没有初始化关系，所以每一个点都指向自己的位置。接下来便是合并（Union），目的是输入数据形成并查集，样板代码如下：
+def find(self, x): if x != self.p[x]: self.p[x] = self.find(self.p[x]) # 这里的递归是为了压缩路径，加快查找速度，下面会讲到 return self.p[x] find() 会返回该点所对应集合的根（父亲），如果两个点返回同样的根（父亲），则证明其处于同一个集合中。
+一般情况下合并的样本代码如下：
+def union(self, x, y): xr = self.find(x) # 找出 x 对应的根 yr = self.find(y) # 找出 y 对应的根 self.p[xr] = yr # 将 x 的根指向 y 的根，因为其属于同一个集合 不同的题目用到的数据不同，一般是某个点的坐标 (x, y) 之类。这类题往往都可以使用递归、DP 等方法解决，所以我经常会往递归和 DP 的方向去想，然后卡在某个状态上（暴风哭泣），从而忘了直接用更简单的并查集来解。</description>
+    </item>
+    
+    <item>
+      <title>如何优雅地使用 WSL2</title>
+      <link>/posts/2021/20210107-%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E4%BD%BF%E7%94%A8-wsl2/</link>
+      <pubDate>Thu, 07 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210107-%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E4%BD%BF%E7%94%A8-wsl2/</guid>
+      <description>这是一个 WSL2 的使用指南，以及本人在安装和使用 WSL2 所遇到的各种问题的解决办法整理。
+为什么是 WSL2？ 最开始使用 WSL2，纯粹是想尝试一下这个“世界上最好的 Linux 发行版”，然后便一发不可收拾，慢慢地将自己的开发环境也转移到了 WSL2 上。WSL2 毕竟是微软的亲儿子，其在各种软件以及环境的适配方面十分出色（相比于其他的虚拟机），VSCode、J 系软件等都能够很好地自动检查和适配 WSL 的相关配置，大部分的配置都能够做到自动化，摆脱了传统虚拟机繁琐的操作，这显著降低了 Linux on Windows 这一体系的使用难度和入门门槛。
+在使用 WSL2 的这几个月的时间里，我也充分地了解了 WSL2 的运行机制和使用方法。在过程中也发现很多的 WSL2 坑在中文互联网上并没有特定的解决方法，只能通过 StackOverflow 和 GitHub Issue 中找到，因此我把这一部分的内容集中了起来，勉强算作一个较为完备的流程。
+我后续踩到的坑也会持续更新至这篇文章中。
+什么是 WSL2 WSL2 是 WSL 的“升级版”，相比于 WSL 只提供了一层类 Linux 的接口，WSL2 是在虚拟硬件层（Hyper-V）上运行了完整的 Linux 系统，与 Windows10 平级；且 Windows 和 WSL 之间可以通过 wsl 命令进行访问，也可以当成一个远程机进行维护。同时，从 Linux 的角度看，Windows10 的文件系统和 Linux 的文件系统直接挂载到了 /mnt 上，所以跨文件系统访问十分方便。
+相比于 WSL1，WSL2 的启动速度会更快、内存占用更少，同时性能也更高。
+注意：因为 Windows10 和 Linux 属于两种不同的文件系统，且目前 WSL2 在文件系统的兼容性上还存在问题——系统间进行 IO 走的网络协议，所以如果经常进行跨文件系统 IO 的话会有肉眼可见的性能损失（见官方对比）。对此建议将文件移至 Linux 系统的根目录（/mnt/wsl）内再进行操作。</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 204 Review</title>
+      <link>/posts/2020/20200830-leetcode-weekly-contest-204-review/</link>
+      <pubDate>Sun, 30 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200830-leetcode-weekly-contest-204-review/</guid>
+      <description>因为 30 日当天返校，要处理很多事情，所以当天搁置了，此为后来补上的文章。
+第一题：重复至少 K 次且长度为 M 的模式 给你一个正整数数组 arr，请你找出一个长度为 m 且在数组中至少重复 k 次的模式。
+模式 是由一个或多个值组成的子数组（连续的子序列），连续重复多次但不重叠。 模式由其长度和重复次数定义。
+如果数组中存在至少重复 k 次且长度为 m 的模式，则返回 true，否则返回 false。
+示例：
+输入：arr = [1,2,4,4,4,4], m = 1, k = 3 输出：true 解释：模式 (4) 的长度为 1 ，且连续重复 4 次。注意，模式可以重复 k 次或更多次，但不能少于 k 次。 分析 这道题用 Python 的话就是一道秒解题，直接匹配即可。
+代码 Python class Solution: def containsPattern(self, arr: List[int], m: int, k: int) -&amp;gt; bool: i = 0 while i &amp;lt; len(arr): p = arr[i:i+m] if p * k == arr[i:i+m*k]: return True i += 1 return False 第二题：乘积为正数的最长子数组长度 给你一个整数数组 nums ，请你求出乘积为正数的最长子数组的长度。</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 203 Review</title>
+      <link>/posts/2020/20200823-leetcode-weekly-contest-203-review/</link>
+      <pubDate>Sun, 23 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200823-leetcode-weekly-contest-203-review/</guid>
+      <description>每一道题目都附上了链接，现在可以更直接地进入题目了。
+第一题：圆形赛道上经过次数最多的扇区 给你一个整数 n 和一个整数数组 rounds 。有一条圆形赛道由 n 个扇区组成，扇区编号从 1 到 n 。现将在这条赛道上举办一场马拉松比赛，该马拉松全程由 m 个阶段组成。其中，第 i 个阶段将会从扇区 rounds[i - 1] 开始，到扇区 rounds[i] 结束。举例来说，第 1 阶段从 rounds[0] 开始，到 rounds[1] 结束。
+请你以数组形式返回经过次数最多的那几个扇区，按扇区编号升序排列。
+注意，赛道按扇区编号升序逆时针形成一个圆（请参见第一个示例）。
+示例：
+输入：n = 4, rounds = [1,3,1,2] 输出：[1,2] 解释：本场马拉松比赛从扇区 1 开始。经过各个扇区的次序如下所示： 1 --&amp;gt; 2 --&amp;gt; 3（阶段 1 结束）--&amp;gt; 4 --&amp;gt; 1（阶段 2 结束）--&amp;gt; 2（阶段 3 结束，即本场马拉松结束） 其中，扇区 1 和 2 都经过了两次，它们是经过次数最多的两个扇区。扇区 3 和 4 都只经过了一次。 分析 这道题的意思就是统计所有经过的块，然后输出经过次数最多块的列表。但其实这道题还可以进行化简，因为每转一圈，圈上的每一块都加一，这跟不加是一样的（因为所有的都一起加了），所以之用考虑开头和结尾经过的块即可。
+代码 Python class Solution: def mostVisited(self, n: int, rounds: List[int]) -&amp;gt; List[int]: tmp_l = rounds[0] # 最左边的数字 tmp_r = rounds[-1] # 最右边的数字 if tmp_l == tmp_r: return [tmp_r] # 相等则返回该数字 elif tmp_r &amp;lt; tmp_l: # 如果两边数字不相等，则可化简为从左数字到右数字的一轮 return [n for n in range(1, tmp_r + 1)] + [m for m in range(tmp_l, n + 1)] # 如果右边的数字比左边的小，即 [左到最大] + [1 到最右] 的数列 else: return [n for n in range(tmp_l, tmp_r + 1)] # 反之就是 [左到右] 的数列 C++ class Solution { public List&amp;lt;Integer&amp;gt; mostVisited(int n, int[] rounds) { int start = rounds[0]; int end = rounds[rounds.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 202 Review</title>
+      <link>/posts/2020/20200816-leetcode-weekly-contest-202-review/</link>
+      <pubDate>Sun, 16 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200816-leetcode-weekly-contest-202-review/</guid>
+      <description>第一题：存在连续三个奇数的数组 给你一个整数数组 arr，请你判断数组中是否存在连续三个元素都是奇数的情况：如果存在，请返回 true ；否则，返回 false。
+示例：
+输入：arr = [2,6,4,1] 输出：false 解释：不存在连续三个元素都是奇数的情况。 分析 直接写一个判断就解决了。
+代码 Python class Solution: def threeConsecutiveOdds(self, arr: List[int]) -&amp;gt; bool: count = 0 for n in arr: if not n % 2: count = 0 elif count == 2: return True else: count += 1 return False C++ class Solution { public: bool threeConsecutiveOdds(vector&amp;lt;int&amp;gt;&amp;amp; arr) { int count = 0; for (int n = 0; n &amp;lt; arr.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 201 Review</title>
+      <link>/posts/2020/20200809-leetcode-weekly-contest-201-review/</link>
+      <pubDate>Sun, 09 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200809-leetcode-weekly-contest-201-review/</guid>
+      <description>第一题：Make The String Great 给你一个由大小写英文字母组成的字符串 s 。
+一个整理好的字符串中，两个相邻字符 s[i] 和 s[i + 1] 不会同时满足下述条件：
+0 &amp;lt;= i &amp;lt;= s.length - 2 s[i] 是小写字符，但 s[i + 1] 是相同的大写字符；反之亦然。 请你将字符串整理好，每次你都可以从字符串中选出满足上述条件的两个相邻字符并删除，直到字符串整理好为止。
+请返回整理好的字符串。题目保证在给出的约束条件下，测试样例对应的答案是唯一的。
+注意：空字符串也属于整理好的字符串，尽管其中没有任何字符。
+示例：
+输入：s = &amp;#34;leEeetcode&amp;#34; 输出：&amp;#34;leetcode&amp;#34; 解释：无论你第一次选的是 i = 1 还是 i = 2，都会使 &amp;#34;leEeetcode&amp;#34; 缩减为 &amp;#34;leetcode&amp;#34; 。 分析 这一题的意思就是说，遍历整个字符串，然后如果当前的字符和下一个字符大小写不同，字母相同的时候，则删除两个字母，直到整个字符串满足条件为止。
+所以就遍历然后写一个判断条件判断即可。可以通过每次匹配到之后遍历指针归零的方式，来减少每一次的遍历长度；同时，考虑到归零也有可能出现无意义的匹配，所以可以在匹配到字符串之后指针减一（即从上一个字符继续匹配），这样就可以进一步减少无意义的匹配。
+这样的题需要用到自己构建的指针遍历，所以要注意 out of range 的问题。
+代码 Python class Solution: def makeGood(self, s: str) -&amp;gt; str: if not s: return &amp;#34;&amp;#34; # 非空继续 i = 0 # 初始化指针 while i &amp;lt;= len(s) - 2: # 指针范围 if s[i] == s[i + 1]: # 如果相等就下一个 i += 1 elif abs(ord(s[i]) - ord(s[i + 1])) == 32: # 不相等则判断是否满足条件 s = s[:i] + s[i + 2:] # 删除两个字符 i = max(0, i - 1) # i -= 1 else: i += 1 return s C++ class Solution { public: string makeGood(string s) { int i = 0; while (i &amp;lt; s.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 200 Review</title>
+      <link>/posts/2020/20200802-leetcode-weekly-contest-200-review/</link>
+      <pubDate>Sun, 02 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200802-leetcode-weekly-contest-200-review/</guid>
+      <description>第一题：Count Good Triplets 给你一个整数数组 arr ，以及 a、b、c 三个整数。请你统计其中好三元组的数量。
+如果三元组 (arr[i], arr[j], arr[k]) 满足下列全部条件，则认为它是一个 好三元组 。
+0 &amp;lt;= i &amp;lt; j &amp;lt; k &amp;lt; arr.length |arr[i] - arr[j]| &amp;lt;= a |arr[j] - arr[k]| &amp;lt;= b |arr[i] - arr[k]| &amp;lt;= c 其中 |x| 表示 x 的绝对值。
+返回好三元组的数量。
+示例：
+输入：arr = [3,0,1,1,9,7], a = 7, b = 2, c = 3 输出：4 解释：一共有 4 个好三元组：[(3,0,1), (3,0,1), (3,1,1), (0,1,1)] 。 分析 这一道题可以直接穷举，然后遍历出所有符合的条件即可。但是直接穷举的话还是比较慢，需要剪枝提高效率。剪枝的方法是先判断第一个条件，满足之后再进行下面的循环，这样可以在测试集中减少接近一半的时间。
+代码 Python class Solution: def countGoodTriplets(self, arr: List[int], a: int, b: int, c: int) -&amp;gt; int: length = len(arr) token = 0 for i in range(length - 2): # 第一个数 for j in range(i + 1, length - 1): # 第二个数 if abs(arr[i] - arr[j]) &amp;lt;= a: # 在满足第一个条件之后再取第三个数 for k in range(j + 1, length): # 第三个数 if (abs(arr[j] - arr[k]) &amp;lt;= b and abs(arr[i] - arr[k]) &amp;lt;= c): # 继续判断后两个条件 token += 1 # 满足则 +1 return token C++ class Solution { public: int countGoodTriplets(vector&amp;lt;int&amp;gt;&amp;amp; arr, int a, int b, int c) { int length = arr.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 199 Review</title>
+      <link>/posts/2020/20200726-leetcode-weekly-contest-199-review/</link>
+      <pubDate>Sun, 26 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200726-leetcode-weekly-contest-199-review/</guid>
+      <description>第一题：Shuffle String 给你一个字符串 s 和一个长度相同的整数数组 indices。请你重新排列字符串 s ，其中第 i 个字符需要移动到 indices[i] 指示的位置，返回重新排列后的字符串。
+输入：s = &amp;#34;codeleet&amp;#34;, indices = [4,5,6,7,0,2,1,3] 输出：&amp;#34;leetcode&amp;#34; 解释：如图所示，&amp;#34;codeleet&amp;#34; 重新排列后变为 &amp;#34;leetcode&amp;#34; 。 分析 这道题的算法比较简单，有两种解法。
+第一种是在不能新建字符串空间的情况下，可以通过从开头遍历，然后根据 indices 循环交换字符串，直到 indices 正好为该位置的指针时，转到下一个继续进行循环交换。
+第二种是可以新建字符串空间的情况，这样子就比较简单了，直接新建或复制出一个同等长度的字符串，然后根据 indices 遍历原字符串，然后放到新数组的对应位置即可。
+很明显，第一种的时间复杂度为 $O(n^2)$，第二种的时间复杂度为 $O(n)$，所以最终提交的为第二种方法的代码。源码如下：
+class Solution: def restoreString(self, s: str, indices: List[int]) -&amp;gt; str: m = [0] * len(indices) # 新建一个列表 for i,n in enumerate(indices): m[n] = s[i] # 按照 indices 为指针，把字符放到新列表中的对应的位置 return &amp;#34;&amp;#34;.join(m) # 用 join 把列表合成字符串 因为 Python 语言本身不支持字符串的枚举，所以只能生成列表进行操作，最后再合起来。而 C++ 可以直接枚举操作字符串，所以代码相对简单一些：</description>
+    </item>
+    
+    <item>
+      <title>DHT11 温湿度传感器在树莓派上的通信</title>
+      <link>/posts/2020/20200614-dht11-%E6%B8%A9%E6%B9%BF%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E4%B8%8A%E7%9A%84%E9%80%9A%E4%BF%A1/</link>
+      <pubDate>Sun, 14 Jun 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200614-dht11-%E6%B8%A9%E6%B9%BF%E5%BA%A6%E4%BC%A0%E6%84%9F%E5%99%A8%E5%9C%A8%E6%A0%91%E8%8E%93%E6%B4%BE%E4%B8%8A%E7%9A%84%E9%80%9A%E4%BF%A1/</guid>
+      <description>最近因为嵌入式的课程设计，买了一些硬件，显示屏跟着官方文档可以基本上没有问题完成所有的设置并正常使用；可是到了 DHT11 这儿就出现了问题，我在网上找了好几个版本的代码，都没有办法能够直接正常从传感器那儿获取数据。
+比如下面这个，原地址在这儿：
+#!/usr/bin/python #-*- coding:utf-8 -*- import RPi.GPIO as GPIO import time channel = 7 #引脚号Pin7 data = [] #温湿度值 j = 0 #计数器 GPIO.setmode(GPIO.BOARD) #以BOARD编码格式 time.sleep(1) #时延一秒 GPIO.setup(channel, GPIO.OUT) GPIO.output(channel, GPIO.LOW) time.sleep(0.02) #给信号提示传感器开始工作 GPIO.output(channel, GPIO.HIGH) GPIO.setup(channel, GPIO.IN) while GPIO.input(channel) == GPIO.LOW: continue while GPIO.input(channel) == GPIO.HIGH: continue while j &amp;lt; 40: k = 0 while GPIO.input(channel) == GPIO.LOW: continue while GPIO.input(channel) == GPIO.HIGH: k += 1 if k &amp;gt; 100: break if k &amp;lt; 8: #通过计数的方式判断是数据位高电平长短，以置0或1。（此方式有待商榷） data.</description>
+    </item>
+    
+    <item>
+      <title>树莓派系统安装及配置（无网线、显示屏和键鼠）</title>
+      <link>/posts/2020/20200527-%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%E6%97%A0%E7%BD%91%E7%BA%BF%E6%98%BE%E7%A4%BA%E5%B1%8F%E5%92%8C%E9%94%AE%E9%BC%A0/</link>
+      <pubDate>Wed, 27 May 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200527-%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%E6%97%A0%E7%BD%91%E7%BA%BF%E6%98%BE%E7%A4%BA%E5%B1%8F%E5%92%8C%E9%94%AE%E9%BC%A0/</guid>
+      <description>为啥要折腾？ 因为最近有课程设计需要使用到树莓派，所以我花了好大的精力联系学姐和辅导员，把板子从学校给寄了回来。
+寄回来之后，我发现没有显示器和额外的键盘，完全没办法直接使用（哭）。然后我就尝试 SSH 连接树莓派，但是似乎连接设置出现了问题无法连接，所以最后只能够重新安装树莓派的系统了。
+我之前安装树莓派的时候是有显示器和额外的一套键鼠的，整体安装过程十分简单直观。这一次因为没有这些额外的硬件，所以我也是查了许多的教程，才摸索出了一个比较正常和方便的安装过程，而且全称可以完全无头，即无网线、显示屏和键盘，只用一条电源线即可。
+开始前的软件准备 系统镜像，可以去官网的下载页面下载，我是用的是 Buster Lite； SD Card Formatter 工具 Win32 Disk Imager 安装系统 将下载下来的系统镜像 .img 文件解压出来； 使用 SD Card Formatter 工具格式化 SD 卡； 使用 Win32 Disk Imager 工具将系统镜像写入 SD 卡； 至此系统已经安装完成，但还需要两步操作，使树莓派在上电开机后能够自动连接上 WiFi 网络。
+在电脑上打开 SD 卡的 /boot 分区（Windows 系统上只能够看到这个分区），在根目录下新建一个名字为 ssh 的空文件；
+再新建一个 wpa_supplicant.conf 文件，写入如下内容：
+country=GB ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev update_config=1 network={ ssid=&amp;#34;WiFi 名称，注意大小写&amp;#34; psk=&amp;#34;WiFi 密码&amp;#34; } 这个文件会写入树莓派系统中的 /etc/wpa_supplicant/wpa_supplicant.conf，所以一般设置一次，后面就不用设置了，可以开机自动接入网络。 这一个配置文件的 network 还有其他的配置项，详情可以见这篇博客。
+搞定上述操作之后，就可以把 SD 卡插入树莓派，然后上电开机了。
+远程连接树莓派 远程连接树莓派这一步简单一些，直接找到树莓派的 IP，然后 SSH 连接即可。</description>
+    </item>
+    
+    <item>
+      <title>图像相似度的比较算法</title>
+      <link>/posts/2020/20200423-%E5%9B%BE%E5%83%8F%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%9A%84%E6%AF%94%E8%BE%83%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Thu, 23 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200423-%E5%9B%BE%E5%83%8F%E7%9B%B8%E4%BC%BC%E5%BA%A6%E7%9A%84%E6%AF%94%E8%BE%83%E7%AE%97%E6%B3%95/</guid>
+      <description>最近花了些时间研究了一下图像相似度算法，感觉还是挺有趣的，也解决了我以前的一些疑惑。
+目前的识别算法主要有几种，第一个是感知哈希算法，其中包括均值哈希（aHash）、感知哈希（pHash）和差异值哈希（dHash）；第二种是 SIFT。而目前主要使用的是 SIFT 和 pHash。
+下面简单介绍一下这几种算法的原理和优势。
+均值哈希（aHash） 原理 缩放图片：将图片进行下采样至 8*8 的像素矩阵，共 64 个像素； 灰度图片：将图片转化为 256 阶的灰度图； 灰度算法有很多: 心理学灰度 $Gray=0.299\times R+0.587\times G+0.114\times B$ 平均值算法 $Gray=(R+G+B)/3$ 绿色值算法 $Gray=G$
+二元化图片：将图片进行二元化转换； 这一步简单来说，就是先计算灰度均值，然后依次遍历原像素值，高于灰度值记为 1，低于记为 0，最后生成了一个 64 bits 的数列。
+构造哈希：对 64 bits 的数列进行哈希，生成“感知指纹”； 对比指纹：对两幅图片的“指纹”计算汉明距离，距离越小则相似度越高。 算法特点 aHash 的算法简单粗暴，速度快。但是由于对图片进行了下采样和二值化，所以自然丢失了非常多的数据，精确度也就很低。
+感知哈希（pHash） 原理 缩放图片：将图片进行下采样，生成正方形的图片（图片一般大于 8*8，3*32）； 灰度图片：该步骤与上同； 计算 DCT（离散余弦变换）：DCT 计算将图片按照频率分布进行分解； 裁剪 DCT：经过 DCT 操作后，会生成一个 32*32 的频域矩阵，我们只需要保存左上角的 8*8 即可，这一部分是图片的低频； 二元化矩阵：对上一步的矩阵进行处理，算法同样是计算平均值然后二元化； 构造哈希：对 64 bits 的数列进行哈希，生成“感知指纹”； 对比指纹：对两幅图片的“指纹”计算汉明距离，距离越小则相似度越高。 DCT 的算法相较复杂，主要用于数据或图像的压缩，能够将空域的信号转换到频域上，具有良好的去相关性的性能。 一维 DCT 变换： $$ F(u)=c(u)\sum_{i=0}^{N-1}f(i)cos[\frac{(i+0.</description>
+    </item>
+    
+    <item>
+      <title>谈谈我所认为的主流编程语言</title>
+      <link>/posts/2020/20200422-%E8%B0%88%E8%B0%88%E6%88%91%E6%89%80%E8%AE%A4%E4%B8%BA%E7%9A%84%E4%B8%BB%E6%B5%81%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/</link>
+      <pubDate>Wed, 22 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200422-%E8%B0%88%E8%B0%88%E6%88%91%E6%89%80%E8%AE%A4%E4%B8%BA%E7%9A%84%E4%B8%BB%E6%B5%81%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/</guid>
+      <description>呆在家里的时间越来越长了，这也给了我很多时间去做一些以前没有想过的思考。
+所以趁着目前的学习阶段，我想谈谈我所认为的三种主流编程语言——C++、Java、Python。这三种语言有着不同的运行方式、不同的运用场景和不同的使用目的，也是我目前主要使用的三个编程语言。
+C++ C++ 是我最早接触的语言之一了，早期的 C++ 更多地是 C 的一个不严谨的“超集”，你甚至可以在 C++ 的语法环境下编写 C 程序，两者相互兼容。后来的 C++ 17 / 18 反而越来越像“Python”，这也足以显示目前语言的一个发展方向。
+的确如今的 C++ 复杂度已经过分高了，从而让开发者把更多的时间花在了指针以及内存管理等本可以自动处理的部分。这对于如今互联网企业的“敏捷开发”潮流来说十分不友好，如果贯彻 C++ 就需要花费大量时间搭建脚手架。
+优点 优点显而易见，程序运行效率极高，接近于机器语言，并且相比于 C 有 OOP 的能力。所以这能够让 C++ 开发者在硬件层次上考虑问题，从而最大化利用硬件的性能。
+所以这就特别适用于对运行速度要求很高，与系统底层相关的程序。
+缺点 那它还有什么缺点呢？首当其冲的就是在开发过程中，工程师需要花费远超算法实现的时间（至少对于我来说是这样）去解决硬件资源管理和内存管理的问题，而这些问题往往与目前解决的问题无关。
+第二点便是代码量和复杂的设计。这大概是历史原因，因为 C++ 一直在鼓励复杂的、精致的设计，导致了庞大的代码体积。
+Java Java 是我最近学习的一种语言。期初我学习 Java 的兴趣并不高，但是后来的作业中用了一下，便继续深入了一点，现在大概还是初学者阶段吧。（笑）
+因为我的 Java 经验并不是特别足，所以就简单对比一下 Java 与其他语言的优劣。
+优点 优点很直观，就是“Write once, run anywhere”，这也是当初 Java 被设计出来的原因。因为 Java 需要先将代码编译成可供 JVM 运行的字节码，所以这也意味着程序可以完全不依赖与运行的平台，只要有 runtime 的运行环境即可。
+其次便是 Java 的编程过程相较于 C++ 就轻松了很多，不仅比 C++ 小巧简单，而且有 GC，OOP，强类型，与 C 结合比较好。</description>
+    </item>
+    
+    <item>
+      <title>字符编码：ASCII、UTF8 和 Unicode</title>
+      <link>/posts/2020/20200416-%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81asciiutf8-%E5%92%8C-unicode/</link>
+      <pubDate>Thu, 16 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200416-%E5%AD%97%E7%AC%A6%E7%BC%96%E7%A0%81asciiutf8-%E5%92%8C-unicode/</guid>
+      <description>字符的编码格式有很多种，互联网上广泛存在着不同种类编码方式编码的文本文件。肯定有很多人在编程的时候遇到过读取文件出现乱码的问题，这很大程度上就是文件编码格式和读取时使用的编码格式不一致造成的，所以就经常需要根据文本编码类型来选择相应的编码格式读取文件。
+字符编码是计算机技术的基石，所以了解编码格式的一些皮毛还是十分重要的。我再网络上查阅了相关的几篇文章，总结了主流编码格式 ASCII、UTF-8、Unicode 的相关知识点信息。
+字节与编码 在了解不同的编码格式之前，我们还需要知道计算机是如何进行存储和编码的。
+计算机内部处理和存储信息时，所有的信息都可以描述为一串特定的二进制信息流，其最小的单位为一个比特 $bit$ ，每一个比特都存在 $0$ 和 $1$ 两种状态；而 8 个比特便是一个字节 $byte$，可以表达出 $2^8=256$ 种状态。通过读取不同的状态，计算机就可以执行对应的操作，而这个把特定的一个状态对应到特定操作上的这个过程，就是编码。
+下面贴一个比较官方的描述：
+编码是信息从一种形式或格式转换为另一种形式的过程，也称为计算机编程语言的代码简称编码。用预先规定的方法将文字、数字或其它对象编成数码，或将信息、数据转换成规定的电脉冲信号。
+所以，有了编码，我们就可以通过这样的方式写一套编码表，将不同的字符用对应的字节码来表示，从而让计算机“读懂”文字，并且显示在屏幕上，形成这一篇文章（笑）。
+ASCII 编码 ASCII 码是最早的编码方式之一，早在上个世纪 60 年代，美国就制定了相关的一套字符编码表，并一直沿用至今。
+ASCII 码中一共规定了 128 个字符，每一个字符通过 1 个字节来表示，但这 128 个符号只占用了一个字节的后 7 位，最前一位规定为 0。
+对于英语国家来说，128 个字符就足够使用了，但是表示其他的语言是远远不够的——比如法语、希腊语等。（因为当时主要是在欧洲国家和北美洲国家使用，所以没有考虑到庞大的汉字系统）
+因此后来 ASCII 码的标准被广泛使用，为了适应非英语语系国家以及数学家（误）的使用需求，码表还需要添加其他的非英语字符和符号，于是之前空出来的 1 比特就派上了用场，扩展 ASCII 问世。
+非 ASCII 编码 不同的国家有不同的字母，128 个字符是囊括不完的。所以实际上高位的 128 个字符在不同的国家编码对应着不同的符号。比如 ASCII 码中，130 号字符在法语里是 é，而在希伯来语里是 ג，在其他的语言又会是另一个符号。
+但是无论怎么改，都是高 128 位（128-255）不同，而低 128 位（0-127）所表示的符号全是一样的。
+汉字由于是另一个语系，使用的符号十分之多，汉字就 10 万往上语法符号还和英文不一样，所以肯定需要更更多地字节去编码表示。例如简体中文常见的编码方式是 GB2312，每一个汉字需要两个字节来表示，理论上最多能够表示 $2^8\times2^8=65536$ 个符号。</description>
+    </item>
+    
+    <item>
+      <title>AC 自动机的原理及实现</title>
+      <link>/posts/2020/20200412-ac-%E8%87%AA%E5%8A%A8%E6%9C%BA%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Sun, 12 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200412-ac-%E8%87%AA%E5%8A%A8%E6%9C%BA%E7%9A%84%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/</guid>
+      <description>在最近水论坛的时候，我发现了一个网友友问的这样一个问题：
+数千万篇文章，寻找其中包含成语的句子。成语有数万条。 目前没有对文章内容建立过全文索引，鉴于这个事情是一次性的，为此搞个索引可能也成本过高。暂时的解决方案是，把成语都放在一条 re.compile(&amp;lsquo;乌合之众|鸡犬相闻|&amp;hellip;&amp;rsquo;)里面去搜索文章，但效率总觉得不理想。 求教，是否可能有更高效的解决方案。
+我写过爬虫，也做过相关的一些算法，对于数据匹配无非就是正则表达式了，毕竟爬的数据量都还不大，效率方面的感知不强。
+但是正则的缺点就是效率低，所以这个有大规模数据匹配需求的网友就遇到了低效的问题。这时，底下的一条评论靠着简单的一个词解决了这个问题：
+“AC 自动机。”
+AC 自动机是什么？ AC 自动机的原理简单来说，就是根据输入的多个模式串去建立一个树模型，然后再根据这个模型作字符串匹配。那它具体是什么呢？
+在聊 AC 自动机之前，我们还需要了解两个基本算法：KMP 和 trie 树。
+KMP KMP 算法是一种改进的字符串匹配算法，能够高效地进行串匹配。
+传统的一种字符串匹配算法是类似于滑窗一样地进行逐个比对，如下：
+T: b a a b a b c x W: a b a Wrong. T: b a a b a b c √ x W: a b a Wrong. T: b a a b a b c √ √ √ W: a b a Right. 后来有人发现了，这样匹配多没效率啊，不如匹配错误的时候，跳过一些字符，可以减少匹配计算量。</description>
+    </item>
+    
+    <item>
+      <title>数据压缩和信息熵</title>
+      <link>/posts/2020/20200409-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9%E5%92%8C%E4%BF%A1%E6%81%AF%E7%86%B5/</link>
+      <pubDate>Thu, 09 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200409-%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9%E5%92%8C%E4%BF%A1%E6%81%AF%E7%86%B5/</guid>
+      <description>压缩的原理及有限性 在计算机导论中简要介绍过几种压缩的算法，原理十分简单，便是利用更短、熵更高的字符串来代替一些重复率高，熵较低的字符串，从而实现缩短字节量，减小文件的体积的目的。步骤大致如下：
+得到文件的概率分布，统计频次高的以及频次低的部分； 结合统计结果对源文件重新编码，用短字符代替重复的长字符。 举个例子：
+AAAAAAAAAA =&amp;gt; 10A // 用 3 个字符代表 10 个字符，压缩比 30% ABCABCABCABCABCABCABCABC =&amp;gt; 8ABC // 用 4 个字符代表 24 个字符，压缩比 16.7% 显而易见，越是重复率高的文件，就意味着能够压缩的量就越大，体积也自然能够越小；反之，如果一个文件的重复率低，也就越难压缩。所以每一个文件的熵不同，压缩比率也会不尽相同。
+那么，压缩有一定的限度吗？ 当然，在信息论中我们学到过，无损压缩实现的前提是输出和输入必须要严格一一对应，也就是不能够出现多对一的映射。我们可以假设任意文件都能够压缩到 $n$ bits，那么就能够产生 $2^n$ 种可能的压缩结果。这便意味着如果有 $2^n+m$ 个不同的文件，就会导致有 $m+1$ 个文件出现了重复，所以压缩一定存在着极限。
+压缩的极限 一个文件的压缩极限可以通过计算文件的平均信息熵大小，从而推导出来。当然这个最小值仅仅是理论最小值，并不一定能够达到，下面我将用浅显的方式做一些推导。
+在不同的文件格式中可能存在着不同的计算方法，比如文本文件可能就会根据文本中的字符计算信息熵，图片会使用 RGB 排列来计算信息熵等。我这里使用了一个通用的方法——将任意文件按字节的形式进行读取，统计不同字节的信息熵。
+计算平均信息熵的公式为：
+$$H(X)=\sum P_n * \log(\frac{1}{P_n})$$
+$P_n$ 为每一个字节在文件中出现的概率，计算方法如下：
+$$P_n=\frac{N_{freq}}{N_{all}}$$
+$N_{freq}$ 为该字节在文件中出现的次数，$N_{all}$ 文件的总字节量。
+其中的 $log$ 在信息论中是默认以 2 为底的（在通信原理中是默认以 10 为底），通常会做省略处理。
+最后求出来的 $H(X)$ 是文件每一个字节的平均信息熵，如果乘以总字节数就可以得到理论的压缩极限大小：
+$$Size_{min}=H(X) * N_{all}$$
+信息熵的含义 信息熵只反映内容的随机性，与内容本身无关。不管是什么文件，服从同样的概率分布就会得到同样的信息熵。 信息熵越大，表示占用的二进制位越长，可以表达更多的符号。即信息熵越大，信息量就越大，但这并不代表所获得的的信息越大。 代码实现 (Python) import sys from math import log from argparse import ArgumentParser from os.</description>
+    </item>
+    
+    <item>
+      <title>将自己的轮子部署到 PyPI</title>
+      <link>/posts/2020/20200405-%E5%B0%86%E8%87%AA%E5%B7%B1%E7%9A%84%E8%BD%AE%E5%AD%90%E9%83%A8%E7%BD%B2%E5%88%B0-pypi/</link>
+      <pubDate>Sun, 05 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200405-%E5%B0%86%E8%87%AA%E5%B7%B1%E7%9A%84%E8%BD%AE%E5%AD%90%E9%83%A8%E7%BD%B2%E5%88%B0-pypi/</guid>
+      <description>自己写了一个效率高，功能简单易用的轮子，如何把它分享给其他人呢？部署到 PyPI 是一个不错方法。
+包结构 一个正常的包结构如下（以 oneline 为例）：
+- Folder - oneline - __init__.py - README.md - LISENCE - setup.py oneline 文件夹就是自己写的库了，为必须项； README.md 是库的文档介绍； LISENCE 是这个包所使用的协议； setup.py 是这个包的配置脚本，为必须项。 虽然 README.md 和 LISENCE 不是必须的，但有这两个文件能方便使用者使用。
+setup.py setup.py 类似于一个配置的脚本，在生成和配置轮子的时候都会使用到。结构如下：
+import setuptools with open(&amp;#34;README.md&amp;#34;, &amp;#34;r&amp;#34;, encoding=&amp;#34;utf-8&amp;#34;) as fh: long_description = fh.read() setuptools.setup( name=&amp;#39;one-line&amp;#39;, version=&amp;#39;0.1.31&amp;#39;, description=&amp;#39;Make every step oneLine.&amp;#39;, long_description=long_description, # 没有 README 这一项可以不要 long_description_content_type=&amp;#34;text/markdown&amp;#34;, install_requires=[ # 该包的依赖包，安装时会检查是否满足依赖要求 &amp;#39;pandas&amp;#39;, &amp;#39;seaborn&amp;#39;, &amp;#39;scipy&amp;#39;, &amp;#39;scikit-learn&amp;#39; ], packages=setuptools.find_packages(), # 该库中含有的包，一般就自动搜索 author=&amp;#39;Zeesain Tsui&amp;#39;, author_email=&amp;#39;clarenceehsu@163.</description>
+    </item>
+    
+    <item>
+      <title>使用 exe4j 打包 Java 程序</title>
+      <link>/posts/2020/20200318-%E4%BD%BF%E7%94%A8-exe4j-%E6%89%93%E5%8C%85-java-%E7%A8%8B%E5%BA%8F/</link>
+      <pubDate>Wed, 18 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200318-%E4%BD%BF%E7%94%A8-exe4j-%E6%89%93%E5%8C%85-java-%E7%A8%8B%E5%BA%8F/</guid>
+      <description>上回说到，因为要提交一个加密算法的作业，我用 Java 写了加密程序以及用 Python 写了文本比较程序做校验。因为老师需要提交一个工程项目，所以为了测试方便我们需要将这些程序打包成可执行文件。对比了那么多的 Java 打包软件，我最终使用了 exe4j 软件进行 Java 程序的打包。
+JRE 因为 Java 程序的运行需要 JVM，所以我们需要一个 jre 的包去给 exe 文件提供环境。一般在 JDK 的文件夹里会带有一个 jre，如果没有的话可以网上找资源下载或者直接通过 JDK 生成，方式如下：
+以管理员身份运行 CMD，并且 cd 到电脑的 JDK 的目录里面（没有管理员身份可能会失败）； 执行 bin\jlink.exe --module-path jmods --add-modules java.desktop --output jre 生成 jre，已生成相关目录会报错； 生成完毕，可以复制到项目文件夹 生成 jar 程序 jar 程序就不多介绍了，因为我目前使用的 JetBrains 全家桶，所以直接用 IDEA 生成 jar 程序，复制出来供后续打包使用。
+exe4j exe4j 可以从官方渠道下载，软件本身是免费的，如果不使用 Lisence 就会在运行的时候弹出一个警告窗口。此时我们可以在网上去找 Lisence 码来用，软件本身没有其他的检查机制，都是可以使用的。在主界面的下方填入序列号（其他的随便填）即可生成纯净的程序。
+这一部分的步骤基本上可以参考其他的教程，但是这里面会出现一些问题，列在下方：
+路径问题 这是一个老生常谈的问题了，路径中不能够出现中文，否则会出现 jre 无法使用的问题。
+都 2020 年了，现代编译器都已经支持中文了，这属实有点说不过去。
+jre 路径问题 在生成程序的 JRE → Search sequence 设置项中，是 jre 的索引顺序，它会按照这个顺序去搜索引用 jre 程序作为 Java 程序的运行环境，在这里我们直接把这个设置为项目文件夹里的 jre 目录，这样只要文件夹完整，在别人的电脑里面也能直接使用。</description>
+    </item>
+    
+    <item>
+      <title>使用 pyinstaller 打包程序及路径问题</title>
+      <link>/posts/2020/20200317-%E4%BD%BF%E7%94%A8-pyinstaller-%E6%89%93%E5%8C%85%E7%A8%8B%E5%BA%8F%E5%8F%8A%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Tue, 17 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200317-%E4%BD%BF%E7%94%A8-pyinstaller-%E6%89%93%E5%8C%85%E7%A8%8B%E5%BA%8F%E5%8F%8A%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98/</guid>
+      <description>最近有一门课的小组任务要求完成 AES 加密算法，语言不限，并且提交一个完整的工程和测试程序，还要附上 README。因为对我来说难度稍微低一些，我就直接把这个给做完了。（微笑）
+为了锻炼一下我的 Java 水平和能力，所以我一开始打算全部用 Java 来写，但后来因为偷懒不想写为了展现我们灵活而全面的技术栈，所以我就用 Python 写了一个文件对比的脚本。
+pyinstaller 的安装 考虑到 Windows 各种各样的使用环境，我们直接发一个 .py 的脚本是不一定能够在其他电脑上正常运行的。因此为了方便就必须要给程序做打包，把 Python 的环境全部打包到一个二进制文件里面，这样就能够做到独立运行了。
+pyinstaller 是一个专门用来做 Python 脚本打包的库，如果没有可通过 pip install pyinstaller 进行安装。
+这里建议使用虚拟环境去安装 pyinstaller，它会根据环境中的库情况进行打包，如果使用的库多了会导致打包出来的程序会特别地大。如果在虚拟环境中做库的删改都会更加方便。
+开始打包！ 完成安装后就可以开始打包的操作了，首先需要 cd 到 .py 文件对应的目录文件夹，这样就可以保证生成出来的文件都在目录里面，整理比较方便。
+pyinstaller 常用的命令有两个：
+pyinstaller -D app.py pyinstaller -F app.py 其中的 app.py 为要打包文件的相对地址，-D 是默认命令，即生成一个目录文件，里面包含了一个启动程序和一系列的依赖文件；-F 是生成单个可执行文件的命令，它生成 build 和 dist 文件夹，其中 dist 文件夹里面的可执行文件是可以单独使用的，其余项可以删掉。
+它的原理很简单粗暴，就是将 Python 复制出来，连着脚本一起打包进去，执行的时候再全部解压到缓存文件夹里执行脚本文件。
+路径问题 打包完成之后就可以拿出来使用了，因为里面集成了 Python 的 runtime 环境，所以不管电脑里面有没有装 Python，各种姿势使用都不会影响。
+正当我以为完成之时，打开程序直接闪退。从 CMD 打开才发现程序出现了错误，要访问的文件访问不到，这时我才发现程序执行的目录（一个在 Roaming 中的缓存目录）和这个程序放的目录不是一致的，所以直接用相对地址根本访问不到所需要的文件。</description>
+    </item>
+    
+    <item>
+      <title>ASC20 比赛记录 - 3</title>
+      <link>/posts/2020/20200303-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-3/</link>
+      <pubDate>Tue, 03 Mar 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200303-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-3/</guid>
+      <description>ASC20 比赛因为疫情的原因，proposal 的提交延期了一个多月，所以中间我也休息了一段时间。最近随着诸多工作的完成，ASC 20 的比赛之旅也渐渐到了尾声。
+题目 这一次的赛题是有关 NLP 方向的，要在只使用 Pytorch 框架的情况下完成 Cloze 下游任务的设计，并且以准确率作为最终的分数计算。
+主办方并未提供 baseline，只提供了数据集，格式为 json，具体如下：
+{ &amp;#39;article&amp;#39;: &amp;#39;...&amp;#39;, &amp;#39;options&amp;#39;: [[words * 4] * 20], &amp;#39;answers&amp;#39;: [&amp;#39;A&amp;#39;,&amp;#39;B&amp;#39;... * 20] } 目前的进展及思路 在之前的训练的过程中出现了一个比较恼人的问题，最早我采用的是 4 分类，但是网络会出现不收敛的问题，我尝试了许多的手段（正如之前所提到的那样）也是没有办法去解决。后来经过检查和与师兄的讨论才发现作 4 分类本身就比较难作拟合——可能根本就没有拟合，毕竟样本太少，每一部分的文字又太多，导致 embedding 出来的矩阵差距较小。
+后来采用了 2 分类效果就好了很多，因此目前训练的成果已经成功追上了 1 队。而且由于 Transformers 在训练的时候能够自动判断 GPU 的环境使用分布式训练，所以还是很顺畅地做了分布式训练。</description>
+    </item>
+    
+    <item>
+      <title>ASC20 比赛记录 - 2</title>
+      <link>/posts/2020/20200208-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-2/</link>
+      <pubDate>Sat, 08 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200208-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95-2/</guid>
+      <description>ASC20 比赛已经到了中段，是时候给最近的工作做一下总结了。
+题目 这一次的赛题是有关 NLP 方向的，要在只使用 Pytorch 框架的情况下完成 Cloze 下游任务的设计，并且以准确率作为最终的分数计算。
+主办方并未提供 baseline，只提供了数据集，格式为 json，具体如下：
+{ &amp;#39;article&amp;#39;: &amp;#39;...&amp;#39;, &amp;#39;options&amp;#39;: [[words * 4] * 20], &amp;#39;answers&amp;#39;: [&amp;#39;A&amp;#39;,&amp;#39;B&amp;#39;... * 20] } 目前的进展及思路 之前所尝试过的预先填词的方法可行性不高，所以只能够将所有的词填进去。我们的算法是以每个空的四个选项去生成四句话，如果出现了一句话多个空的情况，则留空不填，然后以此生成了总共空数 * [ 4, 预填空句子 ] 的矩阵。
+然后就得提取特征了，用 BERT 的预训练模型 bert-base-uncased 生成向量矩阵，其中每一句话都会生成一个 [1, 768] 的向量，然后存入 .npy 文件中。把答案的 ABCD 转换为 [1, 4] 的 onehot 向量，也存入另一个 .npy 文件中，供后面训练使用。
+训练我们使用的是 BiLSTM + Attention Net，通过注意力机制来提高准确率。
+存在问题 目前训练了几波，存在这一些问题：
+out of memory 这个是老生常谈的问题了，主要的原因是 batch_size 设置得过大，从而导致显存使用过高。第二个是未终止之前的训练过程，之前通过 nohup 等手段运行的训练不会自动退出，需要主动 kill 掉。</description>
+    </item>
+    
+    <item>
+      <title>记一次服务器的维护</title>
+      <link>/posts/2020/20200129-%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BB%B4%E6%8A%A4/</link>
+      <pubDate>Wed, 29 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200129-%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BB%B4%E6%8A%A4/</guid>
+      <description>最近因为某些不可言说的原因，我趁着农历春节优惠，用 8.88 $ / 年的价格购了一台国外服务器。
+在搭好了所有环境之后，已经可以正式地部署使用了，于是我开始愉快地玩耍起来。但后来我逐渐发现，在登录服务器的时候，SSH 时 Authentication 过程相当地漫长；毕竟服务器地处遥远，我也没当回事。
+直到后来服务器密码被改掉了，我才发现原来服务器被人黑了。
+破解密码 我一开始设置的初始密码为 12345678（当时也不知道网络上坏人竟然这么多），所以也十分容易被暴力破解。
+怎么解决呢？难道就这样把自己的服务器拱手让人了吗？不，我赵铁柱是不会这么容易屈服的，于是我很快找到了解决办法。
+入手点就在于服务器的提供商在后台也给我们了一系列的运维选项，以方便我们做一些服务器以外的操作，如重装系统，更改 IP 等。我好不容易搭好了环境，不想就这么重装了，所以我打算通过 VNC 来解决。
+VNC 是虚拟网络控制台的缩写。它是一款优秀的远程控制工具软件，由著名的 AT&amp;amp;T 的欧洲研究实验室开发。VNC 是基于 UNIX 和 Linux 操作系统的免费开源软件，远程控制能力强大，高效实用，其性能可以和 Windows 和 MAC 中的任何远程控制软件媲美。
+VNC 的好处在于它会完全显示服务器当前所显示的画面，就相当于是一个远程的显示器。所以通过内网的 VNC 连接到服务器，然后点击右上角的按键重启：
+然后便是熟悉的启动界面，在 boot 状态下点击 esc 键，打断 GNU GRUB 引导，此时可以对启动项进行更改设置等操作。这个时候的操作 CentOS 6 和 CentOS 7 是不一样的，我是 CentOS 7，所以直接进入配置文件，设置为单用户模式，重新引导启动。
+此时已经可以进入 root 用户了，然后使用 passwd 命令字改密码即可。
+设置了强密码后，SSH 的速度还是很慢，正当我找不到原因时，SSH 连接服务器后系统提示我有 4000 多次失败的登录。
+还在搞我？ 我用 lastb 命令看了一下，有两个来自江苏连云港的电信 IP 一直在试 root 密码暴力破解服务器，大量占用 22 端口的资源导致我连接过程缓慢。</description>
+    </item>
+    
+    <item>
+      <title>如何利用 BERT 提取句向量</title>
+      <link>/posts/2020/20200118-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8-bert-%E6%8F%90%E5%8F%96%E5%8F%A5%E5%90%91%E9%87%8F/</link>
+      <pubDate>Sat, 18 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200118-%E5%A6%82%E4%BD%95%E5%88%A9%E7%94%A8-bert-%E6%8F%90%E5%8F%96%E5%8F%A5%E5%90%91%E9%87%8F/</guid>
+      <description>BERT 在 NLP 方向中是一个十分具有里程碑的模型，那么如何通过 BERT 提取一个句子的句向量呢？
+网络上的资料还是很多的，由于比赛要求只使用 Pytorch 框架，所以很多基于 TF 的教程和库就没办法用了。在查询了部分资料后，我终于总结出了一个提取的方法：
+这一篇总结我会尽力写得通俗易懂，一读就明白。
+算法解释 import torch from pytorch_pretrained_bert import BertTokenizer, BertModel, BertForMaskedLM 导入 torch 和 pytorch_pretrained_bert 库，站在巨人的肩膀上，直接缩短大量的训练时间。
+tokenizer = BertTokenizer.from_pretrained(&amp;#39;bert-base-uncased&amp;#39;) # 导入预训练模型 tokenized_text = tokenizer.tokenize(text) # tokenize 输入的文本 indexed_tokens = tokenizer.convert_tokens_to_ids(tokenized_text) # 向量化 这一部分的代码主要是将输入的文本转化为 tokenized 的文本，然后再把该文本给向量化。
+问题来了，什么是 tokenized 和向量化？ tokenized 即标记化，把输入的句子进行标记划的操作，举个小例子：
+tokenized_text = tokenizer.tokenize(&amp;#39;Hello world !&amp;#39;) &amp;gt;&amp;gt;&amp;gt; [&amp;#39;hello&amp;#39;, &amp;#39;world&amp;#39;, &amp;#39;!&amp;#39;] 大家可能注意到了，为什么字母全部为小写了？这是因为我们使用的模型 bert_base_uncased 是不分大小写的，所以输出的 tokenized_text 会全由小写表示。
+其实 BERT 还支持输入两个句子，但是需要放在同一个字符串中，并通过一个标记来表示一个句子的开始和结束，再举个小例子：
+tokenized_text = tokenizer.tokenize(&amp;#39;[CLS] Hello world!</description>
+    </item>
+    
+    <item>
+      <title>ASC20 比赛记录</title>
+      <link>/posts/2020/20200116-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Thu, 16 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200116-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/</guid>
+      <description>ASC20 比赛在 1 月 6 号正式开始了，我在 1 月 10 号也正是接题开始了比赛的相关工作。因为这是我第一次以学校的名义参加全球性的赛事，所以特地记录下这段时间内的学习历程和思路。
+题目 这一次的赛题是有关 NLP 方向的，要在只使用 Pytorch 框架的情况下完成 Cloze 下游任务的设计，并且以准确率作为最终的分数计算。
+主办方并未提供 baseline，只提供了数据集，格式为 json，具体如下：
+{ &amp;#39;article&amp;#39;: &amp;#39;...&amp;#39;, &amp;#39;options&amp;#39;: [[words * 4] * 20], &amp;#39;answers&amp;#39;: [&amp;#39;A&amp;#39;,&amp;#39;B&amp;#39;... * 20] } 学习 这一次的路线就非常直观了，需要走 NLP 方向，而 NLP 目前最为热门的网络模型就是 BERT。类似 ResNet 之于图像识别的网络，这是一个 NLP 中炙手可热，同时也十分常用的模型，而我们可以通过这个模型达到 word2vec 的效果，提取出文字中的向量信息，并输送到下层网络以完成下游任务。
+所以我就打算使用 BERT 作为网络中的 embedding 部分，然后下层在进行 Cloze 的填空操作。在网上简单查找并且学习了 NLP的一些实现细节，我发现了 transformer 这个网红模型，并且有了许多的预训练模型，所以我便选择了以 transformer 为基础去完成题目。
+目前的进展及思路 目前我已经基本看完了 transformer 中的 example 代码文件，并且对其工作原理有了基础的了解，可以开始准备数据集进行训练了。
+我此外则有着以下的一些不成熟的小想法：
+以我在观摩别人打比赛和自己比赛的经验，我会偏向于直接使用 pretrained 模型或者以其为底作迁移学习； 通过 BERT 提取特征并且进行猜词，然后与选项进行比对，如果不存在于选项中则需要通过比对 similarity，然后比较取最为相似的单词作为选择。 把选项放入原句中，然后通过 MRPC 下游任务计算句子的连贯性，取连贯性最高者。 考虑到上下文（比如 He or She 性别判断之类的选择），可能还需要通过另一个网络提取关键信息。 我针对第 2 点完成了基本的代码工作，但是目前就成果和效率来看，还是存在一定的不足，后续会对其进行改进，同时也会往多个方向进行探索~~，毕竟现在时间还多~~。</description>
+    </item>
+    
+    <item>
+      <title>防止过拟合和提高泛化能力的技巧</title>
+      <link>/posts/2019/20191124-%E9%98%B2%E6%AD%A2%E8%BF%87%E6%8B%9F%E5%90%88%E5%92%8C%E6%8F%90%E9%AB%98%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8A%80%E5%B7%A7/</link>
+      <pubDate>Sun, 24 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20191124-%E9%98%B2%E6%AD%A2%E8%BF%87%E6%8B%9F%E5%90%88%E5%92%8C%E6%8F%90%E9%AB%98%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8A%80%E5%B7%A7/</guid>
+      <description>深度学习是一个很奇怪的过程，有人说它是“深度炼丹”，有人说它是一个黑盒，超参调整就是玄学。
+事实上，我们不可能在深度学习中寻找到所谓的“最优解”，我们只能够在自己的能力范围之内寻找到局部的最优解，而如何提高自己网络模型的分类或者生成能力也自然有着许多的技巧。
+数据 深度学习最需要的，就是数据，一个好的数据集可以让神经网络的训练事半功倍。在我看来，数据在保证质量的前提下多多益善，样本数据越多，模型拟合的效果就会越好。因此首先，尽可能多地寻找优质数据集。
+Data Augmentation 而如果在数据集不够时，对数据的预处理就显得十分重要，对原先数据的处理扩增被称作 data augmentation，方法主要是下面的几种：
+对于语音或者图像，可以在原本的数据上加噪声，或者进行缩放，镜像等操作； 对于数值类向量，可以在原先的数据基础上进行随机； 文字类数据，我觉得并不会缺少数据集（笑）。 在数据中添加噪声，或者平移缩放等操作在很多比赛以及网络中已经证明了，可以很好地提高模型的泛化能力。
+数据归一化 这是一个老生常谈的问题了，提前把数据进行归一化可以很好地防止梯度爆炸。在网络中，我们也可以设置激活函数（sigmoid、tanh等）对数据进行归一化。而激活函数也容易造成梯度消失的问题，我们可以更换激活函数，或者进行 normalize，这会在另一篇文章里面讨论。
+数据本身 最后还有一个方法，就是从数据本身寻找问题。举个例子，老师职位和性别有关吗？车速和天气有关系吗？答案是否定的，所以要检查数据集中的某些特征是不是与我们要预测或分类的特征毫无关联，如果是的话就尽量抛弃。
+另外，如果有其他的特征或者更加适合的方法，也需要对数据进行调整。
+算法 其实在我的很多情况下，当无法采取某种特定的算法去进行数据处理的时候，便会采用深度学习其训练拟合（笑）。
+选择算法 什么算法对于特定的问题效果最好，我们是没有办法也不可能知道的，只能取范围内最优，即当前使用的算法并不一定适合当前的问题。
+如果没有头绪的话，可以从下面几点进行尝试：
+线性算法，如逻辑回归和线性判断分析 树模型，如 CART、随机森林等 SVM 或 KNN 等算法 神经网络模型，如 CNN、RNN、LSTM 然后根据经验和结果综合判断，选择目标模型进行调参或者优化，从而进一步提升效果。
+之前比赛的时候有一个大佬的解法是训练两个网络进行对抗，这个算法拿了准确率第一，当时印象挺深刻的。
+算法调优 调参是一个算法调优的必经之路，主要分为以下几点：
+模型可诊断性，模型总是处于两种状态，即欠拟合和过拟合之间，只是程度不同罢了。我们可以把 accuracy 和 loss 输出在图表中，从而作为一个有价值的诊断工具。 权重的初始化，用小的随机数初始化权重。 学习率，学习率决定了梯度下降时的范围，如果添加了更多的神经节点和网络层，就可加大学习率。这一点并不是独立的，与 batch size 等都有关系。 激活函数，激活函数其实有很多种，而且每一种激活函数都有一段流行的时间，如今一般都会使用 ReLU 函数，但 ReLU 本身存在着死神经元的问题，然后又诞生了 Leaky ReLU。尝试不同的激活函数可能会有不同的效果。 网络结构，网络的结构设计也会很大程度影响性能，在一般情况下，最好使用成熟的网络，或者尝试发表论文中的网络。 batch size 和 epoch，batch size 决定了梯度值以及权重的更新频率，一般设置的越大计算的速度就越快，反之越慢；epoch 则是样本参与训练的循环次数。 正则项，这可以很好地解决过拟合，如 dropout。 优化方法和损失函数，现在在梯度下降的过程中有许多优化器。默认的梯度下降方法是得到一个结果，然后调整动量值、学习率进行优化，而复杂的优化器则会有更多的参数设置，这需要多尝试去积累经验。 提早结束训练，一旦效果变差了，可以及时停止优化训练。而这一部分可以直接通过 TensorFlow 或者 Pytorch 框架中的 checkpoint 功能，自动选择和保存相应的模型训练点。 宏观调整 最后边是调出神经网络这个视角，从宏观的角度出发，把神经网络作为一个个体去看待问题。</description>
+    </item>
+    
+    <item>
+      <title>Docker Cheatsheet</title>
+      <link>/posts/2019/20191112-docker-cheatsheet/</link>
+      <pubDate>Tue, 12 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20191112-docker-cheatsheet/</guid>
+      <description>该版本的 Cheatsheet 由其他版本精简而来，旨在提供一个日常使用 Docker 时的速查手册。
+目录 检查版本 安装 容器(Containers) 镜像(Images) 网络(Networks) 仓管中心和仓库(Registry &amp;amp; Repository) Dockerfile 层(Layers) 链接(Links) 卷标(Volumes) 暴露端口(Exposing Ports) 安全 小贴士 检查版本 时刻关注你当前正在使用的 Docker 版本是十分重要的，这能够帮助你了解可用的特性。同时，可以让你在查找镜像时选择使用的版本。接下来让我们看看如何操作。
+docker version 查看你正在运行的 Docker 版本。 获取 Docker 服务版本：
+docker version --format &amp;#39;{{.Server.Version}}&amp;#39; 你也可以输出原始的 JSON 数据：
+docker version --format &amp;#39;{{json .}}&amp;#39; 安装 Linux Docker 官方提供了快速、易用的安装脚本：
+curl -sSL https://get.docker.com/ | sh 如果你不想执行一个不明不白的 Shell 脚本，那么请看 安装说明，选择你在用的发行版本。
+如果你是一个 Docker 超新手，那么你应当先去看看 系列教程。
+容器 (Container) 生命周期 docker create 创建容器但不启动它。 docker rename 用于重命名容器。 docker run 一键创建并同时启动该容器。 docker rm 删除容器。 docker update 调整容器的资源限制。 通常情况下，不使用任何命令行选项启动一个容器，该容器将会立即启动并停止。若需保持其运行，你可以使用 docker run -td container_id 命令。选项 -t 表示分配一个 pseudo-TTY 会话，-d 表示自动将容器与终端分离（也就是说在后台运行容器，并输出容器 ID）。</description>
+    </item>
+    
+    <item>
+      <title>让代码 Pythonic</title>
+      <link>/posts/2019/20190828-%E8%AE%A9%E4%BB%A3%E7%A0%81-pythonic/</link>
+      <pubDate>Wed, 28 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190828-%E8%AE%A9%E4%BB%A3%E7%A0%81-pythonic/</guid>
+      <description>在 Python 中打上 import this，就会出现熟悉的 The Zen of Python。
+&amp;gt;&amp;gt;&amp;gt; import this The Zen of Python, by Tim Peters Beautiful is better than ugly. Explicit is better than implicit. Simple is better than complex. Complex is better than complicated. Flat is better than nested. Sparse is better than dense. Readability counts. Special cases aren&amp;#39;t special enough to break the rules. Although practicality beats purity. Errors should never pass silently. Unless explicitly silenced.</description>
+    </item>
+    
+    <item>
+      <title>车辆驾驶行为分析——比赛复盘（二）</title>
+      <link>/posts/2019/20190822-%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%E4%BA%8C/</link>
+      <pubDate>Thu, 22 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190822-%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%E4%BA%8C/</guid>
+      <description>这一部分是比赛的思路复盘，由于时隔两个多月，只能够写个大概。
+数据预处理 在前面简单地抽出了一些文件进行了人工分析，我们发现数据出现了不同程度的遗漏，并且经纬度的值也会有着很大的偏差。于是乎现在就需要将所有的数据进行预处理，从而方便后面的分析。
+缺失值。缺失值我们采用常规的处理手段，即缺失值中的速度值和角度值等全部继承上一个点的数据；经纬度用上一个点的经纬度、速度和角度进行计算。 经纬度漂移。这个地方其实比较玄学，因为经纬度可以通过算法结合速度、角度进行计算，然而这两个参数所给的数据也存在误差。所以导致一段路上的经纬度利用算法修正也会存在一定量的漂移；后来我们尝试使用高德地图的绑路 API ，但是由于数据的限制以及调用次数的限制也存在瓶颈；再后来我们尝试动态修复，即经纬度出错的地方用速度和角度修正，速度角度出错的地方我们用经纬度修正（在第一步实现的情况下），但判断阈值很难敲定。于是最后我们选择相信速度角度数据的准确性，然后找出漂移的区块进行修正。 预处理后，丢弃一部分无用数据，然后送入分析算法之中分析。
+分析维度 一级指标 阈值界定 疲劳驾驶 采用驾驶人连续驾驶时间不得超过 4 小时，每次停车休息时间不少于 20 分钟的标准界定疲劳驾驶 急加速 设定急加速行为的加速度阈值为 3m/s² ，为避免误差，计算加速度时间间隔取为 3s 急减速 设定急加速行为的加速度阈值为 -3m/s² ，为避免误差，计算加速度时间间隔取为 3s 怠速预热 怠速预热的条件：行驶速度 v = 0；ACC 状态为 on； 超长怠速 超长怠速的条件：行驶速度 v = 0；ACC 状态为 on；怠速预热时间 t ≥ 60s 熄火滑行 熄火滑行的条件：ACC 状态为 off；速度 0 &amp;lt; V &amp;lt; 5km/h；持续时间 t ≥ 3s 超速 条件：速度 ≥ 60km/h；持续 3s 或以上 急变道 短时间内的角度变化范围在 (20°, 70°) 之间；持续时间 3-5s 上文中所有的阈值以及判断标准均是采用了国家标准或者行业规定及习惯，从而确保准确性。超速那一部分需要读取到每一个经纬度所对应的地理位置，由于调用 API 的次数有限，加之大部分的行驶路段为城市公路，所以定位了 60km/h。</description>
+    </item>
+    
+    <item>
+      <title>Advice and Definition of Data Science</title>
+      <link>/posts/2019/20190820-advice-and-definition-of-data-science/</link>
+      <pubDate>Tue, 20 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190820-advice-and-definition-of-data-science/</guid>
+      <description>This article was written after a related course, which includes my comments and notes.
+Definition of Data Science Data Science, which was called the sexiest job in the 21st century, is widely regarded as the process of using data to analyze different things, even the world. And the definition or the name came up in the 80s and 90s when some professors were looking into the statistics curriculum, and they thought it would be better to call it Data Science.</description>
+    </item>
+    
+    <item>
+      <title>如何不让 Hexo 渲染 Markdown 和 HTML 文件</title>
+      <link>/posts/2019/20190819-%E5%A6%82%E4%BD%95%E4%B8%8D%E8%AE%A9-hexo-%E6%B8%B2%E6%9F%93-markdown-%E5%92%8C-html-%E6%96%87%E4%BB%B6/</link>
+      <pubDate>Mon, 19 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190819-%E5%A6%82%E4%BD%95%E4%B8%8D%E8%AE%A9-hexo-%E6%B8%B2%E6%9F%93-markdown-%E5%92%8C-html-%E6%96%87%E4%BB%B6/</guid>
+      <description>最近想用 Hexo 搞一个测试页面和 Cheatsheet，用作日后的快捷参考和查询，而这个时候我发现了一个问题：
+我尝试着把 html 页面单独放到 source 文件夹里面，因为在 source 文件夹里面的内容会被全部放到 public 里面部署。而这个时候，我发现了我原本放的 html 页面排版完全错了，打开文件发现多了很多重复的无关内容。
+于是我发现了，可能我的 html 页面又被 Hexo 渲染了一遍。
+后来查了一下，发现 Hexo 的确会将 source 里面的 html 以及 md 文件渲染一遍形成新的 html ，并找到了其解决方法：
+防止渲染 Markdown 在站点配置文件 _config.yml 中找到 skip_render 参数，地址以 source_dir 为基准，一般为 source 文件夹。
+防止渲染 HTML 在 html 文件添加以下代码：
+--- layout: false --- 以上便可以保留原本放置于 source 文件夹中的文件。</description>
+    </item>
+    
+    <item>
+      <title>如何解决 selenium 的退出问题？ - 关于 Python 函数的运行机制</title>
+      <link>/posts/2019/20190806-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-selenium-%E7%9A%84%E9%80%80%E5%87%BA%E9%97%AE%E9%A2%98-%E5%85%B3%E4%BA%8E-python-%E5%87%BD%E6%95%B0%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Tue, 06 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190806-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-selenium-%E7%9A%84%E9%80%80%E5%87%BA%E9%97%AE%E9%A2%98-%E5%85%B3%E4%BA%8E-python-%E5%87%BD%E6%95%B0%E7%9A%84%E8%BF%90%E8%A1%8C%E6%9C%BA%E5%88%B6/</guid>
+      <description>最近在搞爬虫，然后顺便写了写基于 selenium 框架的模拟登陆脚本供以后需要时用，然而在这时我发现了一个问题：
+代码一开始是这样的：
+from selenium import webdriver driver = webdriver.Chrome() driver.maximize_window() driver.get(&amp;#39;http://mail.163.com&amp;#39;) driver.find_element_by_id(&amp;#39;switchAccountLogin&amp;#39;).click() iframe = driver.find_element_by_xpath(&amp;#39;//*[@id=&amp;#34;loginDiv&amp;#34;]/iframe&amp;#39;) # 使用Xpath选定位到iframe driver.switch_to.frame(iframe)　# 切换iframe # iframe = driver.find_element_by_xpath(&amp;#34;//iframe[contains(@id, &amp;#39;x-URS-iframe&amp;#39;)]&amp;#34;) # 使用Xpath提供的contains定位 # driver.switch_to.frame(iframe) driver.find_element_by_name(&amp;#39;email&amp;#39;).send_keys(&amp;#39;name&amp;#39;) driver.find_element_by_name(&amp;#39;password&amp;#39;).send_keys(&amp;#39;password&amp;#39;) driver.find_element_by_id(&amp;#39;dologin&amp;#39;).click() 然后进行了简单的改造：
+from selenium import webdriver class Mail163: def __init__(self, name, password): self.name = name self.password = password self.driver = webdriver.Chrome() def run(self): # driver.maximize_window() self.driver.get(&amp;#39;http://mail.163.com&amp;#39;) self.driver.find_element_by_id(&amp;#39;switchAccountLogin&amp;#39;).click() iframe = self.driver.find_element_by_xpath(&amp;#39;//*[@id=&amp;#34;loginDiv&amp;#34;]/iframe&amp;#39;) # 使用Xpath选定位到iframe self.driver.switch_to.frame(iframe) # 切换iframe # iframe = driver.</description>
+    </item>
+    
+    <item>
+      <title>如何配置 VS Code 进行远程调试</title>
+      <link>/posts/2019/20190806-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE-vs-code-%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</link>
+      <pubDate>Tue, 06 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190806-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE-vs-code-%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</guid>
+      <description>从前，我还在用 Putty 艰难地连接服务器，用命令行敲着 ftp 去与服务器互传文件；
+后来长大了，开始用 XShell 进行交互，传文件直接用 XFtp，效率陡增；但是由于我用不惯 Vim，每一次改内容都需要把文件先下下来，用 VS Code 改好，然后再用 Xftp 给传上去。
+再后来，VS Code 的官方 Remote 插件推出，如今的我可以直接在 VS Code 里面操作服务器进行开发和调试，简直不要太舒服。
+那么如何配置 VS Code 并实现远程开发呢？
+安装 VS Code 和插件 VS Code 下载地址
+首先下载安装 VS Code。以前只有 Insider 版本才有 Remote Development，现在已经下放到正式版本了。
+然后打开扩展页面，搜索 Remote Development，选择第一个安装，在安装完成后左栏会出现一个 Remote 的小图标。
+配置 Remote Development 如图，点击配置一个 SSH Host：
+这是编辑器会打开一个文件，格式如下：
+# Read more about SSH config files: https://linux.die.net/man/5/ssh_config Host CentOS HostName 111.111.111.111 User admin Host 后面填服务器名称（可随意填）；HostName 后面填服务器的IP地址或域名；User 后面填服务器用户。</description>
+    </item>
+    
+    <item>
+      <title>极速入门 Go 语言</title>
+      <link>/posts/2019/20190729-%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8-go-%E8%AF%AD%E8%A8%80/</link>
+      <pubDate>Mon, 29 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190729-%E6%9E%81%E9%80%9F%E5%85%A5%E9%97%A8-go-%E8%AF%AD%E8%A8%80/</guid>
+      <description>Go 语言可以称为是 21 世纪的 C 语言了，其不仅具有诸多十分优秀的特性，而且也保持了简洁干练，运行效率也与 C++ 看齐。那么再有其他的语言基础下，如何快速入门 Go 呢？
+这篇文章其实更多地是 Go 与其他语言之间的对比，并由此初探 Go，从而达到快速入门的目的。 本文只是 Go 语言入门，其他的 Go 特性操作还需要多加学习。 语言基础要求：C、Python（入门即可）
+首先是一个正常的 Hello World 代码
+package main import &amp;#34;fmt&amp;#34; func main() { var a string = &amp;#34;Hello, World!&amp;#34; b, c := 2, 3 if(b &amp;gt; c &amp;amp;&amp;amp; b &amp;lt; c) { fmt.Println(a) } } package：该文件的包名，同样报名的文件会划归为同一个包，且一个文件夹里面（除去子文件夹）只允许有一个包存在 import：Python 中的 import func：定义 function 函数的关键词，与 def 类似 main：主程序，作用和地位与 C 相似，传参也和 C 相似 var a string：定义一个类型为 string 的变量 a，这是 Go 语言中的格式 &amp;amp;&amp;amp;：Go 的运算符和 C 类似 fmt.</description>
+    </item>
+    
+    <item>
+      <title>Django 所踩过的坑</title>
+      <link>/posts/2019/20190722-django-%E6%89%80%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</link>
+      <pubDate>Mon, 22 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190722-django-%E6%89%80%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</guid>
+      <description>目前市面上流行着两个基于 Python 的 Web 框架，一个是 Django，一个是 Flask。（当然还有其他的如 Pylon 等，只是我没有接触过所以不做讨论）
+由于 Hexo 博客系统的机制以及诸多的限制，我计划将我的博客从原本的基于 Hexo 静态框架转为基于 Django 框架的博客系统。
+总所周知， Django 的架构比较适合于大型项目的开发，Flask 则是轻量级的 Web 框架，适合于小型项目开发。处于学习目的，我这次的框架选择十分的干脆——直接上 Django，所以我就直接开始了 Django 的学习。
+当然，在建立这个博客系统的时候，作为一个接触 Web 较少的菜鸟，我也是踩了非常多的坑的。
+端口开放 这个错误就非常初级了，当时我一直以为阿里云的服务器和腾讯云的服务器一样是端口全开的，所以我就直接把开发服务器放到了 8000 端口，结果什么都没有。所以后来在阿里云控制台打开了 8000 端口的监听才成功看到 Hello World 页面。
+Django 不同版本之间的区别 由于 Django 迭代了很多次，它也像 Python 一样存在着版本之间的兼容性问题。Django 1 与 Django 2 之间就存在着非常多的语法以及参数上的区别，下面这个问题就困扰了我很久。
+在 Django 2.0 之后，定义外键和一对一关系的时候需要加 on_delete 选项，此参数为了避免两个表里的数据不一致问题，否则就会报错： TypeError: __init__() missing 1 required positional argument: &#39;on_delete&#39; 所以要将 category = models.ForeignKey(Category) 改为 category = models.</description>
+    </item>
+    
+    <item>
+      <title>建立并连接到 Ubuntu 服务器的远程桌面</title>
+      <link>/posts/2019/20190707-%E5%BB%BA%E7%AB%8B%E5%B9%B6%E8%BF%9E%E6%8E%A5%E5%88%B0-ubuntu-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/</link>
+      <pubDate>Sun, 07 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190707-%E5%BB%BA%E7%AB%8B%E5%B9%B6%E8%BF%9E%E6%8E%A5%E5%88%B0-ubuntu-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/</guid>
+      <description>建立一个远程桌面，把 Ubuntu 服务器当成远程电脑使用。
+水开头 在经历了很久的命令行交互之后，突然想这把与服务器间的交互给图形化，从而可以方便地搞一些其他的操作，比如像 Windows Server 那样即连即用的云电脑。
+为此我查了一些资料和教程，也算是成功实现了可视化：
+怎么做 下面是自己的经历记录：
+首先安装必要的包：
+sudo apt-get install xrdp sudo apt-get install vnc4server sudo apt-get install xubuntu-desktop echo “xfce4-session” &amp;gt;~/.xsession sudo service xrdp restart
+如果没有的话，就 sudo apt-get update 更新一下再安装。
+这样子的话就已经完成了，Windows 系统通过远程连接，输入自己的服务器 IP。
+然后可以连接到服务器：
+输入自己对应的用户名和密码就可以进入界面了。
+问题 在我进行到最后一步的时候，遇到了 problem connecting 的问题，后来查到还需要安装一个包。
+sudo apt-get install tightvncserver
+成功连接后，我又发现界面只有灰屏和叉型的鼠标，没有图形界面，后来查了许多的资料才发现问题。
+原来 gnome 桌面在 Ubuntu 14.04 之后就已经不支持远程连接了，所以要用 xfce 界面来代替。
+sudo apt-get install xubuntu-desktop echo xfce4-session &amp;gt;~/.xsession vim /etc/xrdp/startwm.sh
+在./etc/X11/Xsession前插入xfce4-session。
+cd /etc/init.</description>
+    </item>
+    
+    <item>
+      <title>数字图像处理 - 双线性插值</title>
+      <link>/posts/2019/20190702-%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E5%8F%8C%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC/</link>
+      <pubDate>Tue, 02 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190702-%E6%95%B0%E5%AD%97%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86-%E5%8F%8C%E7%BA%BF%E6%80%A7%E6%8F%92%E5%80%BC/</guid>
+      <description>双线性插值是一种数字图像中实现缩放的方法，相较于近邻差值和平均差值有着更好地缩放效果。
+原理 在图像进行缩放时，有着不同的缩放方法，最常见的一种是根据缩放大小比例，计算每一个像素位置所对应的原大小的像素大致位置，然后把相对应的未知的像素值套入缩放后的图片中。算法如下图所示：
+这种算法的不足之处在于，其在放大比例过大等情况下会导致明显失真。而双线性差值算法则有效地减少了这一问题，它根据距离上下左右的距离对不同的像素值（RGB 数值的大小）进行了加权相加，从而算出一个更接近的值代替。
+算法 算法如下图：
+例子 下面是一个简单的运算例子。进行计算后，得出的放大后的图某像素对应的原图的位置 P 以及周围的四个像素点：
+有 203.941 - 203 = 0.941
+所以先对上面两个像素进行加权相加：
+f(R1) = (1 - 0.941) * f(104, 203) + 0.941 * f(104,204)
+同理对下面两个像素进行运算：
+f(R2) = (1 - 0.941) * f(105, 203) + 0.941 * f(105, 204)
+又有 104.615 - 104 = 0.615
+所以上下算出来的值对应 y 轴再进行一次加权运算：
+f(P) = (1 - 0.615) * f(R1) + 0.615 * f(R2)
+最终所算出来的 f(P) 便是大图像素的值。
+这个算法主要是通过加权来减轻由于均值或者直接代替所产生的误差，从而减小失真，在图像处理领域也十分常用。</description>
+    </item>
+    
+    <item>
+      <title>为网站设置域名并且添加 SSL 证书</title>
+      <link>/posts/2019/20190617-%E4%B8%BA%E7%BD%91%E7%AB%99%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D%E5%B9%B6%E4%B8%94%E6%B7%BB%E5%8A%A0-ssl-%E8%AF%81%E4%B9%A6/</link>
+      <pubDate>Mon, 17 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190617-%E4%B8%BA%E7%BD%91%E7%AB%99%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D%E5%B9%B6%E4%B8%94%E6%B7%BB%E5%8A%A0-ssl-%E8%AF%81%E4%B9%A6/</guid>
+      <description>最近域名备案了，所以我把自己的博客从 GitHub 搬到了自己的服务器上，以提升访问的速度。其中因为前期准备不足，所以再添加 SSL 的时候踩了许多坑，所以特地写下来作参考之用。
+安装前 在进行操作前，我们需要确保自己的网址已经解析到服务器 IP 上了，以方便后面的操作。
+安装 Nginx 首先由于我用的是 Nginx，所以我们现需要安装 Nginx。
+sudo apt-get install nginx
+等待安装，在安装完成后，Nginx 会默认监听 80 端口，所以输入服务器的 IP 地址进行访问，会出现 Welcome to Nginx! 的字样。
+这一步和 Hexo 的安装互不干涉，先后顺序随意。 但是安装完之后 80 端口会被 Nginx 占用，hexo server 命令可能会无作用。
+Nginx 配置 在 Nginx 安装完成之后，我们还需要进行 Nginx 的配置，我们才能正常用自己的域名登入网站。
+首先进入 /etc/nginx/ 目录，其中我们需要修改的文件是 nginx.conf 和 /sites-avaliable 和 /sites-enabled 中的 default 文件。而这两个文件实际上是相关联的，所以只需要修改一个文件就好。
+在 default 中的 server 模块改成下列代码：
+listen 80 default_server; listen [::]:80 default_server; //设置 80 端口为监听端口 root /root/blog/public; //网站存放的地址 # Add index.</description>
+    </item>
+    
+    <item>
+      <title>Hexo 博客如何添加图片</title>
+      <link>/posts/2019/20190619-hexo-%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/</link>
+      <pubDate>Sun, 09 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190619-hexo-%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/</guid>
+      <description>如何在自己写的 Markdown 博客中添加自己的图片？在多词的寻找和使用后，我找到了如下的几种插入图片的方法。
+利用 OSS （对象存储） 如果网站是托管在 GitHub、Coding 之类的平台上的话，直接将图片存在上面速度会比较慢，而且大陆内陆的网络访问起来可能不是特别顺畅。
+所以我们可以购买 OSS 去存储图片，并且给图片文件添加外链，然后直接在 Markdown 文章中添加外链即可。阿里云、腾讯云都提供了解决方案，价格再优惠后也在可接受范围内。
+利用免费图床 如果不想用收费的存储方案，网络上也有免费图床可以使用，但大多数的免费方案都有时间限制，少则 24 小时，多则 7 天，付费方案还不如自己开一个 OSS 来得实惠。
+img.onl 是一个没有固定期限的免费图床网站，当然数据的安全也没法得到保证，大家谨慎使用。
+自有服务器 如果是自己有服务器的话，那就好办了，这也是我现在所使用的方案。
+首先要将 Hexo 安装到服务器上，一切都准备好后，在 blog 层级的 _config.yml 中修改 post_asset_folder: true，之后每一次创建新的文章都会另外生成一个同名文件夹，我们可以把文章所需的素材放到里面。
+文章中假如如果要引用 1.jpg 的话，在图片地址中只需要写成 ./1.jpg 即可。 （因为 Hexo g 的时候，文件夹中的图片会与该文章页放在同一个目录里面）
+我跳过的坑 我以前曾经想过，如果存放在社交网络上然后把图片的链接贴在文章里不就可以了吗？
+然而现实是大多数的社交网站都不支持外链，图片根本无法显示。下面分享一下我所踩过的坑：
+微博：微博外链理论上是可以的，发的微博图片的链接基本上都能够用一段时间，如果不能用的话把链接中的 s1 或 s2、s3 换一下就能用了，但这在文章很多的时候修改会很麻烦，所以并不特别推荐。
+QQ 空间：有次数限制，多次以后被查出来用外链就不能够使用了。
+微云：可以通过分享文件然后提取预览图的连接，不过需要一定的 web 基础去寻找链接，也不推荐。
+Unsplash：Unsplash 的外链目前没有翻过车，我的摄影作品都是放在上面，然后外链过来的，但仅限于摄影方面的图片并且 CC0 协议。</description>
+    </item>
+    
+    <item>
+      <title>车辆驾驶行为分析——比赛复盘（一）地图生成</title>
+      <link>/posts/2019/20190607-%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%E4%B8%80%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/</link>
+      <pubDate>Fri, 07 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190607-%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%E4%B8%80%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/</guid>
+      <description>最近比赛结果出来了，所以我打算对比赛做一个复盘，作日后参考之用。
+我们的队伍有幸拿了全国二等奖，我在其中负责的是算法以及编程实现。
+因为整个比赛时长只有七天，算法没有时间做特别多的优化，所以代码的质量可能不是特别高。
+本人水平有限，若有缺漏之处欢迎指正。
+研究问题 利用附件 1 所给数据，提取并分析车辆的运输路线以及其在运输过程中的速度、加速度等行车状态。提交附表中 10 辆车每辆车每条线路在经纬度坐标系下的运输线路图及对应的行车里程、平均行车速度、急加速急减速情况。
+利用附件 1 所给数据，挖掘每辆运输车辆的不良驾驶行为，建立行车安全的评价模型，并给出评价结果。
+综合考虑运输车辆的安全、效率和节能，并结合自然气象条件与道路状况等情况， 为运输车辆管理部门建立行车安全的综合评价指标体系与综合评价模型。
+附表
+序号 1 2 3 4 5 6 7 8 9 10 车牌号 AA00002 AB00006 AD00003 AD00013 AD00053 AD00083 AD00419 AF00098 AF00131 AF00373 数据说明 附件 1 给出 450 辆运输车辆的行车轨迹采集数据，由于采集设备精度，实际采集数据可能存在某些异常。 序号 指标名称 指标说明 说明 1 vehicleplatenumber 车牌号码 2 device_num 设备号 3 direction_angle 方向角 范围：0-359（方向角指从定位点的正北方向 起，以顺时针方向至行驶方向间的水平夹角） 4 lng 经度 东经 5 lat 纬度 北纬 6 acc_state ACC 状态 点火 1/熄火 0 7 right_turn_signals 右转向灯 灭 0/开 1 8 left_turn_signals 左转向灯 灭 0/开 1 9 hand_brake 手刹 灭 0/开 1 10 foot_brake 脚刹 无 0/有 1 11 location_time 采集时间 12 gps_speed GPS 速度 单位：km/h 13 mileage GPS 里程 单位：km 附件 2 给出 2018 年 7 月 30 日至 2018 年 10 月 10 日全国主要城市的自然气象数据。 序号 指标名称 指标说明 说明 1 province 省/自治区/直辖市 2 prefecture_city 地级市 3 county 县级市/县 4 wind_direction 风向 5 wind_power 风力 6 high_temp 最高温度 7 low_temp 最低温度 8 conditions 天气状况 如：多云、晴、雨、雪 9 relative_humidity 相对湿度 10 precipitation 降水量 单位：mm 11 record_date 采集日期 在车辆运输过程中，不良驾驶行为主要包括疲劳驾驶、急加速、急减速、怠速预热、超长怠速、熄火滑行、超速、急变道等。 数据类型样例 下面附上数据的样例截图：</description>
+    </item>
+    
+    <item>
+      <title>hacker-laws 的中文版本</title>
+      <link>/posts/2019/20190606-hacker-laws-%E7%9A%84%E4%B8%AD%E6%96%87%E7%89%88%E6%9C%AC/</link>
+      <pubDate>Thu, 06 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190606-hacker-laws-%E7%9A%84%E4%B8%AD%E6%96%87%E7%89%88%E6%9C%AC/</guid>
+      <description>hacker-laws 是一系列对开发人员有用的定律、理论、原则和模式，目前已有 6.8k stars，我参与翻译和编写了中文的版本，目前已有 2.8k stars。
+感觉这个 repo 对于开发人员还是挺有用的，能够避免很多的坑。当然这些是理论性的内容，作锦上添花之用，更多的还是要靠开发人员本身的编程水平。
+项目地址</description>
+    </item>
+    
+    <item>
+      <title>写了一个腾讯 AI 开放平台 SDK</title>
+      <link>/posts/2019/20190528-%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E8%85%BE%E8%AE%AF-ai-%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0-sdk/</link>
+      <pubDate>Tue, 28 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190528-%E5%86%99%E4%BA%86%E4%B8%80%E4%B8%AA%E8%85%BE%E8%AE%AF-ai-%E5%BC%80%E6%94%BE%E5%B9%B3%E5%8F%B0-sdk/</guid>
+      <description>最近打算把 Jarvis 的部分外接功能从百度 AI 平台转到腾讯 AI 平台，但是腾讯 AI 并没有提供 SDK，所以自己写了一个分享出来。
+这里面与百度 AI 平台之间主要的区别是腾讯的平台有一个鉴权机制，在调用 API 时除了一些基本参数之外，还需要提供一个根据 API 所需所有参数字典算出来的一个 MD5 码。格式以官方的 DEMO 作为参考并做了一定的改动，可读性相比 DEMO 有一定提高。
+项目地址：Tencent_aiplat_SDK
+源码如下：（与最终版本可能会有差别，以 GitHub 上的项目内代码为主）
+# _*_ coding:utf-8 _*_ import hashlib import urllib.parse import urllib.request import urllib.error import json import time import base64 import os # 接口api url_prefix = &amp;#39;https://api.ai.qq.com/fcgi-bin/&amp;#39; class AiPlat(object): def __init__(self, app_id, app_key): self.app_id = app_id self.app_key = app_key self.data = {} def genSignString(self, parser): uri_str = &amp;#39;&amp;#39; for key in sorted(parser.</description>
+    </item>
+    
+    <item>
+      <title>从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别</title>
+      <link>/posts/2019/20190522-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%BA%8C%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/</link>
+      <pubDate>Wed, 22 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190522-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%BA%8C%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/</guid>
+      <description>让我们用Python去做一个Jarvis吧！
+这一部分主要是语音识别部分的Python实现，而且由于这是我利用课余时间而作，所以相对于其他的项目而言进度可能并不会特别迅速，更新缓慢且随缘。
+序 那我们就从前面的框架开始动手实现我们的 Jarvis，首先给大家看一下我的文件目录框架：
+其中我把所有自己写的py模块统一归入_module文件夹，供main.py调取，_sounds文件夹存着因为语音识别以及TTS产生的音频文件。
+因为目前的结构还不是特别庞大，可能后面会因为管理或者功能增加等等的原因进行修正。如果有改动我会在后面进行补充。
+作为一个懒人程序员，并且本着不重复造轮子的原则，我决定先到网上搜一搜有没有现成的解决方案能够直接使用的。
+Emmm&amp;hellip; 貌似没有，但这并不影响我们的功能实现。
+我们把语音识别的问题拆分开来，便是：
+麦克风录音 语音识别成文本 返回文本 然而幸运的是，百度在语音识别方面有着成熟的API以及SDK提供使用，所以在这个方面我们真正需要自己实现的部分只有录音方面了。
+后期补充：目前我将这一方面的算法转用腾讯 AI 平台实现，并为此写了一套 SDK，如有需要的话可以参考我的项目。 这并不影响下面百度平台的实现。
+语音录入生成.wav文件 我将语音录入的方法写在了recognition.py中，与语音识别等功能放在一起便于调用和管理，后续编辑也会方便一些。
+在语音录入方面我们需要调用Pyaudio和wave模块，如果没有安装的话可以通过pip、conda或者Pycharm安装，方法这里就不赘述了。
+然后首先我们需要导入这两个模块：
+import pyaudio import wave 然后便是具体的方法实现，我写了一个def audio_record，这个部分的功能便完成了录音，并且会将录音保存为.wav格式。
+def audio_record(out_file, rec_time): # out_file:输出音频文件名, rec_time:音频录制时间(秒) CHUNK = 1024 FORMAT = pyaudio.paInt16 # 16bit编码格式 CHANNELS = 1 # 单声道 RATE = 16000 # 16000采样频率 p = pyaudio.PyAudio() # 创建音频流 stream = p.open(format=FORMAT, # 音频流wav格式 channels=CHANNELS, # 单声道 rate=RATE, # 采样率16000 input=True, frames_per_buffer=CHUNK) print(&amp;#34;I&amp;#39;m listening.</description>
+    </item>
+    
+    <item>
+      <title>从零开始做 Jarvis——基于 Python 的智能语音管家（一）</title>
+      <link>/posts/2019/20190521-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%B8%80%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Tue, 21 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190521-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%B8%80%E7%AE%80%E4%BB%8B/</guid>
+      <description>让我们用 Python 去做一个 Jarvis 吧！
+这一部分主要是先前的大体介绍，而且由于这是我利用课余时间而作，所以相对于其他的项目而言进度可能并不会特别及时，更新缓慢且随缘。
+序 先简单地做一下项目介绍。
+在一次比赛现场与朋友攀谈，并由此激发了一个一直存于我内心的想法——做出像钢铁侠的 Jarvis 一般的智能助手。它能够在日常生活和工作学习中为我及时提供建议以及我所需要的信息，还能够帮我管理我的社交网络以及我的各种数码设备等等。
+当时与朋友聊完这个宏大愿景后，我便留下了不学无术的泪水（毕竟能力有限 TAT）。所以结合目前的状况，我简单地对其可行性进行了进一步的思考和完善。
+其实，从技术上实现一个在生活辅助方面的智能语音助手并不难。而现有的产品之所以功能并非如此强大，更多是公司的商业考量和对用户隐私的保护。
+所以，怎么做？ 迫于技术上的压力，我目前的暂时性目标，是做出一个“简易版”的 Jarvis。它离真正的“人工智能”有着一定的距离，定位是一个在日常的工作和学习中能够帮得上忙的（至少比我手机上的小爱要来的有用的）“智能程序”。
+所以围绕着这个，我产生了以下的想法：
+首先要做到的是我们的 Jarvis 能够对我们说的话有基本的反应行为，比如查查天气、问些问题、聊聊天，诸如此类。其次便是一些高级的操作，比如随时检索我们彼时工作或者学习等方面所需要的任何信息；根据我们的情况作出合理的决策；跨设备交互和智能的设备控制和管理等等。 然后便是怎么做？截至我写作的时间，由于我的 Python 方面做过的项目比较多，所以选择了 Python 作为主要语言。
+从结构上来看，我们如果要实现一个闭环，就需要做到语音识别，NLP，信息处理和分析，语音（或者画面）反馈。由于我有着 Jarvis 情怀，所以我会倾向于先完成语音部分的反馈环节。 至此，我们完成了整个项目的大致框架，显然，我们后续的程序框架以及整体思路也会依照这个来展开。
+下一个部分，我会介绍语音识别部分实现。
+Peace.</description>
+    </item>
+    
+    <item>
+      <title>解决 Xshell 中 jobs 命令不显示后台任务</title>
+      <link>/posts/2019/20190206-%E8%A7%A3%E5%86%B3-xshell-%E4%B8%AD-jobs-%E5%91%BD%E4%BB%A4%E4%B8%8D%E6%98%BE%E7%A4%BA%E5%90%8E%E5%8F%B0%E4%BB%BB%E5%8A%A1/</link>
+      <pubDate>Wed, 06 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190206-%E8%A7%A3%E5%86%B3-xshell-%E4%B8%AD-jobs-%E5%91%BD%E4%BB%A4%E4%B8%8D%E6%98%BE%E7%A4%BA%E5%90%8E%E5%8F%B0%E4%BB%BB%E5%8A%A1/</guid>
+      <description>在踩了很多坑后，分享一下我在XShell中用Nohup等命令执行后台操作之后将任务释放掉的方法。
+之前在折腾服务器的时候，在服务器上挂了一个 Hexo 网站，后来因为网络原因 XShell 直接断连了。好不容易解决了网络问题之后，登录服务器，输入jobs发现 Hexo 并没有出现在列表里面。
+后来差了一些资料发现，jobs 命令只能查看当前 XShell 连接服务器窗口创建的任务。由于我并没有用 nohup 去启动后台任务，所以控制台没有显示。
+所以后来我采用的方法是使用ps aux命令，然后可以查看服务器的进程情况。
+找到想要释放的进程名以及其对应的PID号，然后kill -9 pid号将进程杀死即可（也可以直接kill pid）。
+Peace.</description>
+    </item>
+    
+  </channel>
+</rss>

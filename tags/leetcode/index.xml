@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>LeetCode on Zee Tsui</title>
+    <link>/tags/leetcode/</link>
+    <description>Recent content in LeetCode on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 04 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/leetcode/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>【算法笔记】动态规划 &amp; 最长公共子序列</title>
+      <link>/posts/2021/20210604-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</link>
+      <pubDate>Fri, 04 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210604-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97/</guid>
+      <description>突然发现自己有很长一段时间没有学习和更新算法相关的内容了。当然这并不完全是因为懒，主要还是临近毕业事务较多没能顾得上，做题的也感觉生分了许多。
+什么是最长公共子序列（LCS, Longest Common Sequence） 关于 LCS 网络上有两种不同的含义，一个是“最长公共字符串（Longest Common String）”，一个是“最长公共子序列（Longest Commo Sequence）”。二者存在一定的差别，本文单独就后者进行相关的讨论。
+最长公共子序列是动态规划中的一个经典的问题，即给定序列 A 和序列 B，然后求出两个序列中最大的公共子序列的长度，且该公共子序列中的元素可以不相邻。这类型的题目如果使用暴力解法一般都会直接顶满指数级的 $O(n^2)$ 复杂度，因此一般都会使用动态规划的写法来求解。
+问题解法 LeetCode 上的对应题目见【1143. 最长公共子序列】。
+首先介绍一下常规的暴力解法，直接通过递归来遍历所有可能的情况。代码如下：
+def lcs(s1, s2): if s1 == &amp;#34;&amp;#34; or s2 == &amp;#34;&amp;#34;: return 0 elif s1[-1] == s2[-1]: return lcs(s1[:-1], s2[:-1])+1 else: return max(lcs(s1, s2[:-1]), lcs(s1[:-1], s2)) 这一写法显然存在着不足，即递归的部分会大量的重复，从而导致时间上的开销过大。因此，我们引入动态规划算法并建立矩阵进行相关数据的存储。假设两个字符串分别为 text1 和 text2，并定义dp[i][j] 为 text1 在 [0, i] 范围内的子串和 text2 在 [0, j] 范围内的子串的最长公共子序列。
+状态转移：如果 text1[i-1]==text2[j-1]，那么说明我们找到了公共子串中的一个字符，则 dp[i][j] = dp[i-1][j-1] + 1；否则，如果 text1[i-1]!</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】布隆过滤器</title>
+      <link>/posts/2021/20210428-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</link>
+      <pubDate>Wed, 28 Apr 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210428-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8/</guid>
+      <description>话不多说，这次直接切入主题，介绍一种牺牲准确性的哈希加速方法——布隆过滤器。这种数据结构及其算法原理较为简单，所以内容不会过于复杂。
+什么是布隆过滤器（Bloom Filter） 布隆过滤器（英语：Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。
+上面是来自维基百科的介绍，详情可见布隆过滤器 - 维基百科。
+说白了，布隆过滤器就类似与 set() 的操作，可以用于匹配特定键是否在集合之中。其原理也很简单，就是使用了多个哈希函数对键进行哈希得出多个值，然后将内存中对应位置设置为 1，如下图所示（来源见水印）：
+当我们有一个 obj1 和 obj2 时，首先用 3 个 Hash 函数进行哈希得出对应的地址，然后依次设为 1，即可实现写入布隆过滤器的过程。
+归纳一下具体的算法步骤：
+初始化 k 个 Hash 函数，同时保证其能够分别哈希到不同的内存位置； 初始化一个长度为 n 比特的数组（bitarray/bitmap），每个位都设置为 0； 加入 key 时，先散列出 k 个地址，并将该位置的数据设置为 1； 查找 key 时，同样散列出 k 个地址，然后查询内存对应的内存位置，若全为 1 可认为在集合中，若有 0 则一定不在集合中。 该算法的缺点十分明显，因为位置存在重复性，所以不能够进行删除操作；同时，由于查询出来的内存位置此时可能已经有了其他的键 Hash 出来的 1，所以全为 1 的时候存在一定的误判率——当然，有 0 就已经可以证明该键并没有经过哈希了，不会发生误判。
+这时候相信很多人会有一个疑问：为什么不用直接用哈希表呢？正常情况下，为了保证哈希表 $O(1)$ 的复杂度以及防止哈希冲突，哈希表的存储效率通常在 50% 以下，这就意味着哈希表往往都会较大，而布隆过滤器不用存键值，而且更加“紧凑”，所以可以在相对于小的内存里提供较好的查找性能。但代价就是存在一定的误判率，业务中也需要进行该方面的考量。
+当数据量较小的时候，直接使用哈希表便可以优雅地解决问题了；此时使用布隆过滤器反而还需要承担额外不必要的错误率，得不偿失。
+常用场景 实际的应用场景中，布隆过滤器广泛地应用于网页黑名单系统、垃圾邮件过滤系统、网页 URL 去重、垃圾邮件识别、大集合中重复元素的判断和缓存穿透等。下面是一些详细的场景：
+数据库防止穿库。 Google Bigtable，HBase 和 Cassandra 以及 Postgresql 使用BloomFilter来减少不存在的行或列的磁盘查找。避免代价高昂的磁盘查找会大大提高数据库查询操作的性能。 业务场景中判断用户是否阅读过某视频或文章，比如抖音或头条，当然会导致一定的误判，但不会让用户看到重复的内容。 缓存宕机、缓存击穿场景，一般判断用户是否在缓存中，如果在则直接返回结果，不在则查询db，如果来一波冷数据，会导致缓存大量击穿，造成雪崩效应，这时候可以用布隆过滤器当缓存的索引，只有在布隆过滤器中，才去查询缓存，如果没查询到，则穿透到db。如果不在布隆器中，则直接返回。 WEB拦截器，如果相同请求则拦截，防止重复被攻击。用户第一次请求，将请求参数放入布隆过滤器中，当第二次请求时，先判断请求参数是否被布隆过滤器命中。可以提高缓存命中率。Squid 网页代理缓存服务器在 cache digests 中就使用了布隆过滤器。Google Chrome浏览器使用了布隆过滤器加速安全浏览服务 Venti 文档存储系统也采用布隆过滤器来检测先前存储的数据。 SPIN 模型检测器也使用布隆过滤器在大规模验证问题时跟踪可达状态空间。 （摘自愚公要移山的答案）</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】meet-in-the-middle 算法</title>
+      <link>/posts/2021/20210223-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0meet-in-the-middle-%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Tue, 23 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210223-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0meet-in-the-middle-%E7%AE%97%E6%B3%95/</guid>
+      <description>meet-in-the-middle 算法（又称折半搜索、双向搜索），属于一种优化的 DFS 或 BFS 算法。同分治算法近似，它将问题进行了拆分，然后进行合并归一，得出最后的结果。这样做的好处是在穷举解的时候能够对很多情况进行剪枝，降低了时间复杂度。
+n &amp;lt;= 40 的搜索类型题目一般都可以优化，本质上这是一种空间换时间的算法。
+穷举类的问题当匹配条件越多的时候，其时间复杂度便会越大，所以可以通过将多个条件拆分匹配的方式来减小复杂度。 简单来说，这就是“分而治之”的一种手段。
+常见类型 求和 这一部分可直接见「举个例子」部分。
+双向搜索 这在关系网处理和图的路径规划中经常使用，且在寻路问题中表现很好。算法会同时从两个节点开始搜索，并且看什么时候这两个搜索的边界相遇。这个可以将需要扩展的节点降低到 $O(p^{k/2})$。
+2DES 破解 DES 算法为密码体制中的对称密码体制，又被称为美国数据加密标准，是 1972 年美国 IBM 公司研制的对称密码体制加密算法。明文按 64 位进行分组，密钥长 64 位，密钥事实上是 56 位参与 DES 运算（第 8、16、24、32、40、48、56、64 位是校验位， 使得每个密钥都有奇数个1），分组后的明文组和 56 位的密钥按位替代或交换的方法形成密文组的加密方法。
+DES 算法如今之所以被淘汰，是因为秘钥空间太小。其密钥的 $2^{56}$ 种可能性在以前是很难穷举破解的，但如今随着算力的发展，把所有可能的秘钥遍历一遍也是可以的（参考 BTC 挖矿）。在这之后的 DES 算法便开始显得力不从心，亟待升级，于是就有了 3DES 算法——使用 3 个密钥进行 3 次 DES 加密运算。
+2DES 去哪儿了？答案是 DES 算法过后直接提升到了 3DES，直接把 2DES 给跳过了。理论上来说 2DES 具有 $2^{102}$ 的秘钥空间，已足够使用，但是为什么不用呢，原因就在于 meet-in-the-middle 算法为基础的中间人攻击（Diffile-Hellman 发明）——信息论课堂上的老朋友了，在这儿只用简单的语言介绍其原理。
+假设我需要通过一组 2DES 的明文与密文破解出秘钥，我并不需要遍历 $2^{102}$ 整个秘钥空间，而是使用明文枚举 $2^{56}$ 个秘钥加密，得到 $2^{56}$ 个中间值并存入哈希表；然后使用密文枚举 $2^{56}$ 个秘钥并与明文的哈希库做对比，得到的所有值中一定有一个与之前加密所得到的相等，即 $E_{ki}(p) = D_{kj}(s)$，meet-in-the-middle 结束。这整个破解过程中不难发现，只要有足够大的空间用于存储哈希表，2DES 破解密码的时间仅仅相当于破解 2 次 DES。</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】动态规划 &amp; 二分搜索法</title>
+      <link>/posts/2021/20210122-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%B3%95/</link>
+      <pubDate>Fri, 22 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210122-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E4%BA%8C%E5%88%86%E6%90%9C%E7%B4%A2%E6%B3%95/</guid>
+      <description>动态规划（DP, Dynamic Programming）由于需要对问题进行抽象拆分，然后化简，因此具有一定的难度和乐趣。它属于一种算法设计的技巧，即对暴力遍历中的各种情况（重叠子问题）进行合理地剪枝，从而达到减小时间复杂度的目标。
+动态规划的一般流程为：递归的暴力解法 → 带备忘录的递归解法 → 非递归的动态规划解法。也就是说，平时使用动态规划的方法来解决一个特定的问题时，并不是一蹴而就的，而是从暴力的问题出发进行一步步优化而来的。
+此外，本文除了会对动态规划及其相关的应用进行阐述之外，还会介绍对动态规划问题进行优化的二分搜索法。
+一个问题是该用递推、贪心、搜索还是动态规划，完全是由这个问题本身阶段间状态的转移方式决定的。
+缓存、重叠子问题、记忆化 以 Fibonacci 数列为例，直接写出来的代码是这样的：
+def fib(n:int) -&amp;gt; int: if n == 0: return 0 elif n == 1 or n == 2: return 1 else: return fib(n - 1) + fib(n - 2) 这是使用了递归的 Fibonacci 数列求解算法。因为是递归，所以该解法中一定会存在着重复部分，计算机还是会傻傻地对其重新计算一次，这便是需要进行优化剪枝的重叠子问题。我们可以在计算 fib(n) 之后，使用 LRU Cache 或者创建一个列表来把 fib(n) 给缓存起来，这样就可以避免对其进行重复运算，从而节省时间。
+这便是动态规划最基本的运用，即通过一张表作为“备忘录”，从而减少递归的次数。
+原本暴力求解的时间复杂度为 $O(n^2)$，经过优化后的时间复杂度仅为 $O(n)$。但是空间复杂度增大为了 $O(n)$，这本质上就是一个空间换时间的过程。
+举个例子 下面用几个例子来归纳动态规划的原理：
+凑零钱问题：「322.零钱兑换」 这一题其实可以通过递归的方法来解决，但是自从 LeetCode 改了测试集之后，递归解法就一定会超时（无论如何神优化都会超），所以只得从 DP 来入手。此题和背包问题一致，即求在固定的容量下能够装得下的最小（最大）数量。方法在于通过一个 DP Table 的形式来对最小硬币数量来进行记录，首先需要分析它的转移方程，当容量为 1（amount == 1）时的最优值一致往下推，等于 2 等于 3 等于 4……，最后等于 amount 的时候便可以得出最终的结果了。</description>
+    </item>
+    
+    <item>
+      <title>【算法笔记】并查集</title>
+      <link>/posts/2021/20210117-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B9%B6%E6%9F%A5%E9%9B%86/</link>
+      <pubDate>Sun, 17 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210117-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B9%B6%E6%9F%A5%E9%9B%86/</guid>
+      <description>最近在 LeetCode 的每日一题中，大量出现了使用并查集进行算法设计的题目，如「684.冗余连接」、「803.打砖块」、「947.移除最多的同行或同列石头」。并查集这一点本身并不难学习，但有时候在题目中不容易发现对应的连接关系。
+什么是并查集？ 并查集是一种树形的数据结构，旨在通过特定的规则，将属于同一类别的点归于一个树中，构成一个集合。其包括两种基本操作：
+合并（Union）：将两个不同的集合合并为一个集合，或者将新的元素合入特定的集合 查找（Find）：确定两个元素是否在同一个集合中，或者确定某个元素处于哪一个子集 注意：虽然并查集是一个树形的数据结构，但考虑到内存以及时空复杂度，一般都会使用数组或者列表来实现，而非 Node 树结点。
+建树初始化 首先，需要根据当前数据的规模来开辟空间，同时确保原始数据能够 One-Hot 地映射到创建的节点集合中，即创建的空间能够包括所有的原始数据。下面是样板代码（Python）：
+class Union: def __init__(self, N): self.p = list(range(N)) # 初始化列表，每一个节点的值等于索引，其中 N 要根据原始数据确定 这一部分不难理解，即开辟一块额外的空间来保存并查集中的父子关系，因为现在还没有初始化关系，所以每一个点都指向自己的位置。接下来便是合并（Union），目的是输入数据形成并查集，样板代码如下：
+def find(self, x): if x != self.p[x]: self.p[x] = self.find(self.p[x]) # 这里的递归是为了压缩路径，加快查找速度，下面会讲到 return self.p[x] find() 会返回该点所对应集合的根（父亲），如果两个点返回同样的根（父亲），则证明其处于同一个集合中。
+一般情况下合并的样本代码如下：
+def union(self, x, y): xr = self.find(x) # 找出 x 对应的根 yr = self.find(y) # 找出 y 对应的根 self.p[xr] = yr # 将 x 的根指向 y 的根，因为其属于同一个集合 不同的题目用到的数据不同，一般是某个点的坐标 (x, y) 之类。这类题往往都可以使用递归、DP 等方法解决，所以我经常会往递归和 DP 的方向去想，然后卡在某个状态上（暴风哭泣），从而忘了直接用更简单的并查集来解。</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 204 Review</title>
+      <link>/posts/2020/20200830-leetcode-weekly-contest-204-review/</link>
+      <pubDate>Sun, 30 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200830-leetcode-weekly-contest-204-review/</guid>
+      <description>因为 30 日当天返校，要处理很多事情，所以当天搁置了，此为后来补上的文章。
+第一题：重复至少 K 次且长度为 M 的模式 给你一个正整数数组 arr，请你找出一个长度为 m 且在数组中至少重复 k 次的模式。
+模式 是由一个或多个值组成的子数组（连续的子序列），连续重复多次但不重叠。 模式由其长度和重复次数定义。
+如果数组中存在至少重复 k 次且长度为 m 的模式，则返回 true，否则返回 false。
+示例：
+输入：arr = [1,2,4,4,4,4], m = 1, k = 3 输出：true 解释：模式 (4) 的长度为 1 ，且连续重复 4 次。注意，模式可以重复 k 次或更多次，但不能少于 k 次。 分析 这道题用 Python 的话就是一道秒解题，直接匹配即可。
+代码 Python class Solution: def containsPattern(self, arr: List[int], m: int, k: int) -&amp;gt; bool: i = 0 while i &amp;lt; len(arr): p = arr[i:i+m] if p * k == arr[i:i+m*k]: return True i += 1 return False 第二题：乘积为正数的最长子数组长度 给你一个整数数组 nums ，请你求出乘积为正数的最长子数组的长度。</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 203 Review</title>
+      <link>/posts/2020/20200823-leetcode-weekly-contest-203-review/</link>
+      <pubDate>Sun, 23 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200823-leetcode-weekly-contest-203-review/</guid>
+      <description>每一道题目都附上了链接，现在可以更直接地进入题目了。
+第一题：圆形赛道上经过次数最多的扇区 给你一个整数 n 和一个整数数组 rounds 。有一条圆形赛道由 n 个扇区组成，扇区编号从 1 到 n 。现将在这条赛道上举办一场马拉松比赛，该马拉松全程由 m 个阶段组成。其中，第 i 个阶段将会从扇区 rounds[i - 1] 开始，到扇区 rounds[i] 结束。举例来说，第 1 阶段从 rounds[0] 开始，到 rounds[1] 结束。
+请你以数组形式返回经过次数最多的那几个扇区，按扇区编号升序排列。
+注意，赛道按扇区编号升序逆时针形成一个圆（请参见第一个示例）。
+示例：
+输入：n = 4, rounds = [1,3,1,2] 输出：[1,2] 解释：本场马拉松比赛从扇区 1 开始。经过各个扇区的次序如下所示： 1 --&amp;gt; 2 --&amp;gt; 3（阶段 1 结束）--&amp;gt; 4 --&amp;gt; 1（阶段 2 结束）--&amp;gt; 2（阶段 3 结束，即本场马拉松结束） 其中，扇区 1 和 2 都经过了两次，它们是经过次数最多的两个扇区。扇区 3 和 4 都只经过了一次。 分析 这道题的意思就是统计所有经过的块，然后输出经过次数最多块的列表。但其实这道题还可以进行化简，因为每转一圈，圈上的每一块都加一，这跟不加是一样的（因为所有的都一起加了），所以之用考虑开头和结尾经过的块即可。
+代码 Python class Solution: def mostVisited(self, n: int, rounds: List[int]) -&amp;gt; List[int]: tmp_l = rounds[0] # 最左边的数字 tmp_r = rounds[-1] # 最右边的数字 if tmp_l == tmp_r: return [tmp_r] # 相等则返回该数字 elif tmp_r &amp;lt; tmp_l: # 如果两边数字不相等，则可化简为从左数字到右数字的一轮 return [n for n in range(1, tmp_r + 1)] + [m for m in range(tmp_l, n + 1)] # 如果右边的数字比左边的小，即 [左到最大] + [1 到最右] 的数列 else: return [n for n in range(tmp_l, tmp_r + 1)] # 反之就是 [左到右] 的数列 C++ class Solution { public List&amp;lt;Integer&amp;gt; mostVisited(int n, int[] rounds) { int start = rounds[0]; int end = rounds[rounds.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 202 Review</title>
+      <link>/posts/2020/20200816-leetcode-weekly-contest-202-review/</link>
+      <pubDate>Sun, 16 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200816-leetcode-weekly-contest-202-review/</guid>
+      <description>第一题：存在连续三个奇数的数组 给你一个整数数组 arr，请你判断数组中是否存在连续三个元素都是奇数的情况：如果存在，请返回 true ；否则，返回 false。
+示例：
+输入：arr = [2,6,4,1] 输出：false 解释：不存在连续三个元素都是奇数的情况。 分析 直接写一个判断就解决了。
+代码 Python class Solution: def threeConsecutiveOdds(self, arr: List[int]) -&amp;gt; bool: count = 0 for n in arr: if not n % 2: count = 0 elif count == 2: return True else: count += 1 return False C++ class Solution { public: bool threeConsecutiveOdds(vector&amp;lt;int&amp;gt;&amp;amp; arr) { int count = 0; for (int n = 0; n &amp;lt; arr.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 201 Review</title>
+      <link>/posts/2020/20200809-leetcode-weekly-contest-201-review/</link>
+      <pubDate>Sun, 09 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200809-leetcode-weekly-contest-201-review/</guid>
+      <description>第一题：Make The String Great 给你一个由大小写英文字母组成的字符串 s 。
+一个整理好的字符串中，两个相邻字符 s[i] 和 s[i + 1] 不会同时满足下述条件：
+0 &amp;lt;= i &amp;lt;= s.length - 2 s[i] 是小写字符，但 s[i + 1] 是相同的大写字符；反之亦然。 请你将字符串整理好，每次你都可以从字符串中选出满足上述条件的两个相邻字符并删除，直到字符串整理好为止。
+请返回整理好的字符串。题目保证在给出的约束条件下，测试样例对应的答案是唯一的。
+注意：空字符串也属于整理好的字符串，尽管其中没有任何字符。
+示例：
+输入：s = &amp;#34;leEeetcode&amp;#34; 输出：&amp;#34;leetcode&amp;#34; 解释：无论你第一次选的是 i = 1 还是 i = 2，都会使 &amp;#34;leEeetcode&amp;#34; 缩减为 &amp;#34;leetcode&amp;#34; 。 分析 这一题的意思就是说，遍历整个字符串，然后如果当前的字符和下一个字符大小写不同，字母相同的时候，则删除两个字母，直到整个字符串满足条件为止。
+所以就遍历然后写一个判断条件判断即可。可以通过每次匹配到之后遍历指针归零的方式，来减少每一次的遍历长度；同时，考虑到归零也有可能出现无意义的匹配，所以可以在匹配到字符串之后指针减一（即从上一个字符继续匹配），这样就可以进一步减少无意义的匹配。
+这样的题需要用到自己构建的指针遍历，所以要注意 out of range 的问题。
+代码 Python class Solution: def makeGood(self, s: str) -&amp;gt; str: if not s: return &amp;#34;&amp;#34; # 非空继续 i = 0 # 初始化指针 while i &amp;lt;= len(s) - 2: # 指针范围 if s[i] == s[i + 1]: # 如果相等就下一个 i += 1 elif abs(ord(s[i]) - ord(s[i + 1])) == 32: # 不相等则判断是否满足条件 s = s[:i] + s[i + 2:] # 删除两个字符 i = max(0, i - 1) # i -= 1 else: i += 1 return s C++ class Solution { public: string makeGood(string s) { int i = 0; while (i &amp;lt; s.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 200 Review</title>
+      <link>/posts/2020/20200802-leetcode-weekly-contest-200-review/</link>
+      <pubDate>Sun, 02 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200802-leetcode-weekly-contest-200-review/</guid>
+      <description>第一题：Count Good Triplets 给你一个整数数组 arr ，以及 a、b、c 三个整数。请你统计其中好三元组的数量。
+如果三元组 (arr[i], arr[j], arr[k]) 满足下列全部条件，则认为它是一个 好三元组 。
+0 &amp;lt;= i &amp;lt; j &amp;lt; k &amp;lt; arr.length |arr[i] - arr[j]| &amp;lt;= a |arr[j] - arr[k]| &amp;lt;= b |arr[i] - arr[k]| &amp;lt;= c 其中 |x| 表示 x 的绝对值。
+返回好三元组的数量。
+示例：
+输入：arr = [3,0,1,1,9,7], a = 7, b = 2, c = 3 输出：4 解释：一共有 4 个好三元组：[(3,0,1), (3,0,1), (3,1,1), (0,1,1)] 。 分析 这一道题可以直接穷举，然后遍历出所有符合的条件即可。但是直接穷举的话还是比较慢，需要剪枝提高效率。剪枝的方法是先判断第一个条件，满足之后再进行下面的循环，这样可以在测试集中减少接近一半的时间。
+代码 Python class Solution: def countGoodTriplets(self, arr: List[int], a: int, b: int, c: int) -&amp;gt; int: length = len(arr) token = 0 for i in range(length - 2): # 第一个数 for j in range(i + 1, length - 1): # 第二个数 if abs(arr[i] - arr[j]) &amp;lt;= a: # 在满足第一个条件之后再取第三个数 for k in range(j + 1, length): # 第三个数 if (abs(arr[j] - arr[k]) &amp;lt;= b and abs(arr[i] - arr[k]) &amp;lt;= c): # 继续判断后两个条件 token += 1 # 满足则 +1 return token C++ class Solution { public: int countGoodTriplets(vector&amp;lt;int&amp;gt;&amp;amp; arr, int a, int b, int c) { int length = arr.</description>
+    </item>
+    
+    <item>
+      <title>LeetCode Weekly Contest 199 Review</title>
+      <link>/posts/2020/20200726-leetcode-weekly-contest-199-review/</link>
+      <pubDate>Sun, 26 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200726-leetcode-weekly-contest-199-review/</guid>
+      <description>第一题：Shuffle String 给你一个字符串 s 和一个长度相同的整数数组 indices。请你重新排列字符串 s ，其中第 i 个字符需要移动到 indices[i] 指示的位置，返回重新排列后的字符串。
+输入：s = &amp;#34;codeleet&amp;#34;, indices = [4,5,6,7,0,2,1,3] 输出：&amp;#34;leetcode&amp;#34; 解释：如图所示，&amp;#34;codeleet&amp;#34; 重新排列后变为 &amp;#34;leetcode&amp;#34; 。 分析 这道题的算法比较简单，有两种解法。
+第一种是在不能新建字符串空间的情况下，可以通过从开头遍历，然后根据 indices 循环交换字符串，直到 indices 正好为该位置的指针时，转到下一个继续进行循环交换。
+第二种是可以新建字符串空间的情况，这样子就比较简单了，直接新建或复制出一个同等长度的字符串，然后根据 indices 遍历原字符串，然后放到新数组的对应位置即可。
+很明显，第一种的时间复杂度为 $O(n^2)$，第二种的时间复杂度为 $O(n)$，所以最终提交的为第二种方法的代码。源码如下：
+class Solution: def restoreString(self, s: str, indices: List[int]) -&amp;gt; str: m = [0] * len(indices) # 新建一个列表 for i,n in enumerate(indices): m[n] = s[i] # 按照 indices 为指针，把字符放到新列表中的对应的位置 return &amp;#34;&amp;#34;.join(m) # 用 join 把列表合成字符串 因为 Python 语言本身不支持字符串的枚举，所以只能生成列表进行操作，最后再合起来。而 C++ 可以直接枚举操作字符串，所以代码相对简单一些：</description>
+    </item>
+    
+  </channel>
+</rss>

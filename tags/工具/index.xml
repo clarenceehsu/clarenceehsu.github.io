@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具 on Zee Tsui</title>
+    <link>/tags/%E5%B7%A5%E5%85%B7/</link>
+    <description>Recent content in 工具 on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 18 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>文件夹同步工具 unison 简易指北</title>
+      <link>/posts/2021/20210218-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E7%AE%80%E6%98%93%E6%8C%87%E5%8C%97/</link>
+      <pubDate>Thu, 18 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210218-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E7%AE%80%E6%98%93%E6%8C%87%E5%8C%97/</guid>
+      <description>unison 是一款跨 Windows/Linux/MacOS 平台的双向文件同步工具，不仅支持本地对本地同步，也支持通过 SSH、RSH 和 Socket 等网络协议进行同步；但需要注意的是，unison 无法实现实时双向同步，仅支持猝发实时同步。
+unison 安装 Linux unison 可以直接安装预编译包：sudo apt-get install unison
+Others Windows、MacOS 以及其它平台和源码，都能够在官方 Github 仓库的 Release 页面下载。
+两个文件夹之间双向同步文件 在两台主机之间进行文件夹同步，需要确保主机都正确安装了 unison，并部署了 ssh 服务。unison 会开启一个监听端口，使用 unison dir1 ssh://username@remotehostname(ip)//absolute/path/to/dir2 结构的命令即可进行文件同步。
+注意：两个文件夹的顺序是任意的，且只能够在远程和本地、本地和本地之间进行同步，不能够对两台远程机进行操作。
+本地文件夹进行同步，直接使用 unison dir1 dir2 进行同步即可。
+unison 的配置选项 unison 会在用户目录创建一个 .unison 文件夹来保存相关的配置，里面一般会存有 defalut.prf 作为默认配置。在平时可以通过 unison default dir1 dir2 来选择 default 作为配置文件进行同步。除了使用配置文件外，unison 命令还可以接受如下的一些参数：
+-testserver 测试连通性，连接到服务器即退出；如果服务器端 unison 可执行文件不在默认目录下，甚至没有 unison 命令（需要你编译一个上传到服务器），则需要使用 -servercmd 参数告诉要执行的服务器 unison 命令位置。 使用 -testserver 参数，则成功链接即退出，也不会去执行目录的比较等后续操作。 -auto 接受缺省的动作，然后等待用户确认是否执行。 -batch batch mode, 全自动模式，接受缺省动作，并执行。 -ignore xxx 增加 xxx 到忽略列表中 -ignorecase [true|false|default] 是否忽略文件名大小写 -follow xxx 是否支持对符号连接指向内容的同步； 例如在我的 ~/.</description>
+    </item>
+    
+  </channel>
+</rss>

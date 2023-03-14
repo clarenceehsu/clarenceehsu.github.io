@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>containerd 默认配置参数解析 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2023/20230123-containerd-%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="containerd 默认配置参数解析"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2023/20230123-containerd-%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>containerd 默认配置参数解析<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <blockquote>
+<p>该配置文件的所有配置项，都会加载到 <code>Config</code> 结构体中（坐标：<code>services/server/config/config.go</code>）。</p>
+<p>该文档可以配合 containerd 服务加载流程对照使用。</p>
+</blockquote>
+<h4 id="toml-快速入门可见博客文章-toml-配置格式详解httpsmojotvcn20181226what-is-toml">TOML 快速入门，可见博客文章 <a href="https://mojotv.cn/2018/12/26/what-is-toml">TOML 配置格式详解</a></h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml"><span class="line"><span class="cl"><span class="nx">disabled_plugins</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 禁用的插件名列表</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">imports</span> <span class="p">=</span> <span class="p">[]</span> 
+</span></span><span class="line"><span class="cl"><span class="c"># 导入其他的 toml 配置并应用（import 的 toml 配置文件 version 参数不能大于此 toml 配置）</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">oom_score</span> <span class="p">=</span> <span class="mi">0</span> 
+</span></span><span class="line"><span class="cl"><span class="c"># containerd 主进程的 OOM Score（/proc/&lt;pid&gt;/oom_score_adj），范围 -1000 到 1000，OOM Killer 会根据该值回收进程</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 可见 https://learning-kernel.readthedocs.io/en/latest/mem-management.html</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">plugin_dir</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 插件的路径</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">required_plugins</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 需要引入的插件名列表</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">root</span> <span class="p">=</span> <span class="s2">&#34;/var/lib/containerd&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c"># containerd 的根目录，用来保存持久化数据，包括 Snapshots, Content, Metadata 以及各种插件的数据，每一个插件都有自己单独的目录</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 默认所有的 container 文件都会存于该路径下</span>
+</span></span><span class="line"><span class="cl"><span class="c"># containerd 所有功能都来自于已加载的插件</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">state</span> <span class="p">=</span> <span class="s2">&#34;/run/containerd&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c"># containerd 的状态目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">temp</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nx">version</span> <span class="p">=</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl"><span class="c"># toml 配置文件的版本</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">cgroup</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># Linux cgroup 的定制化参数（与创建 container 相关）</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># 指定 cgroup 的路径，默认 &#34;&#34; 值则会找默认的 cgroup</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">debug</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 配置 containerd socket 连接的 debug 监听端口，一般生产环境用不到</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">address</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># socket 地址，默认 &#34;&#34; 值则会找 /run/containerd/debug.sock</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">format</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">gid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">level</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># debug 信息显示的级别，默认 &#34;&#34; 值则为 &#34;info&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">grpc</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># containerd 的 gRPC server 配置参数</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">address</span> <span class="p">=</span> <span class="s2">&#34;/run/containerd/containerd.sock&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># socket 地址，默认 &#34;/run/containerd/containerd.sock&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">gid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">max_recv_message_size</span> <span class="p">=</span> <span class="mi">16777216</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># 最大接收信息大小</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">max_send_message_size</span> <span class="p">=</span> <span class="mi">16777216</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># 最大发送信息大小</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">tcp_address</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># tcp 监听地址</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">tcp_tls_ca</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># tcp 的 TLS CA</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">tcp_tls_cert</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># tcp 的证书</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">tcp_tls_key</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># tcp 的 key</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">metrics</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># metrics 监听配置，metrics listener 用于监控和记录 containerd 的服务状态信息</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">address</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># 默认 &#34;&#34; 值，则不会开这个 metrics listener</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">grpc_histogram</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">  <span class="c"># 是否开启 gRPC 直方图</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">plugins</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># 针对于引入插件进行自定义配置，下面是默认引入的一些插件，插件里面还有插件则可以嵌套配置</span>
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.gc.v1.scheduler&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">deletion_threshold</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">mutation_threshold</span> <span class="p">=</span> <span class="mi">100</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">pause_threshold</span> <span class="p">=</span> <span class="mf">0.02</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">schedule_delay</span> <span class="p">=</span> <span class="s2">&#34;0s&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">startup_delay</span> <span class="p">=</span> <span class="s2">&#34;100ms&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">device_ownership_from_security_context</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">disable_apparmor</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">disable_cgroup</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">disable_hugetlb_controller</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">disable_proc_mount</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">disable_tcp_service</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">enable_selinux</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">enable_tls_streaming</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">enable_unprivileged_icmp</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">enable_unprivileged_ports</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">ignore_image_defined_volumes</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">max_concurrent_downloads</span> <span class="p">=</span> <span class="mi">3</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">max_container_log_line_size</span> <span class="p">=</span> <span class="mi">16384</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">netns_mounts_under_state_dir</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">restrict_oom_score_adj</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sandbox_image</span> <span class="p">=</span> <span class="s2">&#34;k8s.gcr.io/pause:3.6&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">selinux_category_range</span> <span class="p">=</span> <span class="mi">1024</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">stats_collect_period</span> <span class="p">=</span> <span class="mi">10</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">stream_idle_timeout</span> <span class="p">=</span> <span class="s2">&#34;4h0m0s&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">stream_server_address</span> <span class="p">=</span> <span class="s2">&#34;127.0.0.1&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">stream_server_port</span> <span class="p">=</span> <span class="s2">&#34;0&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">systemd_cgroup</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">tolerate_missing_hugetlb_controller</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">unset_seccomp_profile</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">cni</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">bin_dir</span> <span class="p">=</span> <span class="s2">&#34;/opt/cni/bin&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">conf_dir</span> <span class="p">=</span> <span class="s2">&#34;/etc/cni/net.d&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">conf_template</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">ip_pref</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">max_conf_num</span> <span class="p">=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">default_runtime_name</span> <span class="p">=</span> <span class="s2">&#34;runc&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">disable_snapshot_annotations</span> <span class="p">=</span> <span class="kc">true</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">discard_unpacked_layers</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">ignore_rdt_not_enabled_errors</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">no_pivot</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">snapshotter</span> <span class="p">=</span> <span class="s2">&#34;overlayfs&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">.</span><span class="nx">default_runtime</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">base_runtime_spec</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">cni_conf_dir</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">cni_max_conf_num</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">container_annotations</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">pod_annotations</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">privileged_without_host_devices</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_engine</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_root</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_type</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">.</span><span class="nx">default_runtime</span><span class="p">.</span><span class="nx">options</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">.</span><span class="nx">runtimes</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">.</span><span class="nx">runtimes</span><span class="p">.</span><span class="nx">runc</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">base_runtime_spec</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">cni_conf_dir</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">cni_max_conf_num</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">container_annotations</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">pod_annotations</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">privileged_without_host_devices</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">runtime_engine</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">runtime_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">runtime_root</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">          <span class="nx">runtime_type</span> <span class="p">=</span> <span class="s2">&#34;io.containerd.runc.v2&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">          <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">.</span><span class="nx">runtimes</span><span class="p">.</span><span class="nx">runc</span><span class="p">.</span><span class="nx">options</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">BinaryName</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">CriuImagePath</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">CriuPath</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">CriuWorkPath</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">IoGid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">IoUid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">NoNewKeyring</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">NoPivotRoot</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">Root</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">ShimCgroup</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="nx">SystemdCgroup</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">.</span><span class="nx">untrusted_workload_runtime</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">base_runtime_spec</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">cni_conf_dir</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">cni_max_conf_num</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">container_annotations</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">pod_annotations</span> <span class="p">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">privileged_without_host_devices</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_engine</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_root</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">        <span class="nx">runtime_type</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">containerd</span><span class="p">.</span><span class="nx">untrusted_workload_runtime</span><span class="p">.</span><span class="nx">options</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">image_decryption</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">key_model</span> <span class="p">=</span> <span class="s2">&#34;node&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">registry</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">config_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">registry</span><span class="p">.</span><span class="nx">auths</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">registry</span><span class="p">.</span><span class="nx">configs</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">registry</span><span class="p">.</span><span class="nx">headers</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">registry</span><span class="p">.</span><span class="nx">mirrors</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.grpc.v1.cri&#34;</span><span class="p">.</span><span class="nx">x509_key_pair_streaming</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">tls_cert_file</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="nx">tls_key_file</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.internal.v1.opt&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">path</span> <span class="p">=</span> <span class="s2">&#34;/opt/containerd&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.internal.v1.restart&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">interval</span> <span class="p">=</span> <span class="s2">&#34;10s&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.internal.v1.tracing&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sampling_ratio</span> <span class="p">=</span> <span class="mf">1.0</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">service_name</span> <span class="p">=</span> <span class="s2">&#34;containerd&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.metadata.v1.bolt&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">content_sharing_policy</span> <span class="p">=</span> <span class="s2">&#34;shared&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.monitor.v1.cgroups&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">no_prometheus</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.runtime.v1.linux&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">no_shim</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">runtime</span> <span class="p">=</span> <span class="s2">&#34;runc&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">runtime_root</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shim</span> <span class="p">=</span> <span class="s2">&#34;containerd-shim&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">shim_debug</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.runtime.v2.task&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">platforms</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;linux/amd64&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">sched_core</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.service.v1.diff-service&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">default</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;walking&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.service.v1.tasks-service&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">rdt_config_file</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.snapshotter.v1.aufs&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">root_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.snapshotter.v1.btrfs&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">root_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.snapshotter.v1.devmapper&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">async_remove</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">base_image_size</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">discard_blocks</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fs_options</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">fs_type</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">pool_name</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">root_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.snapshotter.v1.native&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">root_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.snapshotter.v1.overlayfs&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">root_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">upperdir_label</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.snapshotter.v1.zfs&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">root_path</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">plugins</span><span class="p">.</span><span class="s2">&#34;io.containerd.tracing.processor.v1.otlp&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">endpoint</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">insecure</span> <span class="p">=</span> <span class="kc">false</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">protocol</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">proxy_plugins</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">stream_processors</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">stream_processors</span><span class="p">.</span><span class="s2">&#34;io.containerd.ocicrypt.decoder.v1.tar&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">accepts</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;application/vnd.oci.image.layer.v1.tar+encrypted&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">args</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;--decryption-keys-path&#34;</span><span class="p">,</span> <span class="s2">&#34;/etc/containerd/ocicrypt/keys&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">env</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;OCICRYPT_KEYPROVIDER_CONFIG=/etc/containerd/ocicrypt/ocicrypt_keyprovider.conf&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">path</span> <span class="p">=</span> <span class="s2">&#34;ctd-decoder&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">returns</span> <span class="p">=</span> <span class="s2">&#34;application/vnd.oci.image.layer.v1.tar&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">  <span class="p">[</span><span class="nx">stream_processors</span><span class="p">.</span><span class="s2">&#34;io.containerd.ocicrypt.decoder.v1.tar.gzip&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">accepts</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;application/vnd.oci.image.layer.v1.tar+gzip+encrypted&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">args</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;--decryption-keys-path&#34;</span><span class="p">,</span> <span class="s2">&#34;/etc/containerd/ocicrypt/keys&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">env</span> <span class="p">=</span> <span class="p">[</span><span class="s2">&#34;OCICRYPT_KEYPROVIDER_CONFIG=/etc/containerd/ocicrypt/ocicrypt_keyprovider.conf&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">path</span> <span class="p">=</span> <span class="s2">&#34;ctd-decoder&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nx">returns</span> <span class="p">=</span> <span class="s2">&#34;application/vnd.oci.image.layer.v1.tar+gzip&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">timeouts</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;io.containerd.timeout.bolt.open&#34;</span> <span class="p">=</span> <span class="s2">&#34;0s&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;io.containerd.timeout.shim.cleanup&#34;</span> <span class="p">=</span> <span class="s2">&#34;5s&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;io.containerd.timeout.shim.load&#34;</span> <span class="p">=</span> <span class="s2">&#34;5s&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;io.containerd.timeout.shim.shutdown&#34;</span> <span class="p">=</span> <span class="s2">&#34;3s&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="s2">&#34;io.containerd.timeout.task.state&#34;</span> <span class="p">=</span> <span class="s2">&#34;2s&#34;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="p">[</span><span class="nx">ttrpc</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="c"># ttrpc 的配置，ttrpc 是 containerd 的子模块，可以抽象为小型 gRPC，用于 shim 和 containerd 主进程间通信</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">address</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">gid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">  <span class="nx">uid</span> <span class="p">=</span> <span class="mi">0</span>
+</span></span></code></pre></div>
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

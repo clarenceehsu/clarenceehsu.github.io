@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>【算法笔记】meet-in-the-middle 算法 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2021/20210223-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0meet-in-the-middle-%E7%AE%97%E6%B3%95/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="【算法笔记】meet-in-the-middle 算法"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2021/20210223-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0meet-in-the-middle-%E7%AE%97%E6%B3%95/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>【算法笔记】meet-in-the-middle 算法<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p><strong>meet-in-the-middle 算法</strong>（又称折半搜索、双向搜索），属于一种优化的 DFS 或 BFS 算法。同分治算法近似，它将问题进行了拆分，然后进行合并归一，得出最后的结果。这样做的好处是<strong>在穷举解的时候能够对很多情况进行剪枝</strong>，降低了时间复杂度。</p>
+<p><code>n &lt;= 40</code> 的搜索类型题目一般都可以优化，本质上这是一种<strong>空间换时间</strong>的算法。</p>
+<blockquote>
+<p>穷举类的问题当<strong>匹配条件越多</strong>的时候，其<strong>时间复杂度便会越大</strong>，所以可以通过将多个条件拆分匹配的方式来减小复杂度。
+简单来说，这就是“分而治之”的一种手段。</p>
+</blockquote>
+<h2 id="常见类型">常见类型</h2>
+<h4 id="求和">求和</h4>
+<p>这一部分可直接见「<strong>举个例子</strong>」部分。</p>
+<h4 id="双向搜索">双向搜索</h4>
+<p>这在<strong>关系网处理</strong>和<strong>图的路径规划</strong>中经常使用，且在寻路问题中表现很好。算法会同时从两个节点开始搜索，并且看什么时候这两个搜索的边界相遇。这个可以将需要扩展的节点降低到 $O(p^{k/2})$。</p>
+<h4 id="2des-破解">2DES 破解</h4>
+<p>DES 算法为密码体制中的<strong>对称密码体制</strong>，又被称为美国数据加密标准，是 1972 年美国 IBM 公司研制的对称密码体制加密算法。明文按 64 位进行分组，密钥长 64 位，密钥事实上是 56 位参与 DES 运算（第 8、16、24、32、40、48、56、64 位是校验位， 使得每个密钥都有奇数个1），分组后的明文组和 56 位的密钥<strong>按位替代或交换的方法</strong>形成密文组的加密方法。</p>
+<p>DES 算法如今之所以被淘汰，是因为<strong>秘钥空间太小</strong>。其密钥的 $2^{56}$ 种可能性在以前是很难穷举破解的，但如今随着算力的发展，把所有可能的秘钥遍历一遍也是可以的（参考 BTC 挖矿）。在这之后的 DES 算法便开始显得力不从心，亟待升级，于是就有了 <strong>3DES 算法</strong>——使用 3 个密钥进行 3 次 DES 加密运算。</p>
+<p><strong>2DES 去哪儿了？<strong>答案是 DES 算法过后直接提升到了 3DES，直接把 2DES 给跳过了。理论上来说 2DES 具有 $2^{102}$ 的秘钥空间，已足够使用，但是为什么不用呢，原因就在于 meet-in-the-middle 算法为基础的</strong>中间人攻击</strong>（Diffile-Hellman 发明）——信息论课堂上的老朋友了，在这儿只用简单的语言介绍其原理。</p>
+<p>假设我需要通过一组 2DES 的明文与密文破解出秘钥，我并不需要遍历 $2^{102}$ 整个秘钥空间，而是使用明文枚举 $2^{56}$ 个秘钥加密，得到 $2^{56}$ 个中间值并<strong>存入哈希表</strong>；然后使用密文枚举 $2^{56}$ 个秘钥并<strong>与明文的哈希库做对比</strong>，得到的所有值中一定有一个与之前加密所得到的相等，即 $E_{ki}(p) = D_{kj}(s)$，meet-in-the-middle 结束。这整个破解过程中不难发现，<strong>只要有足够大的空间用于存储哈希表，2DES 破解密码的时间仅仅相当于破解 2 次 DES</strong>。</p>
+<p>3DES 的话就可以避免这个问题，无论如何 meet-in-the-middle，都只能够将时间复杂度给缩小到 $O(2^{102})$ 程度。</p>
+<h2 id="举个例子">举个例子</h2>
+<h4 id="4-和问题">「4 和问题」</h4>
+<p><strong>问题</strong>：给定一个整数数组 A，问数组中是否存在 4 个数，使得这 4 个数的和是 0（同一个元素可以被多次使用）。</p>
+<p><strong>例如</strong>：<code>A = [2, 3, 1, 0, -4, -1]</code>，可能的方案是 <code>3 + 1 + 0 - 4 = 0</code> 或 <code>0 + 0 + 0 + 0 = 0</code>。</p>
+<p>该题的直观解法就是<strong>穷举</strong>，然后记录所有符合条件的方案即可，复杂度为 $O(N^4)$。当然，并不能说穷举的时间复杂度高就不好，毕竟这种解法的解题复杂度低，比赛的时候可以<strong>快速解题</strong>。</p>
+<blockquote>
+<p>一般情况下比赛都会配上阴间测试样例，暴力解极有可能错误导致加时，所以最好对算法进行优化后再提交。</p>
+</blockquote>
+<p>使用 meet-in-the-middle 算法的话也不难理解。首先我们将问题中的 <code>a + b + c + d = 0</code> 的格式化为 <code>a + b = -(c + d)</code>，这时我们就可以发现，<strong>当 <code>a + b</code> 计算出来之后，<code>c + d</code> 的值也就出来了</strong>。所以我们要做的就是穷举所有的 <code>a + b</code>（时间复杂度为 $O(N^2)$）并记录到哈希表中，然后匹配一下是否有对应的值即可。</p>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="mi">4</span><span class="nb">sum</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">  <span class="n">sums</span> <span class="o">=</span> <span class="p">{}</span>
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="n">sums</span><span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">A</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="o">-</span><span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">d</span><span class="p">)</span> <span class="ow">in</span> <span class="n">sums</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="n">sums</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">d</span><span class="p">)][</span><span class="mi">0</span><span class="p">],</span> <span class="n">sums</span><span class="p">[</span><span class="o">-</span><span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="n">d</span><span class="p">)][</span><span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">  <span class="k">return</span> <span class="kc">None</span>
+</span></span></code></pre></div><h4 id="1755-最接近目标值的子序列和httpsleetcode-cncomproblemsclosest-subsequence-sum">「<a href="https://leetcode-cn.com/problems/closest-subsequence-sum/">1755. 最接近目标值的子序列和</a>」</h4>
+<p><strong>解题复杂度最低</strong>的解法就是直接穷举，而且这道题 LeetCode 的测试集不够阴间，可以直接过。同时这也可以使用 meet-in-the-middle 算法剪枝，大大降低时间复杂度。</p>
+<p>算法很直观，原理就是<strong>分块穷举会比总体穷举更节省时间</strong>。首先将该数组分成左右两半，然后分别<strong>穷举出所有可能的子数组和</strong>。然后对该两个生成数组重新排序，从而方便最后的 meet-in-the-middle 算法进行判断。</p>
+<p>Python 代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">minAbsDifference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nums</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">goal</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nums</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ln</span> <span class="o">=</span> <span class="n">n</span> <span class="o">//</span> <span class="mi">2</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># make 函数是用于穷举一个列表所有可能的子数组和</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 比如 [3, 5] 就会生成 [0, 3, 5, 8]；[5, -7] 就会生成 [0, 5, -7, -2]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">def</span> <span class="nf">make</span><span class="p">(</span><span class="n">lis</span><span class="p">,</span> <span class="n">loc</span><span class="p">,</span> <span class="n">lis_out</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">loc</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">lis</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">                <span class="k">return</span> <span class="n">lis_out</span>
+</span></span><span class="line"><span class="cl">            <span class="n">temp</span> <span class="o">=</span> <span class="n">lis_out</span> <span class="o">+</span> <span class="p">[</span><span class="n">k</span> <span class="o">+</span> <span class="n">lis</span><span class="p">[</span><span class="n">loc</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">lis_out</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">make</span><span class="p">(</span><span class="n">lis</span><span class="p">,</span> <span class="n">loc</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">temp</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># ll 和 rr 实际上就是左右两半子数组和的穷举，方便后面 meet in the middle</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ll</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">nums</span><span class="p">[:</span><span class="n">ln</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>  
+</span></span><span class="line"><span class="cl">        <span class="n">rr</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="n">nums</span><span class="p">[</span><span class="n">ln</span><span class="p">:],</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 排个序</span>
+</span></span><span class="line"><span class="cl">        <span class="n">ll</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">rr</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">pl</span> <span class="o">=</span> <span class="mi">0</span>
+</span></span><span class="line"><span class="cl">        <span class="n">pr</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rr</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="n">out</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">&#34;inf&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># pl 遍历 ll 数组，pr 遍历 rr 数组</span>
+</span></span><span class="line"><span class="cl">        <span class="k">while</span> <span class="n">pl</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="o">**</span> <span class="n">ln</span> <span class="ow">and</span> <span class="n">pr</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">out</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ll</span><span class="p">[</span><span class="n">pl</span><span class="p">]</span> <span class="o">+</span> <span class="n">rr</span><span class="p">[</span><span class="n">pr</span><span class="p">]</span> <span class="o">-</span> <span class="n">goal</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">ll</span><span class="p">[</span><span class="n">pl</span><span class="p">]</span> <span class="o">+</span> <span class="n">rr</span><span class="p">[</span><span class="n">pr</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">goal</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">pr</span> <span class="o">-=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">pl</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">out</span>
+</span></span></code></pre></div><h2 id="复杂度">复杂度</h2>
+<p>假设向外搜索 $n$ 层需要的代价为 $f(n)$。如果不用 meet-in-the-middle 那么复杂度当然是 $O(f(n))$。</p>
+<p>如果使用了 meet-in-the-middle，那么从起点开始需要搜索的代价为 $f(n/2)$，从终点开始搜索的代价也是 $f(n/2)$，总代价就是 $2*f(n/2)$，复杂度为 $O(f(n/2))$。</p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

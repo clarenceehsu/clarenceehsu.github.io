@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on Zee Tsui</title>
+    <link>/tags/linux/</link>
+    <description>Recent content in Linux on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 18 Feb 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>文件夹同步工具 unison 简易指北</title>
+      <link>/posts/2021/20210218-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E7%AE%80%E6%98%93%E6%8C%87%E5%8C%97/</link>
+      <pubDate>Thu, 18 Feb 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210218-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E6%96%87%E4%BB%B6%E5%A4%B9%E5%90%8C%E6%AD%A5%E5%B7%A5%E5%85%B7-unison-%E7%AE%80%E6%98%93%E6%8C%87%E5%8C%97/</guid>
+      <description>unison 是一款跨 Windows/Linux/MacOS 平台的双向文件同步工具，不仅支持本地对本地同步，也支持通过 SSH、RSH 和 Socket 等网络协议进行同步；但需要注意的是，unison 无法实现实时双向同步，仅支持猝发实时同步。
+unison 安装 Linux unison 可以直接安装预编译包：sudo apt-get install unison
+Others Windows、MacOS 以及其它平台和源码，都能够在官方 Github 仓库的 Release 页面下载。
+两个文件夹之间双向同步文件 在两台主机之间进行文件夹同步，需要确保主机都正确安装了 unison，并部署了 ssh 服务。unison 会开启一个监听端口，使用 unison dir1 ssh://username@remotehostname(ip)//absolute/path/to/dir2 结构的命令即可进行文件同步。
+注意：两个文件夹的顺序是任意的，且只能够在远程和本地、本地和本地之间进行同步，不能够对两台远程机进行操作。
+本地文件夹进行同步，直接使用 unison dir1 dir2 进行同步即可。
+unison 的配置选项 unison 会在用户目录创建一个 .unison 文件夹来保存相关的配置，里面一般会存有 defalut.prf 作为默认配置。在平时可以通过 unison default dir1 dir2 来选择 default 作为配置文件进行同步。除了使用配置文件外，unison 命令还可以接受如下的一些参数：
+-testserver 测试连通性，连接到服务器即退出；如果服务器端 unison 可执行文件不在默认目录下，甚至没有 unison 命令（需要你编译一个上传到服务器），则需要使用 -servercmd 参数告诉要执行的服务器 unison 命令位置。 使用 -testserver 参数，则成功链接即退出，也不会去执行目录的比较等后续操作。 -auto 接受缺省的动作，然后等待用户确认是否执行。 -batch batch mode, 全自动模式，接受缺省动作，并执行。 -ignore xxx 增加 xxx 到忽略列表中 -ignorecase [true|false|default] 是否忽略文件名大小写 -follow xxx 是否支持对符号连接指向内容的同步； 例如在我的 ~/.</description>
+    </item>
+    
+    <item>
+      <title>记一次服务器的维护</title>
+      <link>/posts/2020/20200129-%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BB%B4%E6%8A%A4/</link>
+      <pubDate>Wed, 29 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200129-%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BB%B4%E6%8A%A4/</guid>
+      <description>最近因为某些不可言说的原因，我趁着农历春节优惠，用 8.88 $ / 年的价格购了一台国外服务器。
+在搭好了所有环境之后，已经可以正式地部署使用了，于是我开始愉快地玩耍起来。但后来我逐渐发现，在登录服务器的时候，SSH 时 Authentication 过程相当地漫长；毕竟服务器地处遥远，我也没当回事。
+直到后来服务器密码被改掉了，我才发现原来服务器被人黑了。
+破解密码 我一开始设置的初始密码为 12345678（当时也不知道网络上坏人竟然这么多），所以也十分容易被暴力破解。
+怎么解决呢？难道就这样把自己的服务器拱手让人了吗？不，我赵铁柱是不会这么容易屈服的，于是我很快找到了解决办法。
+入手点就在于服务器的提供商在后台也给我们了一系列的运维选项，以方便我们做一些服务器以外的操作，如重装系统，更改 IP 等。我好不容易搭好了环境，不想就这么重装了，所以我打算通过 VNC 来解决。
+VNC 是虚拟网络控制台的缩写。它是一款优秀的远程控制工具软件，由著名的 AT&amp;amp;T 的欧洲研究实验室开发。VNC 是基于 UNIX 和 Linux 操作系统的免费开源软件，远程控制能力强大，高效实用，其性能可以和 Windows 和 MAC 中的任何远程控制软件媲美。
+VNC 的好处在于它会完全显示服务器当前所显示的画面，就相当于是一个远程的显示器。所以通过内网的 VNC 连接到服务器，然后点击右上角的按键重启：
+然后便是熟悉的启动界面，在 boot 状态下点击 esc 键，打断 GNU GRUB 引导，此时可以对启动项进行更改设置等操作。这个时候的操作 CentOS 6 和 CentOS 7 是不一样的，我是 CentOS 7，所以直接进入配置文件，设置为单用户模式，重新引导启动。
+此时已经可以进入 root 用户了，然后使用 passwd 命令字改密码即可。
+设置了强密码后，SSH 的速度还是很慢，正当我找不到原因时，SSH 连接服务器后系统提示我有 4000 多次失败的登录。
+还在搞我？ 我用 lastb 命令看了一下，有两个来自江苏连云港的电信 IP 一直在试 root 密码暴力破解服务器，大量占用 22 端口的资源导致我连接过程缓慢。</description>
+    </item>
+    
+    <item>
+      <title>如何配置 VS Code 进行远程调试</title>
+      <link>/posts/2019/20190806-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE-vs-code-%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</link>
+      <pubDate>Tue, 06 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190806-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE-vs-code-%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/</guid>
+      <description>从前，我还在用 Putty 艰难地连接服务器，用命令行敲着 ftp 去与服务器互传文件；
+后来长大了，开始用 XShell 进行交互，传文件直接用 XFtp，效率陡增；但是由于我用不惯 Vim，每一次改内容都需要把文件先下下来，用 VS Code 改好，然后再用 Xftp 给传上去。
+再后来，VS Code 的官方 Remote 插件推出，如今的我可以直接在 VS Code 里面操作服务器进行开发和调试，简直不要太舒服。
+那么如何配置 VS Code 并实现远程开发呢？
+安装 VS Code 和插件 VS Code 下载地址
+首先下载安装 VS Code。以前只有 Insider 版本才有 Remote Development，现在已经下放到正式版本了。
+然后打开扩展页面，搜索 Remote Development，选择第一个安装，在安装完成后左栏会出现一个 Remote 的小图标。
+配置 Remote Development 如图，点击配置一个 SSH Host：
+这是编辑器会打开一个文件，格式如下：
+# Read more about SSH config files: https://linux.die.net/man/5/ssh_config Host CentOS HostName 111.111.111.111 User admin Host 后面填服务器名称（可随意填）；HostName 后面填服务器的IP地址或域名；User 后面填服务器用户。</description>
+    </item>
+    
+    <item>
+      <title>建立并连接到 Ubuntu 服务器的远程桌面</title>
+      <link>/posts/2019/20190707-%E5%BB%BA%E7%AB%8B%E5%B9%B6%E8%BF%9E%E6%8E%A5%E5%88%B0-ubuntu-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/</link>
+      <pubDate>Sun, 07 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190707-%E5%BB%BA%E7%AB%8B%E5%B9%B6%E8%BF%9E%E6%8E%A5%E5%88%B0-ubuntu-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2/</guid>
+      <description>建立一个远程桌面，把 Ubuntu 服务器当成远程电脑使用。
+水开头 在经历了很久的命令行交互之后，突然想这把与服务器间的交互给图形化，从而可以方便地搞一些其他的操作，比如像 Windows Server 那样即连即用的云电脑。
+为此我查了一些资料和教程，也算是成功实现了可视化：
+怎么做 下面是自己的经历记录：
+首先安装必要的包：
+sudo apt-get install xrdp sudo apt-get install vnc4server sudo apt-get install xubuntu-desktop echo “xfce4-session” &amp;gt;~/.xsession sudo service xrdp restart
+如果没有的话，就 sudo apt-get update 更新一下再安装。
+这样子的话就已经完成了，Windows 系统通过远程连接，输入自己的服务器 IP。
+然后可以连接到服务器：
+输入自己对应的用户名和密码就可以进入界面了。
+问题 在我进行到最后一步的时候，遇到了 problem connecting 的问题，后来查到还需要安装一个包。
+sudo apt-get install tightvncserver
+成功连接后，我又发现界面只有灰屏和叉型的鼠标，没有图形界面，后来查了许多的资料才发现问题。
+原来 gnome 桌面在 Ubuntu 14.04 之后就已经不支持远程连接了，所以要用 xfce 界面来代替。
+sudo apt-get install xubuntu-desktop echo xfce4-session &amp;gt;~/.xsession vim /etc/xrdp/startwm.sh
+在./etc/X11/Xsession前插入xfce4-session。
+cd /etc/init.</description>
+    </item>
+    
+    <item>
+      <title>为网站设置域名并且添加 SSL 证书</title>
+      <link>/posts/2019/20190617-%E4%B8%BA%E7%BD%91%E7%AB%99%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D%E5%B9%B6%E4%B8%94%E6%B7%BB%E5%8A%A0-ssl-%E8%AF%81%E4%B9%A6/</link>
+      <pubDate>Mon, 17 Jun 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190617-%E4%B8%BA%E7%BD%91%E7%AB%99%E8%AE%BE%E7%BD%AE%E5%9F%9F%E5%90%8D%E5%B9%B6%E4%B8%94%E6%B7%BB%E5%8A%A0-ssl-%E8%AF%81%E4%B9%A6/</guid>
+      <description>最近域名备案了，所以我把自己的博客从 GitHub 搬到了自己的服务器上，以提升访问的速度。其中因为前期准备不足，所以再添加 SSL 的时候踩了许多坑，所以特地写下来作参考之用。
+安装前 在进行操作前，我们需要确保自己的网址已经解析到服务器 IP 上了，以方便后面的操作。
+安装 Nginx 首先由于我用的是 Nginx，所以我们现需要安装 Nginx。
+sudo apt-get install nginx
+等待安装，在安装完成后，Nginx 会默认监听 80 端口，所以输入服务器的 IP 地址进行访问，会出现 Welcome to Nginx! 的字样。
+这一步和 Hexo 的安装互不干涉，先后顺序随意。 但是安装完之后 80 端口会被 Nginx 占用，hexo server 命令可能会无作用。
+Nginx 配置 在 Nginx 安装完成之后，我们还需要进行 Nginx 的配置，我们才能正常用自己的域名登入网站。
+首先进入 /etc/nginx/ 目录，其中我们需要修改的文件是 nginx.conf 和 /sites-avaliable 和 /sites-enabled 中的 default 文件。而这两个文件实际上是相关联的，所以只需要修改一个文件就好。
+在 default 中的 server 模块改成下列代码：
+listen 80 default_server; listen [::]:80 default_server; //设置 80 端口为监听端口 root /root/blog/public; //网站存放的地址 # Add index.</description>
+    </item>
+    
+    <item>
+      <title>解决 Xshell 中 jobs 命令不显示后台任务</title>
+      <link>/posts/2019/20190206-%E8%A7%A3%E5%86%B3-xshell-%E4%B8%AD-jobs-%E5%91%BD%E4%BB%A4%E4%B8%8D%E6%98%BE%E7%A4%BA%E5%90%8E%E5%8F%B0%E4%BB%BB%E5%8A%A1/</link>
+      <pubDate>Wed, 06 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190206-%E8%A7%A3%E5%86%B3-xshell-%E4%B8%AD-jobs-%E5%91%BD%E4%BB%A4%E4%B8%8D%E6%98%BE%E7%A4%BA%E5%90%8E%E5%8F%B0%E4%BB%BB%E5%8A%A1/</guid>
+      <description>在踩了很多坑后，分享一下我在XShell中用Nohup等命令执行后台操作之后将任务释放掉的方法。
+之前在折腾服务器的时候，在服务器上挂了一个 Hexo 网站，后来因为网络原因 XShell 直接断连了。好不容易解决了网络问题之后，登录服务器，输入jobs发现 Hexo 并没有出现在列表里面。
+后来差了一些资料发现，jobs 命令只能查看当前 XShell 连接服务器窗口创建的任务。由于我并没有用 nohup 去启动后台任务，所以控制台没有显示。
+所以后来我采用的方法是使用ps aux命令，然后可以查看服务器的进程情况。
+找到想要释放的进程名以及其对应的PID号，然后kill -9 pid号将进程杀死即可（也可以直接kill pid）。
+Peace.</description>
+    </item>
+    
+  </channel>
+</rss>

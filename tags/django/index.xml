@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Django on Zee Tsui</title>
+    <link>/tags/django/</link>
+    <description>Recent content in Django on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 22 Jul 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/django/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Django 所踩过的坑</title>
+      <link>/posts/2019/20190722-django-%E6%89%80%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</link>
+      <pubDate>Mon, 22 Jul 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190722-django-%E6%89%80%E8%B8%A9%E8%BF%87%E7%9A%84%E5%9D%91/</guid>
+      <description>目前市面上流行着两个基于 Python 的 Web 框架，一个是 Django，一个是 Flask。（当然还有其他的如 Pylon 等，只是我没有接触过所以不做讨论）
+由于 Hexo 博客系统的机制以及诸多的限制，我计划将我的博客从原本的基于 Hexo 静态框架转为基于 Django 框架的博客系统。
+总所周知， Django 的架构比较适合于大型项目的开发，Flask 则是轻量级的 Web 框架，适合于小型项目开发。处于学习目的，我这次的框架选择十分的干脆——直接上 Django，所以我就直接开始了 Django 的学习。
+当然，在建立这个博客系统的时候，作为一个接触 Web 较少的菜鸟，我也是踩了非常多的坑的。
+端口开放 这个错误就非常初级了，当时我一直以为阿里云的服务器和腾讯云的服务器一样是端口全开的，所以我就直接把开发服务器放到了 8000 端口，结果什么都没有。所以后来在阿里云控制台打开了 8000 端口的监听才成功看到 Hello World 页面。
+Django 不同版本之间的区别 由于 Django 迭代了很多次，它也像 Python 一样存在着版本之间的兼容性问题。Django 1 与 Django 2 之间就存在着非常多的语法以及参数上的区别，下面这个问题就困扰了我很久。
+在 Django 2.0 之后，定义外键和一对一关系的时候需要加 on_delete 选项，此参数为了避免两个表里的数据不一致问题，否则就会报错： TypeError: __init__() missing 1 required positional argument: &#39;on_delete&#39; 所以要将 category = models.ForeignKey(Category) 改为 category = models.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Hexo 博客如何添加图片 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2019/20190619-hexo-%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="Hexo 博客如何添加图片"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2019/20190619-hexo-%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>Hexo 博客如何添加图片<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>如何在自己写的 <code>Markdown</code> 博客中添加自己的图片？在多词的寻找和使用后，我找到了如下的几种插入图片的方法。</p>
+<!-- more -->
+<h2 id="利用-oss-对象存储">利用 OSS （对象存储）</h2>
+<p>如果网站是托管在 GitHub、Coding 之类的平台上的话，直接将图片存在上面速度会比较慢，而且<strong>大陆内陆的网络访问起来可能不是特别顺畅</strong>。</p>
+<p>所以我们可以购买 OSS 去存储图片，并且给图片文件添加外链，然后直接在 <code>Markdown</code> 文章中添加外链即可。阿里云、腾讯云都提供了解决方案，价格再优惠后也在可接受范围内。</p>
+<p><img src="https://zeee.cc/pictures/blog/20190619Hexo%E5%8D%9A%E5%AE%A2%E5%A6%82%E4%BD%95%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/1.jpg" alt=""></p>
+<h2 id="利用免费图床">利用免费图床</h2>
+<p>如果不想用收费的存储方案，网络上也有<strong>免费图床</strong>可以使用，但大多数的免费方案都有<strong>时间限制</strong>，少则 24 小时，多则 7 天，付费方案还不如自己开一个 OSS 来得实惠。</p>
+<p><a href="https://img.onl/">img.onl</a> 是一个<strong>没有固定期限</strong>的免费图床网站，当然<strong>数据的安全也没法得到保证</strong>，大家<strong>谨慎使用</strong>。</p>
+<h2 id="自有服务器">自有服务器</h2>
+<p>如果是自己有服务器的话，那就好办了，这也是我现在所使用的方案。</p>
+<p>首先要将 Hexo 安装到服务器上，一切都准备好后，在 blog 层级的 <code>_config.yml</code> 中修改 <code>post_asset_folder: true</code>，之后每一次创建新的文章都会<strong>另外生成一个同名文件夹</strong>，我们可以把文章所需的素材放到里面。</p>
+<blockquote>
+<p>文章中假如如果要引用 <code>1.jpg</code> 的话，在图片地址中只需要写成 <code>./1.jpg</code> 即可。
+（因为 <code>Hexo g</code> 的时候，<strong>文件夹中的图片会与该文章页放在同一个目录里面</strong>）</p>
+</blockquote>
+<h2 id="我跳过的坑">我跳过的坑</h2>
+<p>我以前曾经想过，<strong>如果存放在社交网络上然后把图片的链接贴在文章里不就可以了吗</strong>？</p>
+<p>然而现实是大多数的社交网站都<strong>不支持外链</strong>，图片根本无法显示。下面分享一下我所踩过的坑：</p>
+<p><strong>微博</strong>：微博外链理论上是可以的，发的微博图片的链接基本上都能够用一段时间，如果不能用的话把链接中的 s1 或 s2、s3 换一下就能用了，但这在文章很多的时候修改会很麻烦，所以并不特别推荐。</p>
+<p><strong>QQ 空间</strong>：有次数限制，多次以后被查出来用外链就不能够使用了。</p>
+<p><strong>微云</strong>：可以通过分享文件然后提取预览图的连接，不过需要一定的 web 基础去寻找链接，也不推荐。</p>
+<p><strong>Unsplash</strong>：Unsplash 的外链目前没有翻过车，我的摄影作品都是放在上面，然后外链过来的，但<strong>仅限于摄影方面的图片</strong>并且 <strong>CC0</strong> 协议。</p>
+<p><img src="https://images.unsplash.com/photo-1559888894-7199667c0558?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2100&amp;q=80" alt=""></p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

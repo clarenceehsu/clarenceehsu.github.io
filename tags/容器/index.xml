@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>容器 on Zee Tsui</title>
+    <link>/tags/%E5%AE%B9%E5%99%A8/</link>
+    <description>Recent content in 容器 on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 15 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%AE%B9%E5%99%A8/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基于 syncthing 的云盘容器搭建方案（发现 &#43; 中继 &#43; 同步）</title>
+      <link>/temp/20230215-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</link>
+      <pubDate>Wed, 15 Feb 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/temp/20230215-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</guid>
+      <description>整体结构 遇到的问题 中继选择顺序 中继与发现服务 Nginx 反向代理 </description>
+    </item>
+    
+    <item>
+      <title>Kubernetes 开源容器平台结构简介</title>
+      <link>/posts/2023/20230125-kubernetes-%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E5%B9%B3%E5%8F%B0%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Wed, 25 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230125-kubernetes-%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E5%B9%B3%E5%8F%B0%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B/</guid>
+      <description>经典结构图 containerd &amp;amp; kubernetes &amp;amp; runc 角色分工和层级 Kubernetes：部署容器的平台，属于最上层与用户交互的角色。
+主要承担的功能：负责集群成员管理，以及自动化的 Pod 的调度维护。 containerd：容器平台（Docker、Kubernetes）的低一层，底层运行时（runc、kata）的高一层，属于中间负责 Pod 级别管理的角色。
+主要承担的功能：镜像管理（镜像导入导出删除）、容器管理（容器创建删除停止），文件系统的快照管理。 runc：底层运行时，属于直接与底层操作系统交互的角色；类似的 runtime 还有 kata、Firecracker、gVisor 等，用于不同的操作系统平台且遵循 OCI 规范。
+主要承担的功能：根据镜像配置，使用系统提供的 cgroups 之类的资源隔离组件，为不同的容器创建运行环境，然后调起 endpoint。 containerd 和 kubernetes 都通过 systemd 维护进程，二者之间通过 gRPC 进行通信（遵循 OCI 规范）
+containerd 和 runc 是直接通过进程调用的方式进行交互和绑定。大白话就是 containerd 为每个容器开了一个 shim 进程；然后 shim 进程拼了一个 runc 命令跑容器，并作为主进程接管所有的 runc 僵尸进程，然后监控容器的状态。
+从 kubernetes 到 runc 的流程 kuberlet 通过 gRPC 向 containerd 发送命令调用 以前是 kuberlet 调用 CRI-containerd，然后 CRI-containerd 再调用 contaienrd；后来 cri 直接作为一个插件集成进了 containerd，调用链缩短为了 kubelet -&amp;gt; containerd -&amp;gt; runc 源码也可以看到，cri 现在在 containerd 的内部是作为插件进行加载的。 containerd 收到请求，创建 containerd-shim 实例 containerd-shim 实例才会真正操作容器，负责管理一个容器的整个声明周期，并且对其状态进行监控和上报；容器进程需要一个父进程来做状态收集、维持 stdin 等 fd 打开等工作，假如这个父进程就是 containerd，那如果 containerd 挂掉的话，整个宿主机上所有的容器都得退出了，引入 containerd-shim 可以规避这个问题。 创建 shim 进程（通过 runtime/shim 的 newInit() 初始化） newInit() 中会调用 process.</description>
+    </item>
+    
+    <item>
+      <title>containerd 默认配置参数解析</title>
+      <link>/posts/2023/20230123-containerd-%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Mon, 23 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230123-containerd-%E9%BB%98%E8%AE%A4%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0%E8%A7%A3%E6%9E%90/</guid>
+      <description>该配置文件的所有配置项，都会加载到 Config 结构体中（坐标：services/server/config/config.go）。
+该文档可以配合 containerd 服务加载流程对照使用。
+TOML 快速入门，可见博客文章 TOML 配置格式详解 disabled_plugins = [] # 禁用的插件名列表 imports = [] # 导入其他的 toml 配置并应用（import 的 toml 配置文件 version 参数不能大于此 toml 配置） oom_score = 0 # containerd 主进程的 OOM Score（/proc/&amp;lt;pid&amp;gt;/oom_score_adj），范围 -1000 到 1000，OOM Killer 会根据该值回收进程 # 可见 https://learning-kernel.readthedocs.io/en/latest/mem-management.html plugin_dir = &amp;#34;&amp;#34; # 插件的路径 required_plugins = [] # 需要引入的插件名列表 root = &amp;#34;/var/lib/containerd&amp;#34; # containerd 的根目录，用来保存持久化数据，包括 Snapshots, Content, Metadata 以及各种插件的数据，每一个插件都有自己单独的目录 # 默认所有的 container 文件都会存于该路径下 # containerd 所有功能都来自于已加载的插件 state = &amp;#34;/run/containerd&amp;#34; # containerd 的状态目录 temp = &amp;#34;&amp;#34; version = 2 # toml 配置文件的版本 [cgroup] # Linux cgroup 的定制化参数（与创建 container 相关） path = &amp;#34;&amp;#34; # 指定 cgroup 的路径，默认 &amp;#34;&amp;#34; 值则会找默认的 cgroup [debug] # 配置 containerd socket 连接的 debug 监听端口，一般生产环境用不到 address = &amp;#34;&amp;#34; # socket 地址，默认 &amp;#34;&amp;#34; 值则会找 /run/containerd/debug.</description>
+    </item>
+    
+    <item>
+      <title>contaienrd 简介及安装运行</title>
+      <link>/posts/2023/20230121-contaienrd-%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Sat, 21 Jan 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230121-contaienrd-%E7%AE%80%E4%BB%8B/</guid>
+      <description>一、什么是 containerd Containerd 是一个工业级标准的容器运行时，它强调简单性、健壮性和可移植性。Containerd 可以在宿主机中管理完整的容器生命周期，核心功能有：
+管理容器的生命周期(从创建容器到销毁容器) 拉取/推送容器镜像 存储管理(管理镜像及容器数据的存储) 调用 runC 运行容器(与 runC 等容器运行时交互) 管理容器网络接口及网络 二、安装并运行 containerd 官网安装步骤 从官网下载 containerd-&amp;lt;VERSION&amp;gt;-&amp;lt;OS&amp;gt;-&amp;lt;ARCH&amp;gt;.tar.gz 包，并解压到 /usr/local 目录：
+$ tar Cxzvf /usr/local containerd-1.6.2-linux-amd64.tar.gz bin/ bin/containerd-shim-runc-v2 bin/containerd-shim bin/ctr bin/containerd-shim-runc-v1 bin/containerd bin/containerd-stress 可以使用 systemd 启动 containerd 服务，从 https://raw.githubusercontent.com/containerd/containerd/main/containerd.service 下载 containerd.service 并放置到 /usr/local/lib/systemd/system/containerd.service，使用如下命令运行：
+systemctl daemon-reload systemctl enable --now containerd containerd 运行依赖 runc，可以从 https://github.com/containernetworking/plugins/releases 下载 cni-plugins-&amp;lt;OS&amp;gt;-&amp;lt;ARCH&amp;gt;-&amp;lt;VERSION&amp;gt;.tgz 包，并把 runc 文件放置到 /usr/local/sbin/runc 路径下：
+$ install -m 755 runc.amd64 /usr/local/sbin/runc 三、containerd 上下游生态 北向：containerd通过实现Kubernetes的CRI（容器运行时接口）接口与Kubernetes进行交互</description>
+    </item>
+    
+  </channel>
+</rss>

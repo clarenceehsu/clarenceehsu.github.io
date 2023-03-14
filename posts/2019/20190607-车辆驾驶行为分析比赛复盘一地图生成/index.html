@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>车辆驾驶行为分析——比赛复盘（一）地图生成 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2019/20190607-%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%E4%B8%80%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="车辆驾驶行为分析——比赛复盘（一）地图生成"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2019/20190607-%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%E4%B8%80%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>车辆驾驶行为分析——比赛复盘（一）地图生成<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>最近比赛结果出来了，所以我打算对比赛做一个复盘，作日后参考之用。</p>
+<!-- more -->
+<p>我们的队伍有幸拿了<strong>全国二等奖</strong>，我在其中负责的是<strong>算法以及编程实现</strong>。</p>
+<p>因为整个比赛时长只有<strong>七天</strong>，算法没有时间做特别多的优化，所以<strong>代码的质量可能不是特别高</strong>。</p>
+<p>本人水平有限，<strong>若有缺漏之处欢迎指正</strong>。</p>
+<h2 id="研究问题">研究问题</h2>
+<ol>
+<li>
+<p>利用附件 1 所给数据，提取并分析车辆的运输路线以及其在运输过程中的速度、加速度等行车状态。提交附表中 10 辆车每辆车每条线路在经纬度坐标系下的运输线路图及对应的行车里程、平均行车速度、急加速急减速情况。</p>
+</li>
+<li>
+<p>利用附件 1 所给数据，挖掘每辆运输车辆的不良驾驶行为，建立行车安全的评价模型，并给出评价结果。</p>
+</li>
+<li>
+<p>综合考虑运输车辆的安全、效率和节能，并结合自然气象条件与道路状况等情况， 为运输车辆管理部门建立行车安全的综合评价指标体系与综合评价模型。</p>
+</li>
+</ol>
+<p><strong>附表</strong></p>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>1</th>
+<th>2</th>
+<th>3</th>
+<th>4</th>
+<th>5</th>
+<th>6</th>
+<th>7</th>
+<th>8</th>
+<th>9</th>
+<th>10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>车牌号</td>
+<td>AA00002</td>
+<td>AB00006</td>
+<td>AD00003</td>
+<td>AD00013</td>
+<td>AD00053</td>
+<td>AD00083</td>
+<td>AD00419</td>
+<td>AF00098</td>
+<td>AF00131</td>
+<td>AF00373</td>
+</tr>
+</tbody>
+</table>
+<h3 id="数据说明">数据说明</h3>
+<ol>
+<li>附件 1 给出 <strong>450 辆运输车辆的行车轨迹采集数据</strong>，由于采集设备精度，实际采集数据可能存在某些异常。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>指标名称</th>
+<th>指标说明</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>vehicleplatenumber</td>
+<td>车牌号码</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>device_num</td>
+<td>设备号</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>direction_angle</td>
+<td>方向角</td>
+<td>范围：0-359（方向角指从定位点的正北方向 起，以顺时针方向至行驶方向间的水平夹角）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>lng</td>
+<td>经度</td>
+<td>东经</td>
+</tr>
+<tr>
+<td>5</td>
+<td>lat</td>
+<td>纬度</td>
+<td>北纬</td>
+</tr>
+<tr>
+<td>6</td>
+<td>acc_state</td>
+<td>ACC</td>
+<td>状态 点火 1/熄火 0</td>
+</tr>
+<tr>
+<td>7</td>
+<td>right_turn_signals</td>
+<td>右转向灯</td>
+<td>灭 0/开 1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>left_turn_signals</td>
+<td>左转向灯</td>
+<td>灭 0/开 1</td>
+</tr>
+<tr>
+<td>9</td>
+<td>hand_brake</td>
+<td>手刹</td>
+<td>灭 0/开 1</td>
+</tr>
+<tr>
+<td>10</td>
+<td>foot_brake</td>
+<td>脚刹</td>
+<td>无 0/有 1</td>
+</tr>
+<tr>
+<td>11</td>
+<td>location_time</td>
+<td>采集时间</td>
+<td></td>
+</tr>
+<tr>
+<td>12</td>
+<td>gps_speed</td>
+<td>GPS 速度</td>
+<td>单位：km/h</td>
+</tr>
+<tr>
+<td>13</td>
+<td>mileage</td>
+<td>GPS 里程</td>
+<td>单位：km</td>
+</tr>
+</tbody>
+</table>
+<ol start="2">
+<li>附件 2 给出 <strong>2018 年 7 月 30 日至 2018 年 10 月 10 日全国主要城市的自然气象数据</strong>。</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>序号</th>
+<th>指标名称</th>
+<th>指标说明</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>province</td>
+<td>省/自治区/直辖市</td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>prefecture_city</td>
+<td>地级市</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>county</td>
+<td>县级市/县</td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>wind_direction</td>
+<td>风向</td>
+<td></td>
+</tr>
+<tr>
+<td>5</td>
+<td>wind_power</td>
+<td>风力</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>high_temp</td>
+<td>最高温度</td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>low_temp</td>
+<td>最低温度</td>
+<td></td>
+</tr>
+<tr>
+<td>8</td>
+<td>conditions</td>
+<td>天气状况</td>
+<td>如：多云、晴、雨、雪</td>
+</tr>
+<tr>
+<td>9</td>
+<td>relative_humidity</td>
+<td>相对湿度</td>
+<td></td>
+</tr>
+<tr>
+<td>10</td>
+<td>precipitation</td>
+<td>降水量</td>
+<td>单位：mm</td>
+</tr>
+<tr>
+<td>11</td>
+<td>record_date</td>
+<td>采集日期</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ol start="3">
+<li>在车辆运输过程中，不良驾驶行为主要包括疲劳驾驶、急加速、急减速、怠速预热、超长怠速、熄火滑行、超速、急变道等。</li>
+</ol>
+<h3 id="数据类型样例">数据类型样例</h3>
+<p>下面附上数据的样例截图：</p>
+<p><img src="https://zeee.cc/pictures/blog/20190607%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%EF%BC%88%E4%B8%80%EF%BC%89%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/2.jpg" alt=""></p>
+<p><img src="https://zeee.cc/pictures/blog/20190607%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%EF%BC%88%E4%B8%80%EF%BC%89%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/3.jpg" alt=""></p>
+<h2 id="开始解题">开始解题</h2>
+<p>首先分析题目，题目中要完成的目标主要分为三块：</p>
+<ul>
+<li>根据 <code>.csv</code> 中的经纬度数据<strong>生成路线图</strong></li>
+<li>根据数据对车辆的疲劳驾驶、急加减速等因素进行<strong>多维度的综合评价</strong></li>
+<li><strong>结合天气</strong>对车辆的驾驶行为进行评价</li>
+</ul>
+<p>所以解构后问题就比较明了了，接下来进行代码实现。</p>
+<p>首先老样子，贴上<strong>整个项目的结构图</strong>：</p>
+<p><img src="https://zeee.cc/pictures/blog/20190607%E8%BD%A6%E8%BE%86%E9%A9%BE%E9%A9%B6%E8%A1%8C%E4%B8%BA%E5%88%86%E6%9E%90%E2%80%94%E2%80%94%E6%AF%94%E8%B5%9B%E5%A4%8D%E7%9B%98%EF%BC%88%E4%B8%80%EF%BC%89%E5%9C%B0%E5%9B%BE%E7%94%9F%E6%88%90/1.jpg" alt=""></p>
+<p>下面解释一下：</p>
+<ul>
+<li><code>_dataset</code> 是存放 <code>.csv</code> 数据的文件夹，后续分析的数据皆从此文件夹读取</li>
+<li><code>map</code> 用于存放生成的地图文件</li>
+<li><code>module</code> 是存放主要代码的文件夹，由外部 <code>main.py</code> 调用</li>
+<li><code>main.py</code> 是主文件，直接运行此文件可以调用 <code>module</code> 里面的包进行运算</li>
+</ul>
+<blockquote>
+<p><strong>为什么要把 <code>main.py</code> 单独出来呢？</strong>
+因为队友也要参与代码调试和数据生成，而他们对 <code>Python</code> 不是很熟悉。所以我把 <code>main.py</code> 单独出来方便队友使用，比较简洁直观。</p>
+</blockquote>
+<h2 id="生成地图">生成地图</h2>
+<p>如何根据经纬度来生成地图呢？网上有许多的方法，有用 <code>Pyecharts</code> 的，也有用 <code>matplotlib</code> 的，而因为我需要作出一个可交互的地图，所以最后使用了 <code>folium</code>。</p>
+<blockquote>
+<p><code>folium</code> 需要通过 <code>pip</code> 安装。</p>
+</blockquote>
+<p>首先要获取 <code>_dataset</code> 中的 <code>.csv</code> 数据文件列表，以便后面生成地图和进行数据分析。</p>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="nd">@staticmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">get_csv_list</span><span class="p">(</span><span class="n">_dir</span><span class="p">):</span>  <span class="c1"># 获取_dataset中csv文件目录</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">csv_list</span> <span class="o">=</span> <span class="p">[]</span>
+</span></span><span class="line"><span class="cl">        <span class="n">_dir</span> <span class="o">=</span> <span class="n">_dir</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">_dataset&#39;</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">dir_path</span><span class="p">,</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">_dir</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="s1">&#39;.csv&#39;</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">filename</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>  <span class="c1"># 判断是 .csv 文件则写入列表</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">csv_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">csv_list</span>  <span class="c1"># 传回列表</span>
+</span></span></code></pre></div><blockquote>
+<p>如果数据量多并且需要多次调用读取数据，可以先将目录保存在 <code>.txt</code> 文件中，然后后面直接读取该文件即可。</p>
+</blockquote>
+<p>接着，把读取到的文件名传入 <code>data_input</code> 方法中组成文件地址，然后通过 <code>Pandas</code> 来读取 <code>.csv</code> 文件。</p>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="nd">@staticmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">data_input</span><span class="p">(</span><span class="n">_dir</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>  <span class="c1"># 输入数据，并用pandas读取csv文件</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">_dir</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">_dataset</span><span class="se">\\</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">n</span><span class="p">,</span> <span class="n">low_memory</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">_data</span>
+</span></span></code></pre></div><blockquote>
+<p>其实可以直接用相对地址进行读取 <code>.csv</code> 文件，而我在代码中使用了绝对地址。</p>
+</blockquote>
+<p>然后将 <code>Pandas</code> 读取出来的数据转化为 <code>list</code> 格式，或者可以用 <code>numpy</code> 转化为 <code>list</code>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="n">location</span> <span class="o">=</span> <span class="n">data_io</span><span class="o">.</span><span class="n">data_input</span><span class="p">(</span><span class="n">_dir</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># 数字代表着列数</span>
+</span></span><span class="line"><span class="cl">    <span class="n">location</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">location</span><span class="p">)[:,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  <span class="c1"># 数字代表着列数</span>
+</span></span></code></pre></div><p>最后便是生成地图了，代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="nd">@staticmethod</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">map_g</span><span class="p">(</span><span class="n">_dir</span><span class="p">,</span> <span class="n">location</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">color</span><span class="p">):</span>  <span class="c1"># 生成运行轨迹地图</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">([</span><span class="mi">28</span><span class="p">,</span> <span class="mi">115</span><span class="p">],</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># 初始化坐标</span>
+</span></span><span class="line"><span class="cl">        <span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">            <span class="n">location</span><span class="p">,</span>  <span class="c1"># 经纬度矩阵 [纬度、经度]</span>
+</span></span><span class="line"><span class="cl">            <span class="n">weight</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>  <span class="c1"># 划线粗细</span>
+</span></span><span class="line"><span class="cl">            <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>  <span class="c1"># 划线颜色</span>
+</span></span><span class="line"><span class="cl">            <span class="n">opacity</span><span class="o">=</span><span class="mf">0.8</span>  <span class="c1"># 透明度</span>
+</span></span><span class="line"><span class="cl">        <span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>  <span class="c1"># 将线添加到地图上</span>
+</span></span><span class="line"><span class="cl">        <span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_dir</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">map&#39;</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;.html&#39;</span><span class="p">))</span>  <span class="c1"># 将地图保存为 html 文件</span>
+</span></span></code></pre></div><blockquote>
+<p>注意 <code>location</code> 一定是 [纬度, 经度] 的列表
+一张地图无法添加两条线（这也可能是我的问题）</p>
+</blockquote>
+<p>今天有点晚了，下一次分享一下<strong>数据分析部分</strong>，而这也是整一个解题过程中的大头，耗时最多的部分。</p>
+<p><img src="ttps://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2100&amp;q=80" alt=""></p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

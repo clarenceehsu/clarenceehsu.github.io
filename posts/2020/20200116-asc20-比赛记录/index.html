@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>ASC20 比赛记录 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2020/20200116-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="ASC20 比赛记录"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2020/20200116-asc20-%E6%AF%94%E8%B5%9B%E8%AE%B0%E5%BD%95/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>ASC20 比赛记录<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>ASC20 比赛在 1 月 6 号正式开始了，我在 1 月 10 号也正是接题开始了比赛的相关工作。因为这是我第一次以学校的名义参加全球性的赛事，所以特地记录下这段时间内的学习历程和思路。</p>
+<!-- more -->
+<h2 id="题目">题目</h2>
+<p>这一次的赛题是有关 NLP 方向的，要在只使用 Pytorch 框架的情况下完成 Cloze 下游任务的设计，并且以准确率作为最终的分数计算。</p>
+<p>主办方并未提供 baseline，只提供了数据集，格式为 json，具体如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="err">&#39;article&#39;:</span> <span class="err">&#39;...&#39;,</span>
+</span></span><span class="line"><span class="cl">        <span class="err">&#39;options&#39;:</span> <span class="err">[[words</span> <span class="err">*</span> <span class="err">4]</span> <span class="err">*</span> <span class="err">20],</span>
+</span></span><span class="line"><span class="cl">        <span class="err">&#39;answers&#39;:</span> <span class="err">[&#39;A&#39;,&#39;B&#39;...</span> <span class="err">*</span> <span class="err">20]</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span></code></pre></div><h2 id="学习">学习</h2>
+<p>这一次的路线就非常直观了，需要走 NLP 方向，而 NLP 目前最为热门的网络模型就是 <strong>BERT</strong>。类似 ResNet 之于图像识别的网络，这是一个 NLP 中炙手可热，同时也十分常用的模型，而我们可以通过这个模型达到 <strong>word2vec</strong> 的效果，<strong>提取出文字中的向量信息</strong>，并输送到下层网络以完成下游任务。</p>
+<p>所以我就打算使用 BERT 作为网络中的 embedding 部分，然后下层在进行 Cloze 的填空操作。在网上简单查找并且学习了 NLP的一些实现细节，我发现了 <strong>transformer</strong> 这个网红模型，并且有了许多的预训练模型，所以我便选择了以 transformer 为基础去完成题目。</p>
+<h2 id="目前的进展及思路">目前的进展及思路</h2>
+<p>目前我已经基本看完了 transformer 中的 example 代码文件，并且对其工作原理有了基础的了解，可以开始准备数据集进行训练了。</p>
+<p>我此外则有着以下的一些不成熟的小想法：</p>
+<ol>
+<li>以我在观摩别人打比赛和自己比赛的经验，我会偏向于<strong>直接使用 pretrained 模型</strong>或者<strong>以其为底作迁移学习</strong>；</li>
+<li>通过 <strong>BERT 提取特征</strong>并且进行猜词，然后与选项进行比对，如果不存在于选项中则需要通过<strong>比对 similarity</strong>，然后比较<strong>取最为相似</strong>的单词作为选择。</li>
+<li>把选项放入原句中，然后通过 MRPC 下游任务计算句子的连贯性，取连贯性最高者。</li>
+<li>考虑到上下文（比如 He or She 性别判断之类的选择），可能还需要通过另一个网络提取关键信息。</li>
+</ol>
+<p>我针对第 2 点完成了基本的代码工作，但是目前就成果和效率来看，还是存在一定的不足，后续会对其进行改进，同时也会往多个方向进行探索~~，毕竟现在时间还多~~。</p>
+<p><img src="https://images.unsplash.com/photo-1579069260854-450fadfff665?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=2700&amp;q=80" alt=""></p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

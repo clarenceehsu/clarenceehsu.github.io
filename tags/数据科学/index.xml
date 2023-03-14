@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>数据科学 on Zee Tsui</title>
+    <link>/tags/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/</link>
+    <description>Recent content in 数据科学 on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 20 Aug 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E6%95%B0%E6%8D%AE%E7%A7%91%E5%AD%A6/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Advice and Definition of Data Science</title>
+      <link>/posts/2019/20190820-advice-and-definition-of-data-science/</link>
+      <pubDate>Tue, 20 Aug 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20190820-advice-and-definition-of-data-science/</guid>
+      <description>This article was written after a related course, which includes my comments and notes.
+Definition of Data Science Data Science, which was called the sexiest job in the 21st century, is widely regarded as the process of using data to analyze different things, even the world. And the definition or the name came up in the 80s and 90s when some professors were looking into the statistics curriculum, and they thought it would be better to call it Data Science.</description>
+    </item>
+    
+  </channel>
+</rss>

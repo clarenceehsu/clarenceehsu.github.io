@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CentOS on Zee Tsui</title>
+    <link>/tags/centos/</link>
+    <description>Recent content in CentOS on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 29 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="/tags/centos/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>记一次服务器的维护</title>
+      <link>/posts/2020/20200129-%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BB%B4%E6%8A%A4/</link>
+      <pubDate>Wed, 29 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2020/20200129-%E8%AE%B0%E4%B8%80%E6%AC%A1%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E7%BB%B4%E6%8A%A4/</guid>
+      <description>最近因为某些不可言说的原因，我趁着农历春节优惠，用 8.88 $ / 年的价格购了一台国外服务器。
+在搭好了所有环境之后，已经可以正式地部署使用了，于是我开始愉快地玩耍起来。但后来我逐渐发现，在登录服务器的时候，SSH 时 Authentication 过程相当地漫长；毕竟服务器地处遥远，我也没当回事。
+直到后来服务器密码被改掉了，我才发现原来服务器被人黑了。
+破解密码 我一开始设置的初始密码为 12345678（当时也不知道网络上坏人竟然这么多），所以也十分容易被暴力破解。
+怎么解决呢？难道就这样把自己的服务器拱手让人了吗？不，我赵铁柱是不会这么容易屈服的，于是我很快找到了解决办法。
+入手点就在于服务器的提供商在后台也给我们了一系列的运维选项，以方便我们做一些服务器以外的操作，如重装系统，更改 IP 等。我好不容易搭好了环境，不想就这么重装了，所以我打算通过 VNC 来解决。
+VNC 是虚拟网络控制台的缩写。它是一款优秀的远程控制工具软件，由著名的 AT&amp;amp;T 的欧洲研究实验室开发。VNC 是基于 UNIX 和 Linux 操作系统的免费开源软件，远程控制能力强大，高效实用，其性能可以和 Windows 和 MAC 中的任何远程控制软件媲美。
+VNC 的好处在于它会完全显示服务器当前所显示的画面，就相当于是一个远程的显示器。所以通过内网的 VNC 连接到服务器，然后点击右上角的按键重启：
+然后便是熟悉的启动界面，在 boot 状态下点击 esc 键，打断 GNU GRUB 引导，此时可以对启动项进行更改设置等操作。这个时候的操作 CentOS 6 和 CentOS 7 是不一样的，我是 CentOS 7，所以直接进入配置文件，设置为单用户模式，重新引导启动。
+此时已经可以进入 root 用户了，然后使用 passwd 命令字改密码即可。
+设置了强密码后，SSH 的速度还是很慢，正当我找不到原因时，SSH 连接服务器后系统提示我有 4000 多次失败的登录。
+还在搞我？ 我用 lastb 命令看了一下，有两个来自江苏连云港的电信 IP 一直在试 root 密码暴力破解服务器，大量占用 22 端口的资源导致我连接过程缓慢。</description>
+    </item>
+    
+  </channel>
+</rss>

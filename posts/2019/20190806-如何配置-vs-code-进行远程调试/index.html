@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>如何配置 VS Code 进行远程调试 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2019/20190806-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE-vs-code-%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="如何配置 VS Code 进行远程调试"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2019/20190806-%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE-vs-code-%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>如何配置 VS Code 进行远程调试<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>从前，我还在用 <strong>Putty</strong> 艰难地连接服务器，用命令行敲着 ftp 去与服务器互传文件；</p>
+<!-- more -->
+<p>后来长大了，开始用 <strong>XShell</strong> 进行交互，传文件直接用 <strong>XFtp</strong>，效率陡增；但是由于我用不惯 Vim，每一次改内容都需要把文件先下下来，用 VS Code 改好，然后再用 Xftp 给传上去。</p>
+<p>再后来，VS Code 的<strong>官方 Remote 插件</strong>推出，如今的我可以直接在 VS Code 里面操作服务器进行开发和调试，简直不要太舒服。</p>
+<p>那么如何配置 VS Code 并<strong>实现远程开发</strong>呢？</p>
+<h2 id="安装-vs-code-和插件">安装 VS Code 和插件</h2>
+<p><a href="https://code.visualstudio.com/">VS Code 下载地址</a></p>
+<p>首先下载安装 VS Code。<strong>以前只有 Insider 版本才有 Remote Development，现在已经下放到正式版本了。</strong></p>
+<p>然后打开<strong>扩展页面</strong>，搜索 <strong>Remote Development</strong>，选择第一个安装，在安装完成后左栏会出现一个 <strong>Remote 的小图标</strong>。</p>
+<h2 id="配置-remote-development">配置 Remote Development</h2>
+<p>如图，点击配置一个 <code>SSH Host</code>：</p>
+<p><img src="https://zeee.cc/pictures/blog/20190806%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEVSCode%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/1.png" alt=""></p>
+<p>这是编辑器会打开一个文件，格式如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">    # Read more about SSH config files: https://linux.die.net/man/5/ssh_config
+</span></span><span class="line"><span class="cl">    Host CentOS
+</span></span><span class="line"><span class="cl">        HostName 111.111.111.111
+</span></span><span class="line"><span class="cl">        User admin
+</span></span></code></pre></div><p><code>Host</code> 后面填<strong>服务器名称</strong>（可随意填）；<code>HostName</code> 后面填<strong>服务器的IP地址或域名</strong>；<code>User</code> 后面填<strong>服务器用户</strong>。</p>
+<p>填写的时候注意空格。</p>
+<h2 id="配置-ssh-key">配置 ssh-key</h2>
+<p>从用户文件夹打开 cmd，然后 cd 到 <code>.ssh</code> 文件夹中，用 <code>ssh-keygen</code> 命令<strong>生成密钥文件</strong>（.pub 文件）。</p>
+<p>把 .pub 文件传到服务器的 .ssh 文件夹中，然后在 .ssh 文件夹用 <code>cat id_rsa.pub &gt;&gt; authorized_keys</code> 命令将公钥加入到 <code>authorized_keys</code> 中。</p>
+<p>然后返回 VS Code，在配置文件下添加 <code>IdentityFile</code> 和<strong>自己的私钥路径</strong>：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">    # Read more about SSH config files: https://linux.die.net/man/5/ssh_config
+</span></span><span class="line"><span class="cl">    Host CentOS
+</span></span><span class="line"><span class="cl">        HostName 111.111.111.111
+</span></span><span class="line"><span class="cl">        User admin
+</span></span><span class="line"><span class="cl">        IdentityFile C:\Users\***\.ssh\id_rsa
+</span></span></code></pre></div><p>保存后便会出现一个刚刚生成的连接：</p>
+<p><img src="https://zeee.cc/pictures/blog/20190806%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AEVSCode%E8%BF%9B%E8%A1%8C%E8%BF%9C%E7%A8%8B%E8%B0%83%E8%AF%95/2.png" alt=""></p>
+<p>右键它可以选择是<strong>在新的窗口连接</strong>还是<strong>在现在的窗口连接</strong>。</p>
+<h2 id="结束">结束</h2>
+<p>至此，<strong>VS Code 的远程连接</strong>就配置完成，后续的连接可以<strong>通过 Remote 图标连接</strong>，也可以在<strong>文件 → 打开最近的文件</strong>中快捷打开。</p>
+<p>连接到服务器后，打开终端便是<strong>服务器的终端</strong>，而且安装其他插件的时候，会有选项设置安装到<strong>本地 VS Code</strong> 还是<strong>服务器的 VS Code</strong> 上。</p>
+<p><img src="https://images.unsplash.com/photo-1565010505255-cd05a670b436?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1867&amp;q=80" alt=""></p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

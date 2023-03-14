@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on Zee Tsui</title>
+    <link>/tags/docker/</link>
+    <description>Recent content in Docker on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 12 Nov 2019 00:00:00 +0000</lastBuildDate><atom:link href="/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Docker Cheatsheet</title>
+      <link>/posts/2019/20191112-docker-cheatsheet/</link>
+      <pubDate>Tue, 12 Nov 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2019/20191112-docker-cheatsheet/</guid>
+      <description>该版本的 Cheatsheet 由其他版本精简而来，旨在提供一个日常使用 Docker 时的速查手册。
+目录 检查版本 安装 容器(Containers) 镜像(Images) 网络(Networks) 仓管中心和仓库(Registry &amp;amp; Repository) Dockerfile 层(Layers) 链接(Links) 卷标(Volumes) 暴露端口(Exposing Ports) 安全 小贴士 检查版本 时刻关注你当前正在使用的 Docker 版本是十分重要的，这能够帮助你了解可用的特性。同时，可以让你在查找镜像时选择使用的版本。接下来让我们看看如何操作。
+docker version 查看你正在运行的 Docker 版本。 获取 Docker 服务版本：
+docker version --format &amp;#39;{{.Server.Version}}&amp;#39; 你也可以输出原始的 JSON 数据：
+docker version --format &amp;#39;{{json .}}&amp;#39; 安装 Linux Docker 官方提供了快速、易用的安装脚本：
+curl -sSL https://get.docker.com/ | sh 如果你不想执行一个不明不白的 Shell 脚本，那么请看 安装说明，选择你在用的发行版本。
+如果你是一个 Docker 超新手，那么你应当先去看看 系列教程。
+容器 (Container) 生命周期 docker create 创建容器但不启动它。 docker rename 用于重命名容器。 docker run 一键创建并同时启动该容器。 docker rm 删除容器。 docker update 调整容器的资源限制。 通常情况下，不使用任何命令行选项启动一个容器，该容器将会立即启动并停止。若需保持其运行，你可以使用 docker run -td container_id 命令。选项 -t 表示分配一个 pseudo-TTY 会话，-d 表示自动将容器与终端分离（也就是说在后台运行容器，并输出容器 ID）。</description>
+    </item>
+    
+  </channel>
+</rss>

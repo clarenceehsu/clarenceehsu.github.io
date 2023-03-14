@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>让代码 Pythonic - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2019/20190828-%E8%AE%A9%E4%BB%A3%E7%A0%81-pythonic/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="让代码 Pythonic"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2019/20190828-%E8%AE%A9%E4%BB%A3%E7%A0%81-pythonic/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>让代码 Pythonic<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>在 Python 中打上 <code>import this</code>，就会出现熟悉的 The Zen of Python。</p>
+<!-- more -->
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="o">&gt;&gt;&gt;</span> <span class="kn">import</span> <span class="nn">this</span>
+</span></span><span class="line"><span class="cl">      <span class="n">The</span> <span class="n">Zen</span> <span class="n">of</span> <span class="n">Python</span><span class="p">,</span> <span class="n">by</span> <span class="n">Tim</span> <span class="n">Peters</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="n">Beautiful</span> <span class="ow">is</span> <span class="n">better</span> <span class="n">than</span> <span class="n">ugly</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Explicit</span> <span class="ow">is</span> <span class="n">better</span> <span class="n">than</span> <span class="n">implicit</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Simple</span> <span class="ow">is</span> <span class="n">better</span> <span class="n">than</span> <span class="nb">complex</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Complex</span> <span class="ow">is</span> <span class="n">better</span> <span class="n">than</span> <span class="n">complicated</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Flat</span> <span class="ow">is</span> <span class="n">better</span> <span class="n">than</span> <span class="n">nested</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Sparse</span> <span class="ow">is</span> <span class="n">better</span> <span class="n">than</span> <span class="n">dense</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Readability</span> <span class="n">counts</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Special</span> <span class="n">cases</span> <span class="n">aren</span><span class="s1">&#39;t special enough to break the rules.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Although</span> <span class="n">practicality</span> <span class="n">beats</span> <span class="n">purity</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Errors</span> <span class="n">should</span> <span class="n">never</span> <span class="k">pass</span> <span class="n">silently</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Unless</span> <span class="n">explicitly</span> <span class="n">silenced</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">In</span> <span class="n">the</span> <span class="n">face</span> <span class="n">of</span> <span class="n">ambiguity</span><span class="p">,</span> <span class="n">refuse</span> <span class="n">the</span> <span class="n">temptation</span> <span class="n">to</span> <span class="n">guess</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">There</span> <span class="n">should</span> <span class="n">be</span> <span class="n">one</span><span class="o">--</span> <span class="ow">and</span> <span class="n">preferably</span> <span class="n">only</span> <span class="n">one</span> <span class="o">--</span><span class="n">obvious</span> <span class="n">way</span> <span class="n">to</span> <span class="n">do</span> <span class="n">it</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Although</span> <span class="n">that</span> <span class="n">way</span> <span class="n">may</span> <span class="ow">not</span> <span class="n">be</span> <span class="n">obvious</span> <span class="n">at</span> <span class="n">first</span> <span class="n">unless</span> <span class="n">you</span><span class="s1">&#39;re Dutch.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Now</span> <span class="ow">is</span> <span class="n">better</span> <span class="n">than</span> <span class="n">never</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Although</span> <span class="n">never</span> <span class="ow">is</span> <span class="n">often</span> <span class="n">better</span> <span class="n">than</span> <span class="o">*</span><span class="n">right</span><span class="o">*</span> <span class="n">now</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">If</span> <span class="n">the</span> <span class="n">implementation</span> <span class="ow">is</span> <span class="n">hard</span> <span class="n">to</span> <span class="n">explain</span><span class="p">,</span> <span class="n">it</span><span class="s1">&#39;s a bad idea.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">If</span> <span class="n">the</span> <span class="n">implementation</span> <span class="ow">is</span> <span class="n">easy</span> <span class="n">to</span> <span class="n">explain</span><span class="p">,</span> <span class="n">it</span> <span class="n">may</span> <span class="n">be</span> <span class="n">a</span> <span class="n">good</span> <span class="n">idea</span><span class="o">.</span>
+</span></span><span class="line"><span class="cl">      <span class="n">Namespaces</span> <span class="n">are</span> <span class="n">one</span> <span class="n">honking</span> <span class="n">great</span> <span class="n">idea</span> <span class="o">--</span> <span class="n">let</span><span class="s1">&#39;s do more of those!</span>
+</span></span></code></pre></div><p>突然我发现，Python 已经陪了我好久。</p>
+<p>解决问题的时候用它；做项目的时候用它；比赛的时候也用它；即使我是以 C 入的门，有的时候也优先考虑 “用 Python 能不能做” 而不是 “用 C 能不能做” 。它以<strong>简洁</strong>和<strong>干练</strong>著称，甚至流传着这样的笑话：如何把一段伪代码变成 Python 代码？——把后缀改成 <code>.py</code>。</p>
+<p>当然随着 Python 群体的壮大，一定的规范能够提高代码的可读性以及美观性，使其结构更加规整。这篇文章列举了一些 Pythonic 的写法，能够显得让代码更加的优雅。</p>
+<blockquote>
+<p>这里有的参考了其他的例子，另有一些简洁写法我认为其他语言也适用，遂未列于 Pythonic 风格。</p>
+</blockquote>
+<h3 id="变量值交换">变量值交换</h3>
+<p>在 C、C++ 等语言里面，如果要交换两个变量的值，就一定会出现一个 temp 变量，作为缓存暂时存储值。而在 Python 中，有着更加直观的写法：</p>
+<p><code>a, b = b, a</code></p>
+<p>这样的原理是先把 a, b 做成元组，然后直接交换值，除去了中间变量 temp。</p>
+<h3 id="判断区间">判断区间</h3>
+<p>同样的，Pythonic 就十分直观，可以将区间判断直接写成 <code>0 &lt; a &lt; 1</code>。</p>
+<h3 id="带有索引位置的集合遍历">带有索引位置的集合遍历</h3>
+<p>一般写法：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Mike&#39;</span><span class="p">,</span> <span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Jhon&#39;</span><span class="p">,</span> <span class="s1">&#39;Sam&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</span></span></code></pre></div><p>Pythonic 写法：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Mike&#39;</span><span class="p">,</span> <span class="s1">&#39;Amy&#39;</span><span class="p">,</span> <span class="s1">&#39;Jhon&#39;</span><span class="p">,</span> <span class="s1">&#39;Sam&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">      <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="nb">print</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</span></span></code></pre></div><p>利用枚举来进行带有索引位置的集合遍历。</p>
+<h3 id="字符串连接">字符串连接</h3>
+<p>当有许多个字符串需要连在一起的时候，Python 可以这样写：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+</span></span><span class="line"><span class="cl">      <span class="k">for</span> <span class="nb">str</span> <span class="ow">in</span> <span class="n">strs</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">s</span> <span class="o">+=</span> <span class="nb">str</span>
+</span></span></code></pre></div><p>当然，更 Pythonic 的写法是这样：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="n">s</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">strs</span><span class="p">)</span>
+</span></span></code></pre></div><p>在使用 + 操作时，每执行一次就会在内存中生成一个新的字符串对象，造成无谓的内存浪费。而用 join 方法整个过程只会产生一个字符串对象，更加高效。</p>
+<h3 id="列表推导">列表推导</h3>
+<p>0 到 10 的偶数列表：<code>[ i*i for i in range(0, 10) if i% 2 == 0 ]</code></p>
+<h3 id="unpacking">Unpacking</h3>
+<p>一般情况下的写法会是这样的，利用指针完成赋值：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="n">profile</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Zeesain&#39;</span><span class="p">,</span> <span class="s1">&#39;Tsui&#39;</span><span class="p">,</span> <span class="s1">&#39;1234&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="n">first_name</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="n">last_name</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="n">number</span> <span class="o">=</span> <span class="n">profile</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</span></span></code></pre></div><p>而 Pythonic 的写法会是：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="n">profile</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Zeesain&#39;</span><span class="p">,</span> <span class="s1">&#39;Tsui&#39;</span><span class="p">,</span> <span class="s1">&#39;1234&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">      <span class="n">first_name</span><span class="p">,</span> <span class="n">last_name</span><span class="p">,</span> <span class="n">number</span> <span class="o">=</span> <span class="n">profile</span>
+</span></span></code></pre></div><p>这样的写法在原理上和交换赋值是一样的，利用元组然后 Unpack。</p>
+<h3 id="打开文件">打开文件</h3>
+<p>一般情况下的写法是这样的：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;some_file.txt&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">      <span class="o">...</span>
+</span></span><span class="line"><span class="cl">      <span class="k">finally</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span></code></pre></div><p>这样的写法因为不会自动关闭文件，所以最后还是要用 finally 运行 close 函数关闭文件。下面这样写就可以自动关闭文件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">      <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&#34;some_file.txt&#34;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span></code></pre></div><h3 id="尾巴">尾巴</h3>
+<p>其实，我觉得一个程序员不能够被一种语言所限制，这些语法糖能够简化非常多的逻辑和代码量，但其中的原理以及算法可不能不识。当在 Golang 中不能够直接用 + 运算合并字符串的时候，我才发现 Python 用多了有的时候还真的不太好。</p>
+<p><img src="https://images.unsplash.com/photo-1566928224408-18392a67fbc7?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1867&amp;q=80" alt=""></p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

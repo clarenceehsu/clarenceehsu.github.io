@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>【算法笔记】并查集 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2021/20210117-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B9%B6%E6%9F%A5%E9%9B%86/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="【算法笔记】并查集"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2021/20210117-%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0%E5%B9%B6%E6%9F%A5%E9%9B%86/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>【算法笔记】并查集<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>最近在 <strong>LeetCode 的每日一题</strong>中，大量出现了使用<strong>并查集</strong>进行算法设计的题目，如「<a href="https://leetcode-cn.com/problems/redundant-connection/">684.冗余连接</a>」、「<a href="https://leetcode-cn.com/problems/bricks-falling-when-hit/">803.打砖块</a>」、「<a href="https://leetcode-cn.com/problems/most-stones-removed-with-same-row-or-column/">947.移除最多的同行或同列石头</a>」。并查集这一点本身并不难学习，但有时候在题目中不容易发现对应的连接关系。</p>
+<h2 id="什么是并查集">什么是并查集？</h2>
+<p>并查集是一种<strong>树形的数据结构</strong>，旨在通过特定的规则，将属于同一类别的点归于一个树中，构成一个集合。其包括两种基本操作：</p>
+<ul>
+<li><strong>合并（Union）</strong>：将两个不同的集合合并为一个集合，或者将新的元素合入特定的集合</li>
+<li><strong>查找（Find）</strong>：确定两个元素是否在同一个集合中，或者确定某个元素处于哪一个子集</li>
+</ul>
+<blockquote>
+<p><strong>注意</strong>：虽然并查集是一个树形的数据结构，但考虑到内存以及时空复杂度，一般都会使用<strong>数组</strong>或者<strong>列表</strong>来实现，而非 Node 树结点。</p>
+</blockquote>
+<h2 id="建树初始化">建树初始化</h2>
+<p>首先，需要<strong>根据当前数据的规模</strong>来开辟空间，同时确保原始数据能够 One-Hot 地映射到创建的节点集合中，即<strong>创建的空间能够包括所有的原始数据</strong>。下面是样板代码（Python）：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Union</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">p</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>  <span class="c1"># 初始化列表，每一个节点的值等于索引，其中 N 要根据原始数据确定</span>
+</span></span></code></pre></div><p>这一部分不难理解，即<strong>开辟一块额外的空间来保存并查集中的父子关系</strong>，因为现在还没有初始化关系，所以每一个点都指向自己的位置。接下来便是<strong>合并（Union）</strong>，目的是<strong>输入数据形成并查集</strong>，样板代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>  <span class="c1"># 这里的递归是为了压缩路径，加快查找速度，下面会讲到</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+</span></span></code></pre></div><p><code>find()</code> 会返回<strong>该点所对应集合的根（父亲）</strong>，如果两个点返回同样的根（父亲），则证明其处于同一个集合中。</p>
+<p>一般情况下合并的样本代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="n">xr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 找出 x 对应的根</span>
+</span></span><span class="line"><span class="cl">    <span class="n">yr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>  <span class="c1"># 找出 y 对应的根</span>
+</span></span><span class="line"><span class="cl">    <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">xr</span><span class="p">]</span> <span class="o">=</span> <span class="n">yr</span>  <span class="c1"># 将 x 的根指向 y 的根，因为其属于同一个集合</span>
+</span></span></code></pre></div><p>不同的题目用到的数据不同，一般是某个点的坐标 <code>(x, y)</code> 之类。这类题往往都可以使用<strong>递归、DP</strong> 等方法解决，所以我经常会往递归和 DP 的方向去想，然后卡在某个状态上（暴风哭泣），从而忘了直接用更简单的并查集来解。</p>
+<h2 id="举个例子">举个例子</h2>
+<p>下面举两个例子：</p>
+<h4 id="947移除最多的同行或同列石头httpsleetcode-cncomproblemsmost-stones-removed-with-same-row-or-column">「<a href="https://leetcode-cn.com/problems/most-stones-removed-with-same-row-or-column/">947.移除最多的同行或同列石头</a>」</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">removeStones</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">stones</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">uf</span> <span class="o">=</span> <span class="n">Union</span><span class="p">(</span><span class="mi">20000</span><span class="p">)</span>  <span class="c1"># 开辟空间</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">stones</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">10000</span><span class="p">)</span>  <span class="c1"># 前半部分存储 x，后半部分存储 y，防止数据冲突</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">stones</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">({</span><span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">stones</span><span class="p">})</span>
+</span></span></code></pre></div><p>解释一下最后的 <code>return</code> 部分：在前面的构建并查集的过程中，我们已经把每个石头的横纵坐标一起构建了一个并查集。相同的行或者相同的列都已经归于一个集合中，所以对这些石头的坐标查找根（父亲）结点，都会返回相同的值。</p>
+<p>所以基于这个特点，<code>uf.find(x[0]) for x in stones</code> 返回的是每个石头对应的根的列表。然后套一个 <code>{}</code> 对列表求 set，即共有多少个不同的根，这便代表着有多少个石头<strong>不能被删除</strong>，所以 <code>len(stones) - len({uf.find(x[0]) for x in stones})</code> 即为可以删除的石头数量。</p>
+<blockquote>
+<p>因为不管是 x 还是 y，都在一个集合中，所以使用 x[0] （石头的横坐标）或者 x[1] （石头的纵坐标）来计算结果是一致的。</p>
+</blockquote>
+<h4 id="684冗余连接httpsleetcode-cncomproblemsredundant-connection">「<a href="https://leetcode-cn.com/problems/redundant-connection/">684.冗余连接</a>」</h4>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="c1"># 并查集 class 中的 connected 函数如下：</span>
+</span></span><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">connected</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># 题解</span>
+</span></span><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">findRedundantConnection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edges</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="n">uf</span> <span class="o">=</span> <span class="n">UF</span><span class="p">(</span><span class="mi">1001</span><span class="p">)</span>  <span class="c1"># 开辟内存空间</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">fr</span><span class="p">,</span> <span class="n">to</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">uf</span><span class="o">.</span><span class="n">connected</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">to</span><span class="p">):</span> <span class="k">return</span> <span class="p">[</span><span class="n">fr</span><span class="p">,</span> <span class="n">to</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">            <span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">to</span><span class="p">)</span>
+</span></span></code></pre></div><p>这题的意思就是根据向量 <code>[x, y]</code> 来构建一张图，然后删除其中环的一条冗余边，使其变成一个无环图。<code>connected()</code> 用来判断两个点是否属于同一个集合中，如果两点属于同一个集合，则这<strong>一条向量连接后便会形成环</strong>，因此可删除，<code>return</code> 即可；如果不是同一个集合，则<strong>将其放入并查集构建树</strong>。</p>
+<h2 id="路径压缩">路径压缩</h2>
+<p>路径压缩是为了使查找这一过程更快，一般使用的方法有<strong>递归合并</strong>和<strong>按秩合并</strong>。</p>
+<h4 id="递归合并">递归合并</h4>
+<p>每加入一个结点，就把该点对应的值设为其所属集合的根，这样查找就<strong>不需要每次从头递归了</strong>，大大减少了时间消耗。比如前面的代码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="n">x</span> <span class="o">!=</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>  <span class="c1"># 这里的递归是为了压缩路径，加快查找速度</span>
+</span></span><span class="line"><span class="cl">    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">p</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+</span></span></code></pre></div><p>这样的路径压缩方法对于大多数的算法题已经够用了，但是如果遇到了对时间卡的很紧，还外加一些阴间样例的题目，这样的方法可能依旧会翻车。</p>
+<p>其原因就是在于，当<strong>一个大的集合要与小的集合合并</strong>时，如果使用递归合并，就有可能出现大的往小的集合合并的情况，此时需要就大集合的根依次改为小集合的根，这回额外消耗更多的时间。</p>
+<h4 id="按秩合并启发式合并">按秩合并（启发式合并）</h4>
+<p>所以针对这种情况，我们就需要另外建立一个变量“<strong>秩（Rank）</strong>”来存储每一个树的<strong>深度信息</strong>（因为只有深度会影响到递归的效率），这样我们就能够在合并集合的时候，始终让<strong>较浅的集合合并到较深的集合</strong>处，从而有效地减少所合并所消耗的时间。</p>
+<p>使用启发式合并的代码样例（注意其中的 Rank 列表）：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="cl"><span class="k">class</span> <span class="nc">Solution</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">hitBricks</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grid</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="n">hits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># ==================== 并查集模版 =========================</span>
+</span></span><span class="line"><span class="cl">        <span class="k">def</span> <span class="nf">find</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">parent</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">parent</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">rootx</span><span class="p">,</span> <span class="n">rooty</span> <span class="o">=</span> <span class="n">find</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">find</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="k">if</span> <span class="n">rootx</span> <span class="o">!=</span> <span class="n">rooty</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                <span class="k">if</span> <span class="n">rank</span><span class="p">[</span><span class="n">rootx</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">rank</span><span class="p">[</span><span class="n">rooty</span><span class="p">]:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">parent</span><span class="p">[</span><span class="n">rootx</span><span class="p">]</span> <span class="o">=</span> <span class="n">rooty</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">count</span><span class="p">[</span><span class="n">rooty</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span><span class="p">[</span><span class="n">rootx</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">parent</span><span class="p">[</span><span class="n">rooty</span><span class="p">]</span> <span class="o">=</span> <span class="n">rootx</span>
+</span></span><span class="line"><span class="cl">                    <span class="n">count</span><span class="p">[</span><span class="n">rootx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">count</span><span class="p">[</span><span class="n">rooty</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">                    <span class="k">if</span> <span class="n">rank</span><span class="p">[</span><span class="n">rootx</span><span class="p">]</span> <span class="o">==</span> <span class="n">rank</span><span class="p">[</span><span class="n">rooty</span><span class="p">]:</span> <span class="n">rank</span><span class="p">[</span><span class="n">rootx</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+</span></span></code></pre></div>
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

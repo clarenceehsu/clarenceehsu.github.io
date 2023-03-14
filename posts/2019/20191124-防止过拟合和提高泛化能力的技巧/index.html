@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>防止过拟合和提高泛化能力的技巧 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2019/20191124-%E9%98%B2%E6%AD%A2%E8%BF%87%E6%8B%9F%E5%90%88%E5%92%8C%E6%8F%90%E9%AB%98%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8A%80%E5%B7%A7/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="防止过拟合和提高泛化能力的技巧"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2019/20191124-%E9%98%B2%E6%AD%A2%E8%BF%87%E6%8B%9F%E5%90%88%E5%92%8C%E6%8F%90%E9%AB%98%E6%B3%9B%E5%8C%96%E8%83%BD%E5%8A%9B%E7%9A%84%E6%8A%80%E5%B7%A7/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>防止过拟合和提高泛化能力的技巧<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>深度学习是一个很奇怪的过程，有人说它是“深度炼丹”，有人说它是一个黑盒，超参调整就是玄学。</p>
+<!-- more -->
+<p>事实上，我们不可能在深度学习中寻找到所谓的“最优解”，我们只能够在自己的能力范围之内寻找到局部的最优解，而如何提高自己网络模型的分类或者生成能力也自然有着许多的技巧。</p>
+<h1 id="数据">数据</h1>
+<p>深度学习最需要的，就是数据，一个好的数据集可以让神经网络的训练事半功倍。在我看来，数据在保证质量的前提下多多益善，样本数据越多，模型拟合的效果就会越好。因此首先，<strong>尽可能多地寻找优质数据集</strong>。</p>
+<h3 id="data-augmentation">Data Augmentation</h3>
+<p>而如果在数据集不够时，对<strong>数据的预处理</strong>就显得十分重要，对原先数据的处理扩增被称作 <strong>data augmentation</strong>，方法主要是下面的几种：</p>
+<ol>
+<li>对于语音或者图像，可以在原本的数据上加噪声，或者进行缩放，镜像等操作；</li>
+<li>对于数值类向量，可以在原先的数据基础上进行随机；</li>
+<li>文字类数据，我觉得并不会缺少数据集（笑）。</li>
+</ol>
+<p>在数据中添加噪声，或者平移缩放等操作在很多比赛以及网络中已经证明了，<strong>可以很好地提高模型的泛化能力</strong>。</p>
+<h3 id="数据归一化">数据归一化</h3>
+<p>这是一个老生常谈的问题了，提前把数据进行归一化可以很好地防止梯度爆炸。在网络中，我们也可以设置激活函数（sigmoid、tanh等）对数据进行归一化。而激活函数也容易造成梯度消失的问题，我们可以更换激活函数，或者进行 normalize，这会在另一篇文章里面讨论。</p>
+<h3 id="数据本身">数据本身</h3>
+<p>最后还有一个方法，就是从数据本身寻找问题。举个例子，老师职位和性别有关吗？车速和天气有关系吗？答案是否定的，所以要检查数据集中的某些特征是不是与我们要预测或分类的特征毫无关联，如果是的话就尽量抛弃。</p>
+<p>另外，如果有其他的特征或者更加适合的方法，也需要对数据进行调整。</p>
+<h1 id="算法">算法</h1>
+<p>其实在我的很多情况下，当无法采取某种特定的算法去进行数据处理的时候，便会采用深度学习其训练拟合（笑）。</p>
+<h3 id="选择算法">选择算法</h3>
+<p>什么算法对于特定的问题效果最好，我们是没有办法也不可能知道的，只能取范围内最优，即当前使用的算法并不一定适合当前的问题。</p>
+<p>如果没有头绪的话，可以从下面几点进行尝试：</p>
+<ul>
+<li>线性算法，如逻辑回归和线性判断分析</li>
+<li>树模型，如 CART、随机森林等</li>
+<li>SVM 或 KNN 等算法</li>
+<li>神经网络模型，如 CNN、RNN、LSTM</li>
+</ul>
+<p>然后根据经验和结果综合判断，选择目标模型进行调参或者优化，从而进一步提升效果。</p>
+<p>之前比赛的时候有一个大佬的解法是训练两个网络进行对抗，这个算法拿了准确率第一，当时印象挺深刻的。</p>
+<h3 id="算法调优">算法调优</h3>
+<p>调参是一个算法调优的必经之路，主要分为以下几点：</p>
+<ul>
+<li><strong>模型可诊断性</strong>，模型总是处于两种状态，即欠拟合和过拟合之间，只是程度不同罢了。我们可以把 accuracy 和 loss 输出在图表中，从而作为一个有价值的诊断工具。</li>
+<li><strong>权重的初始化</strong>，用小的随机数初始化权重。</li>
+<li><strong>学习率</strong>，学习率决定了梯度下降时的范围，如果添加了更多的神经节点和网络层，就可加大学习率。这一点并不是独立的，与 batch size 等都有关系。</li>
+<li><strong>激活函数</strong>，激活函数其实有很多种，而且每一种激活函数都有一段流行的时间，如今一般都会使用 ReLU 函数，但 ReLU 本身存在着死神经元的问题，然后又诞生了 Leaky ReLU。尝试不同的激活函数可能会有不同的效果。</li>
+<li><strong>网络结构</strong>，网络的结构设计也会很大程度影响性能，在一般情况下，最好使用成熟的网络，或者尝试发表论文中的网络。</li>
+<li><strong>batch size 和 epoch</strong>，batch size 决定了梯度值以及权重的更新频率，一般设置的越大计算的速度就越快，反之越慢；epoch 则是样本参与训练的循环次数。</li>
+<li><strong>正则项</strong>，这可以很好地解决过拟合，如 dropout。</li>
+<li><strong>优化方法和损失函数</strong>，现在在梯度下降的过程中有许多优化器。默认的梯度下降方法是得到一个结果，然后调整动量值、学习率进行优化，而复杂的优化器则会有更多的参数设置，这需要多尝试去积累经验。</li>
+<li><strong>提早结束训练</strong>，一旦效果变差了，可以及时停止优化训练。而这一部分可以直接通过 TensorFlow 或者 Pytorch 框架中的 checkpoint 功能，自动选择和保存相应的模型训练点。</li>
+</ul>
+<h3 id="宏观调整">宏观调整</h3>
+<p>最后边是调出神经网络这个视角，从宏观的角度出发，把神经网络作为一个个体去看待问题。</p>
+<p>比如上文中所说的，通过两个网络之间的对抗提高准确率（GAN 网络就是这样的），以及最近有大神的网络暴力行为监测网络也一样，在神经网络外面套上了一个连坐的算法，即有暴力倾向的人其朋友圈的人也会有更大的概率有暴力倾向，说人话就是近朱者赤，近墨者黑。</p>
+<p>所以，从宏观上进行调整，比如切换观察视角，加上限制条件的网络或者其他算法，甚至是想随机森林一样，通过多神经网络投票进行融合等。</p>
+<h1 id="尾巴">尾巴</h1>
+<p>这是我的一些在学习过程中的小结，希望对大家有用。其实神经网络，或者说深度学习这方面，我们一直时站在巨人的肩膀上，不停有大佬创造出了更有效和更强大的网络模型，我们能够做的更多是择善而从。</p>
+<p>我觉得最好能够把网络或者是算法做的更加模块化或者是耦合度更高，从而可以更加灵活多变。</p>
+<p><img src="https://images.unsplash.com/photo-1574790989029-373ba6b885bb?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1250&amp;q=80" alt=""></p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

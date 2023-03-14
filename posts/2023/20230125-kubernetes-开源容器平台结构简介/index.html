@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Kubernetes 开源容器平台结构简介 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2023/20230125-kubernetes-%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E5%B9%B3%E5%8F%B0%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="Kubernetes 开源容器平台结构简介"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2023/20230125-kubernetes-%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E5%B9%B3%E5%8F%B0%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>Kubernetes 开源容器平台结构简介<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <h3 id="经典结构图">经典结构图</h3>
+<p><img src="https://zeee.cc/pictures/blog/20230125_Kubernetes_%E5%BC%80%E6%BA%90%E5%AE%B9%E5%99%A8%E5%B9%B3%E5%8F%B0%E7%BB%93%E6%9E%84%E7%AE%80%E4%BB%8B/20210810134700.png" alt=""></p>
+<h2 id="containerd--kubernetes--runc">containerd &amp; kubernetes &amp; runc</h2>
+<h3 id="角色分工和层级">角色分工和层级</h3>
+<ul>
+<li>
+<p><strong>Kubernetes</strong>：部署容器的平台，属于最上层与用户交互的角色。</p>
+<ul>
+<li>主要承担的功能：负责集群成员管理，以及自动化的 Pod 的调度维护。</li>
+</ul>
+</li>
+<li>
+<p><strong>containerd</strong>：容器平台（Docker、Kubernetes）的低一层，底层运行时（runc、kata）的高一层，属于中间负责 Pod 级别管理的角色。</p>
+<ul>
+<li>主要承担的功能：镜像管理（镜像导入导出删除）、容器管理（容器创建删除停止），文件系统的快照管理。</li>
+</ul>
+</li>
+<li>
+<p><strong>runc</strong>：底层运行时，属于直接与底层操作系统交互的角色；类似的 runtime 还有 kata、Firecracker、gVisor 等，用于不同的操作系统平台且遵循 OCI 规范。</p>
+<ul>
+<li>主要承担的功能：根据镜像配置，使用系统提供的 cgroups 之类的资源隔离组件，为不同的容器创建运行环境，然后调起 endpoint。</li>
+</ul>
+</li>
+<li>
+<p>containerd 和 kubernetes 都通过 <code>systemd</code> 维护进程，二者之间通过 gRPC 进行通信（遵循 OCI 规范）</p>
+</li>
+<li>
+<p>containerd 和 runc 是直接通过进程调用的方式进行交互和绑定。大白话就是 containerd 为每个容器开了一个 shim 进程；然后 shim 进程拼了一个 runc 命令跑容器，并作为主进程接管所有的 runc 僵尸进程，然后监控容器的状态。</p>
+</li>
+</ul>
+<h3 id="从-kubernetes-到-runc-的流程">从 kubernetes 到 runc 的流程</h3>
+<ul>
+<li>kuberlet 通过 gRPC 向 containerd 发送命令调用
+<ul>
+<li>以前是 kuberlet 调用 CRI-containerd，然后 CRI-containerd 再调用 contaienrd；后来 cri 直接作为一个插件集成进了 containerd，调用链缩短为了 <code>kubelet -&gt; containerd -&gt; runc</code></li>
+<li>源码也可以看到，cri 现在在 containerd 的内部是作为插件进行加载的。</li>
+</ul>
+</li>
+<li><code>containerd</code> 收到请求，创建 <code>containerd-shim</code> 实例
+<ul>
+<li><code>containerd-shim</code> 实例才会真正操作容器，负责管理一个容器的整个声明周期，并且对其状态进行监控和上报；容器进程需要一个父进程来做状态收集、维持 <code>stdin</code> 等 <code>fd</code> 打开等工作，假如这个父进程就是 <code>containerd</code>，那如果 <code>containerd</code> 挂掉的话，整个宿主机上所有的容器都得退出了，引入 <code>containerd-shim</code> 可以规避这个问题。</li>
+</ul>
+</li>
+<li>创建 <code>shim</code> 进程（通过 <code>runtime/shim</code> 的 <code>newInit()</code> 初始化）
+<ul>
+<li><code>newInit()</code> 中会调用 <code>process.NewRunc()</code> 创建新的 <code>go-runc</code> 实例，然后 <code>go-runc</code> 去拼 <code>runc</code> 命令并执行</li>
+</ul>
+</li>
+<li><code>runc</code> 启动容器，然后 <code>runc</code> 本身会直接退出，<code>containerd-shim</code> 则会接管容器进程，并负责上报容器进程的状态给 <code>containerd</code>。同时开 subReaper 在容器中 <code>pid</code> 为 <code>1</code> 的进程退出后接管容器中的子进程进行清理, 确保无僵尸进程。</li>
+<li>创建容器的 RPC 调用流程</li>
+<li><code>cmd\ctr\commands\tasks\tasks_unix.go</code> NewTask() 调用 container.NewTask()</li>
+<li><code>container.NewTask()</code> c.client.TaskService().Create(ctx, request)
+<ul>
+<li>创建一个 GRPC 客户端然后进行通信</li>
+</ul>
+</li>
+</ul>
+<h2 id="协议规范">协议规范</h2>
+<h3 id="cricontainer-runtime-interface-容器运行时接口">CRI（Container Runtime Interface 容器运行时接口）</h3>
+<p>CRI 是由 Kubernetes 定义的一套<strong>对接容器运行时的接口标准</strong>，然后 containerd（或者 dockerdhim）等容器运行时会有一套自己的实现。目前官方主流提供 Kubernetes + containerd 的方案，即 containerd 内有一个 CRI 插件实现，提供给 Kubernetes 进行调用。</p>
+<p>可以在 Kubernetes 的配置中指定不同的 CRI 实现组件，来达到<strong>对接不同的容器运行时</strong>的目的。</p>
+<h3 id="ociopen-container-initiative-开放容器倡议">OCI（Open Container Initiative 开放容器倡议）</h3>
+<p>围绕<strong>容器镜像和运行时创建</strong>指定的开放行业标准，维护容器镜像格式的规范，以及容器应该如何运行。也相当与一套标准的接口，然后不同的平台（如 Linux、Windows）上面有不同的组件实现。</p>
+<h3 id="cnicontainer-network-interface-容器网络接口">CNI（Container Network Interface 容器网络接口）</h3>
+<p>由一组用于配置 Linux 容器的网络接口的规范和库组成，同时还包含了一些插件。CNI 只提供了两个接口：容器创建分配网络资源、容器删除释放网络资源。</p>
+<h3 id="csicontainer-storage-interface-容器存储接口">CSI（Container Storage Interface 容器存储接口）</h3>
+<p>主要用于 Kubernetes 中，旨在能为容器编排引擎和存储系统间建立一套标准的存储调用接口，为容器编排引擎提供存储服务。</p>
+<h2 id="开源组件实现">开源组件实现</h2>
+<h3 id="containerd">containerd</h3>
+<p>开源的容器运行时之一，从 docker 中的 libcontainerd 子项目发展而来；目前是 Kubernetes 社区官方使用的 runtime。</p>
+<h3 id="cri-o">CRI-O</h3>
+<p>开源的容器运行时之一（可能等价为另一种类似 containerd 的中间件），由 RedHat、IBM、英特尔、SUSE、Hyper 等公司从头开始创建的另一套 runtime。</p>
+<h3 id="runc">runc</h3>
+<p>Linux 平台上最底层的 OCI 组件实现，用来根据镜像创建容器的运行环境并拉起容器进程，功能上与 cgroups 和 systemd 高度绑定。</p>
+<h2 id="其他子组件">其他子组件</h2>
+<h3 id="containerd-shim">containerd-shim</h3>
+<p>containerd-shim 是 containerd 的一个子组件。实际的运行环境中的 contaienrd 进程只是充当了一个管理角色（一个节点只有一个），而 containerd-shim 才是真正创建和操作容器的组件，<strong>每一个容器都会对应一个 containerd-shim 作为父进程</strong>。它的主要职责是做容器的状态收集、维持 <code>stdin</code>、<code>fd</code> 等操作。</p>
+<blockquote>
+<p>containerd-shim 有 v1 和 v2 两个版本，在实现上有着非常大的差异；目前官方版本已经在淘汰 v1 版本。</p>
+</blockquote>
+<h3 id="dockershim">dockershim</h3>
+<p>dockershim 和 containerd-shim 承担的角色完全不同。dockershim 是 Kubernetes 为了让 docker 的接口<strong>适配 OCI 规范</strong>而构建的适配器。</p>
+<blockquote>
+<p>目前市面上以 docker 作为 endpoint 的 Kubernetes 集群环境还有很多，所以 dockershim 相关的信息还是很常见。</p>
+</blockquote>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

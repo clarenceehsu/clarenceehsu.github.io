@@ -1,60 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Zeesain Tsui</title>
+	<meta name="generator" content="Hugo 0.110.0">
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Home - Zee Tsui</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Rubik:300,500,700" rel="stylesheet">
-  <link rel="icon" href="/image/favicon.ico">
-  <style>
-    body {
-      font-family: 'Rubik', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      font-size: calc(10px + 0.33vw);
-      -webkit-font-smoothing: antialiased;
-      padding: 20vh 10vw;
-      color: #121314;
-    }
-    h1 {
-      font-size: 4.5em;
-      font-weight: 500;
-      margin-bottom: 0;
-    }
-    c {
-      letter-spacing: 0.1em;
-    }
-    p {
-      font-size: 1.6em;
-      font-weight: 300;
-      line-height: 1.4;
-      max-width: 26em;
-    }
-    a {
-      text-decoration: none;
-      color: #121314;
-      position: relative;
-    }
-    a:after {
-      content: "";
-      position: absolute;
-      z-index: -1;
-      top: 60%;
-      left: -0.1em;
-      right: -0.1em;
-      bottom: 0;
-      transition: top 200ms cubic-bezier(0, .8, .13, 1);
-      background-color: rgba(255, 238, 0, 0.432);
-    }
-    a:hover:after {
-      top: 0%;
-    }
-    item{
-      font-size: 2.2em;
-      font-weight: 400;
-      word-spacing: 1em;
-      line-height: 200%;
-    }
-  </style>
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    <meta name="description" content="Zeee"/>
+    <meta property="og:title" content="Home"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/"/>
+    
+    <meta property="og:description" content="Zeee"/>
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-home'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+
   <script>
     window.onload=function(){
       NowTime();
@@ -63,31 +155,45 @@
         var time=new Date();
         var h = time.getHours();
         if(h >= 5 && h <= 10){
-          temp = "🌥️早上好。";
+          temp = "🌥️早上好";
         }
         else if(h >= 11 && h <= 12) {
-          temp = "🌞中午好。";
+          temp = "🌞中午好";
         }
         else if(h >= 13 && h <= 18) {
-          temp = "⛱️下午好。";
+          temp = "⛱️下午好";
         }
         else {
-          temp = "🌙晚上好。";
+          temp = "🌙晚上好";
         }
         document.getElementsByName("time")[0].innerText = temp;
     }
   </script>
-<meta name="generator" content="Hexo 5.3.0"></head>
-<body>
-  <h1><c name='time'></c></h1>
+  <div class="intro">
+    <h1><c name='time' style="letter-spacing: 0.15em;"></c><span class="dot">.</span></h1>
+    <div class="intro-content"><p>This is Zeesain Tsui. A programmer, photographer and designer.</p>
+<p href="http://beian.miit.gov.cn/" target="_blank" style="color:#FFFFFF;margin-top:-1em">粤ICP备2021038294号</p></div>
+  </div>
 
-  <p style="font-size:2.5em">
-    This is Zeesain Tsui.</p>
-  <p style="font-size:2.5em;margin-top:-1em">
-    A programmer, photographer and designer.
-  </p>
 
-  <item><a href="archives/">BLOG</a> <a href="pic/">GALLERY</a> <a href="about/">ABOUT</a></item>
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
 
 </body>
 </html>

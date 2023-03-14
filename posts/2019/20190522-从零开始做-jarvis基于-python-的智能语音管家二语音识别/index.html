@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别 - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2019/20190522-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%BA%8C%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2019/20190522-%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A-jarvis%E5%9F%BA%E4%BA%8E-python-%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%E4%BA%8C%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>从零开始做 Jarvis——基于 Python 的智能语音管家（二）语音识别<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>让我们用Python去做一个Jarvis吧！</p>
+<p>这一部分主要是语音识别部分的Python实现，而且由于这是我利用课余时间而作，所以相对于其他的项目而言进度可能并不会特别迅速，更新缓慢且随缘。</p>
+<!-- more -->
+<h2 id="序">序</h2>
+<p>那我们就从前面的框架开始动手实现我们的 Jarvis，首先给大家看一下我的文件目录框架：</p>
+<p><img src="https://zeee.cc/pictures/blog/20190522_%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A_Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E_Python_%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/1.jpg" alt=""></p>
+<p>其中我把所有自己写的<code>py</code>模块统一归入<code>_module</code>文件夹，供<code>main.py</code>调取，<code>_sounds</code>文件夹存着因为语音识别以及<code>TTS</code>产生的音频文件。</p>
+<blockquote>
+<p>因为目前的结构还不是特别庞大，可能后面会因为管理或者功能增加等等的原因进行修正。如果有改动我会在后面进行补充。</p>
+</blockquote>
+<p>作为一个<del>懒人</del>程序员，并且本着<strong>不重复造轮子</strong>的原则，我决定先到网上搜一搜有没有现成的解决方案能够直接使用的。</p>
+<p>Emmm&hellip; 貌似没有，但这并不影响我们的功能实现。</p>
+<p>我们把语音识别的问题拆分开来，便是：</p>
+<ul>
+<li><strong>麦克风录音</strong></li>
+<li><strong>语音识别成文本</strong></li>
+<li><strong>返回文本</strong></li>
+</ul>
+<p>然而幸运的是，<strong>百度在语音识别方面有着成熟的API以及SDK提供使用</strong>，所以在这个方面我们真正需要自己实现的部分只有录音方面了。</p>
+<blockquote>
+<p>后期补充：目前我将这一方面的算法转用<strong>腾讯 AI 平台</strong>实现，并为此写了一套 SDK，如有需要的话可以参考<strong>我的项目</strong>。
+<strong>这并不影响下面百度平台的实现</strong>。</p>
+</blockquote>
+<h2 id="语音录入生成wav文件">语音录入生成.wav文件</h2>
+<p>我将语音录入的方法写在了<code>recognition.py</code>中，与语音识别等功能放在一起便于调用和管理，后续编辑也会方便一些。</p>
+<p>在语音录入方面我们需要调用<code>Pyaudio</code>和<code>wave</code>模块，如果没有安装的话可以通过<code>pip</code>、<code>conda</code>或者<code>Pycharm</code>安装，方法这里就不赘述了。</p>
+<p>然后首先我们需要导入这两个模块：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="kn">import</span> <span class="nn">pyaudio</span>
+</span></span><span class="line"><span class="cl">    <span class="kn">import</span> <span class="nn">wave</span>
+</span></span></code></pre></div><p>然后便是具体的方法实现，我写了一个<code>def audio_record</code>，这个部分的功能便完成了录音，并且会将录音保存为<code>.wav</code>格式。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">audio_record</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="n">rec_time</span><span class="p">):</span>  <span class="c1"># out_file:输出音频文件名, rec_time:音频录制时间(秒)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CHUNK</span> <span class="o">=</span> <span class="mi">1024</span>
+</span></span><span class="line"><span class="cl">        <span class="n">FORMAT</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">paInt16</span>  <span class="c1"># 16bit编码格式</span>
+</span></span><span class="line"><span class="cl">        <span class="n">CHANNELS</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># 单声道</span>
+</span></span><span class="line"><span class="cl">        <span class="n">RATE</span> <span class="o">=</span> <span class="mi">16000</span>  <span class="c1"># 16000采样频率</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">p</span> <span class="o">=</span> <span class="n">pyaudio</span><span class="o">.</span><span class="n">PyAudio</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 创建音频流</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stream</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="nb">format</span><span class="o">=</span><span class="n">FORMAT</span><span class="p">,</span>  <span class="c1"># 音频流wav格式</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">channels</span><span class="o">=</span><span class="n">CHANNELS</span><span class="p">,</span>  <span class="c1"># 单声道</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">rate</span><span class="o">=</span><span class="n">RATE</span><span class="p">,</span>  <span class="c1"># 采样率16000</span>
+</span></span><span class="line"><span class="cl">                        <span class="nb">input</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                        <span class="n">frames_per_buffer</span><span class="o">=</span><span class="n">CHUNK</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;I&#39;m listening...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># 录制的音频流</span>
+</span></span><span class="line"><span class="cl">        <span class="c1"># 录制音频数据</span>
+</span></span><span class="line"><span class="cl">        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">RATE</span> <span class="o">/</span> <span class="n">CHUNK</span> <span class="o">*</span> <span class="n">rec_time</span><span class="p">)):</span>
+</span></span><span class="line"><span class="cl">            <span class="n">data</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">CHUNK</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 录制完成</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stream</span><span class="o">.</span><span class="n">stop_stream</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">stream</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">        <span class="n">p</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="nb">print</span><span class="p">(</span><span class="s2">&#34;Emmm...&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="c1"># 保存音频文件</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wf</span> <span class="o">=</span> <span class="n">wave</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">out_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wf</span><span class="o">.</span><span class="n">setnchannels</span><span class="p">(</span><span class="n">CHANNELS</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wf</span><span class="o">.</span><span class="n">setsampwidth</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_sample_size</span><span class="p">(</span><span class="n">FORMAT</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wf</span><span class="o">.</span><span class="n">setframerate</span><span class="p">(</span><span class="n">RATE</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wf</span><span class="o">.</span><span class="n">writeframes</span><span class="p">(</span><span class="sa">b</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">frames</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wf</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</span></span></code></pre></div><p>这样就实现了程序自动录音然后自动保存为<code>.wav</code>文件的过程，其中的<code>rec_time</code>是<strong>录音的固定时长</strong>，经过我的多次测试最终设置为了一个较合理的<strong>5秒时长</strong>，这个见仁见智，可以根据自己的使用情况做改动。</p>
+<h2 id="stt语音转文字">STT——语音转文字</h2>
+<p>接下来就是要让“Jarvis”听到我们说的话，也就是STT——声音转文字的功能实现。</p>
+<p>我们需要用到百度的开放平台，所以首先需要有一个百度的AI开放平台的账号，这个可以直接前往<a href="https://ai.baidu.com/">百度AI开放平台</a>注册。</p>
+<blockquote>
+<p>这里为什么我会选择使用<strong>百度</strong>而非<strong>高德</strong>的语音识别平台呢？
+<del>识别体验大同小异，高德标点符号更完善些。</del>
+<del>高德对于开发者有着<strong>500次每日</strong>的额度限制，而百度是<strong>无限次数</strong>的。</del>
+<del>不用考虑了，选<strong>腾讯</strong>老大哥吧。</del>
+<strong>腾讯 AI 平台现在也开始商用了</strong>，限制了开发者的 API 调用次数，如果对次数有要求的话还是<strong>百度</strong>吧</p>
+</blockquote>
+<p>注册完后需要在百度AI平台的<strong>语音技术</strong>一栏新建一个应用，并且将<strong>语音识别</strong>加入到应用的功能中，其它的功能有按需加入。</p>
+<p><img src="https://zeee.cc/pictures/blog/20190522_%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A_Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E_Python_%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/2.jpg" alt=""></p>
+<p>这个时候进入管理应用页面，就可以看到我们所创建的应用以及对应的<code>APPID</code>、<code>API Key</code>、<code>Secret Key</code>。这三个参数是我们后续接入百度平台的必备条件。</p>
+<p>然后我们开始完成<strong>语音转文字的代码</strong>部分。</p>
+<p>首先导入<code>aip</code>模块，这个模块只能通过<code>pip install aip</code>进行安装，或者自己从<strong>百度的SDK页面</strong>下载导入。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="kn">from</span> <span class="nn">aip</span> <span class="kn">import</span> <span class="n">AipSpeech</span>
+</span></span></code></pre></div><p>然后将其<strong>实例化</strong>并建立一个基于我们应用的对象，方便后续调用。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="n">APP_ID</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># App ID</span>
+</span></span><span class="line"><span class="cl">    <span class="n">API_KEY</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># API Key</span>
+</span></span><span class="line"><span class="cl">    <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>  <span class="c1"># Secret Key</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">    <span class="n">client</span> <span class="o">=</span> <span class="n">AipSpeech</span><span class="p">(</span><span class="n">APP_ID</span><span class="p">,</span> <span class="n">API_KEY</span><span class="p">,</span> <span class="n">SECRET_KEY</span><span class="p">)</span>
+</span></span></code></pre></div><p>然后查了一下<code>aip</code>的方法中，<code>asr</code>对应的是语音识别的方法，所以我们直接调用<code>asr</code>方法就行，然后在设置一个识别失败的默认恢复。</p>
+<p>代码如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="k">def</span> <span class="nf">BaiduRecog</span><span class="p">(</span><span class="n">fileurl</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="n">res</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">asr</span><span class="p">(</span><span class="n">Recognition</span><span class="o">.</span><span class="n">get_file_content</span><span class="p">(</span><span class="n">fileurl</span><span class="p">),</span> <span class="s1">&#39;pcm&#39;</span><span class="p">,</span> <span class="mi">16000</span><span class="p">,</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                    <span class="s1">&#39;dev_pid&#39;</span><span class="p">:</span> <span class="mi">1537</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="p">})</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">        <span class="k">except</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="s1">&#39;Pardon?&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">        <span class="k">def</span> <span class="nf">get_file_content</span><span class="p">(</span><span class="n">filePath</span><span class="p">):</span>
+</span></span><span class="line"><span class="cl">        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filePath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
+</span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">fp</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</span></span></code></pre></div><p>上面代码中的<code>dev_pid</code>是一串设置的代码，每一个数字对应一个参数，在百度AI平台的<strong>SDK文档</strong>中有说明。</p>
+<blockquote>
+<p>在我先前百度过的语音识别方法中，绝大多数都是先录下来<code>wav</code>文件，然后转换为<code>mp3</code>文件再上传至百度平台进行识别，并没有其他他别好的方案。
+考虑到算法的时效性，<code>wav</code>转换为<code>mp3</code>这一个环节的存在完全没有必要，可以去掉，所以我把算法改成了直接将录下来的<code>wav</code>传到百度平台进行分析，相较他人减少了一个步骤。</p>
+</blockquote>
+<p>我们还差最后一步，<strong>把识别到的文字显示到控制台上</strong>。若果需要一直进行语音识别可以直接套上<code>While True</code>循环。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Python" data-lang="Python"><span class="line"><span class="cl">    <span class="n">audio_record</span><span class="p">(</span><span class="s1">&#39;temp.wav&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="n">voice</span> <span class="o">=</span> <span class="n">Recognition</span><span class="o">.</span><span class="n">BaiduRecog</span><span class="p">(</span><span class="s1">&#39;temp.wav&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">print</span><span class="p">(</span><span class="n">voice</span><span class="p">)</span>
+</span></span></code></pre></div><p>输出结果如下：</p>
+<p><img src="https://zeee.cc/pictures/blog/20190522_%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E5%81%9A_Jarvis%E2%80%94%E2%80%94%E5%9F%BA%E4%BA%8E_Python_%E7%9A%84%E6%99%BA%E8%83%BD%E8%AF%AD%E9%9F%B3%E7%AE%A1%E5%AE%B6%EF%BC%88%E4%BA%8C%EF%BC%89%E8%AF%AD%E9%9F%B3%E8%AF%86%E5%88%AB/3.jpg" alt=""></p>
+<p>至此，语音识别就已经完成了。</p>
+<p><strong>下一次我会介绍一下我实现对文字的自动回复以及让“Jarvis”说话的TTS部分。</strong></p>
+<p>Peace.</p>
+<p><img src="https://images.unsplash.com/photo-1558456036-ec404043fc6f?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1950&amp;q=80" alt=""></p>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>WSL on Zee Tsui</title>
+    <link>/tags/wsl/</link>
+    <description>Recent content in WSL on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 07 Jan 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/wsl/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何优雅地使用 WSL2</title>
+      <link>/posts/2021/20210107-%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E4%BD%BF%E7%94%A8-wsl2/</link>
+      <pubDate>Thu, 07 Jan 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2021/20210107-%E5%A6%82%E4%BD%95%E4%BC%98%E9%9B%85%E5%9C%B0%E4%BD%BF%E7%94%A8-wsl2/</guid>
+      <description>这是一个 WSL2 的使用指南，以及本人在安装和使用 WSL2 所遇到的各种问题的解决办法整理。
+为什么是 WSL2？ 最开始使用 WSL2，纯粹是想尝试一下这个“世界上最好的 Linux 发行版”，然后便一发不可收拾，慢慢地将自己的开发环境也转移到了 WSL2 上。WSL2 毕竟是微软的亲儿子，其在各种软件以及环境的适配方面十分出色（相比于其他的虚拟机），VSCode、J 系软件等都能够很好地自动检查和适配 WSL 的相关配置，大部分的配置都能够做到自动化，摆脱了传统虚拟机繁琐的操作，这显著降低了 Linux on Windows 这一体系的使用难度和入门门槛。
+在使用 WSL2 的这几个月的时间里，我也充分地了解了 WSL2 的运行机制和使用方法。在过程中也发现很多的 WSL2 坑在中文互联网上并没有特定的解决方法，只能通过 StackOverflow 和 GitHub Issue 中找到，因此我把这一部分的内容集中了起来，勉强算作一个较为完备的流程。
+我后续踩到的坑也会持续更新至这篇文章中。
+什么是 WSL2 WSL2 是 WSL 的“升级版”，相比于 WSL 只提供了一层类 Linux 的接口，WSL2 是在虚拟硬件层（Hyper-V）上运行了完整的 Linux 系统，与 Windows10 平级；且 Windows 和 WSL 之间可以通过 wsl 命令进行访问，也可以当成一个远程机进行维护。同时，从 Linux 的角度看，Windows10 的文件系统和 Linux 的文件系统直接挂载到了 /mnt 上，所以跨文件系统访问十分方便。
+相比于 WSL1，WSL2 的启动速度会更快、内存占用更少，同时性能也更高。
+注意：因为 Windows10 和 Linux 属于两种不同的文件系统，且目前 WSL2 在文件系统的兼容性上还存在问题——系统间进行 IO 走的网络协议，所以如果经常进行跨文件系统 IO 的话会有肉眼可见的性能损失（见官方对比）。对此建议将文件移至 Linux 系统的根目录（/mnt/wsl）内再进行操作。</description>
+    </item>
+    
+  </channel>
+</rss>

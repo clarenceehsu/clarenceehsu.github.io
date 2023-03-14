@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>树莓派系统安装及配置（无网线、显示屏和键鼠） - Zee Tsui</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2020/20200527-%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%E6%97%A0%E7%BD%91%E7%BA%BF%E6%98%BE%E7%A4%BA%E5%B1%8F%E5%92%8C%E9%94%AE%E9%BC%A0/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.3f1e3bd10507e4116fd7a84691d9fa5bd4e6419a6fb58dcdad1e6c0ebf48e011.css">
+  
+
+  
+    
+    <meta property="og:title" content="树莓派系统安装及配置（无网线、显示屏和键鼠）"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2020/20200527-%E6%A0%91%E8%8E%93%E6%B4%BE%E7%B3%BB%E7%BB%9F%E5%AE%89%E8%A3%85%E5%8F%8A%E9%85%8D%E7%BD%AE%E6%97%A0%E7%BD%91%E7%BA%BF%E6%98%BE%E7%A4%BA%E5%B1%8F%E5%92%8C%E9%94%AE%E9%BC%A0/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>树莓派系统安装及配置（无网线、显示屏和键鼠）<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <!-- more -->
+<h2 id="为啥要折腾">为啥要折腾？</h2>
+<p>因为最近有课程设计需要使用到树莓派，所以我花了好大的精力联系学姐和辅导员，把板子从学校给寄了回来。</p>
+<p>寄回来之后，我发现没有显示器和额外的键盘，完全没办法直接使用（哭）。然后我就尝试 SSH 连接树莓派，但是似乎连接设置出现了问题无法连接，所以最后只能够<strong>重新安装树莓派的系统</strong>了。</p>
+<p>我之前安装树莓派的时候是<strong>有显示器和额外的一套键鼠</strong>的，整体安装过程十分简单直观。这一次因为没有这些额外的硬件，所以我也是查了许多的教程，才摸索出了一个比较正常和方便的安装过程，而且全称可以完全无头，即无网线、显示屏和键盘，<strong>只用一条电源线即可</strong>。</p>
+<h2 id="开始前的软件准备">开始前的软件准备</h2>
+<ol>
+<li>系统镜像，可以去<a href="https://www.raspberrypi.org/downloads/raspbian/">官网的下载页面</a>下载，我是用的是 Buster Lite；</li>
+<li><a href="https://www.sdcard.org/downloads/formatter/eula_windows/SDCardFormatterv5_WinEN.zip">SD Card Formatter 工具</a></li>
+<li><a href="https://sourceforge.net/projects/win32diskimager/">Win32 Disk Imager</a></li>
+</ol>
+<h2 id="安装系统">安装系统</h2>
+<ol>
+<li>将下载下来的系统镜像 <code>.img</code> 文件<strong>解压</strong>出来；</li>
+<li>使用 SD Card Formatter 工具<strong>格式化 SD 卡</strong>；</li>
+<li>使用 Win32 Disk Imager 工具<strong>将系统镜像写入 SD 卡</strong>；</li>
+</ol>
+<p>至此系统已经安装完成，但还需要两步操作，使树莓派在上电开机后能够<strong>自动连接上 WiFi 网络</strong>。</p>
+<ol>
+<li>
+<p>在电脑上打开 SD 卡的 <code>/boot</code> 分区（Windows 系统上只能够看到这个分区），在根目录下新建一个名字为 <code>ssh</code> 的空文件；</p>
+</li>
+<li>
+<p>再新建一个 <code>wpa_supplicant.conf</code> 文件，写入如下内容：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">country=GB
+</span></span><span class="line"><span class="cl">ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+</span></span><span class="line"><span class="cl">update_config=1
+</span></span><span class="line"><span class="cl">network={
+</span></span><span class="line"><span class="cl">    ssid=&#34;WiFi 名称，注意大小写&#34;
+</span></span><span class="line"><span class="cl">    psk=&#34;WiFi 密码&#34;
+</span></span><span class="line"><span class="cl">}
+</span></span></code></pre></div></li>
+</ol>
+<blockquote>
+<p>这个文件会写入树莓派系统中的 <code>/etc/wpa_supplicant/wpa_supplicant.conf</code>，所以一般设置一次，后面就不用设置了，可以开机自动接入网络。
+这一个配置文件的 network 还有其他的配置项，详情可以见<a href="https://blog.csdn.net/hbcbgcx/article/details/90812056">这篇博客</a>。</p>
+</blockquote>
+<p>搞定上述操作之后，就可以把 SD 卡插入树莓派，然后<strong>上电开机</strong>了。</p>
+<h2 id="远程连接树莓派">远程连接树莓派</h2>
+<p>远程连接树莓派这一步简单一些，直接<strong>找到树莓派的 IP</strong>，然后 <strong>SSH 连接</strong>即可。</p>
+<p>首先需要通过内网 IP 进入路由器的控制台，通过控制台可以找到 raspberrypi 设备以及对应的 IP；（这里不同的路由器的具体情况不一样，所以不过多赘述了）然后通过 XShell 等软件 SSH 连接即可。</p>
+<p>至此，树莓派已经可以正常连接使用了。</p>
+<h2 id="其他的操作">其他的操作</h2>
+<blockquote>
+<p>这里的操作更多是为了方便使用，非必须。</p>
+</blockquote>
+<h4 id="获取-root">获取 root</h4>
+<p><strong>树莓派默认的用户是 pi</strong>，所以我们需要获取到 root 用户以便做一些高级操作。</p>
+<p>先给 root 设置密码：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo passwd root
+</span></span></code></pre></div><p>然后开启 root 用户：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo passwd --unlook root
+</span></span></code></pre></div><p>如果要禁止，可以执行下面的命令：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo passwd -l root
+</span></span></code></pre></div><h4 id="apt-切换为清华源raspbian-buster-系统">apt 切换为清华源（Raspbian-buster 系统）</h4>
+<p>第一步，先备份源文件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+</span></span><span class="line"><span class="cl">sudo cp /etc/apt/sources.list.d/raspi.list /etc/apt/sources.list.d/raspi.list.
+</span></span></code></pre></div><p>第二步，编辑系统源文件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo vi /etc/apt/sources.list
+</span></span></code></pre></div><p>第三步，添加清华的镜像源：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">deb http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main contrib non-free rpi
+</span></span><span class="line"><span class="cl">deb-src http://mirrors.tuna.tsinghua.edu.cn/raspbian/raspbian/ buster main contrib non-free rpi
+</span></span></code></pre></div><blockquote>
+<p>这里的树莓派系统是Raspbian-buster系统，在写系统源链接时要注意是buster，网上很多教程都是之前stretch版本，容易出错！</p>
+</blockquote>
+<p>第四步，更新软件包索引：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo apt-get update&amp;&amp;upgrade
+</span></span></code></pre></div><p>第五步，更改系统源为清华源：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">sudo vi /etc/apt/sources.list.d/raspi.list
+</span></span></code></pre></div><p>改成以下内容：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">deb http://mirrors.tuna.tsinghua.edu.cn/raspberrypi/ buster main ui
+</span></span><span class="line"><span class="cl">deb-src http://mirrors.tuna.tsinghua.edu.cn/raspberrypi/ buster main ui
+</span></span></code></pre></div><h4 id="pip-更换国内源">pip 更换国内源</h4>
+<p>在用户文件夹进入或者创建 <code>.pip</code> 目录，新建 <code>pip.conf</code> 文件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">mkdir ~/.pip
+</span></span><span class="line"><span class="cl">vim ~/.pip/pip.conf
+</span></span></code></pre></div><p>写入如下内容：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">[global]
+</span></span><span class="line"><span class="cl">timeout=100
+</span></span><span class="line"><span class="cl">index-url=https://pypi.tuna.tsinghua.edu.cn/simple/
+</span></span><span class="line"><span class="cl">extra-index-url= http://mirrors.aliyun.com/pypi/simple/
+</span></span><span class="line"><span class="cl">[install]
+</span></span><span class="line"><span class="cl">trusted-host=
+</span></span><span class="line"><span class="cl">        pypi.tuna.tsinghua.edu.cn
+</span></span><span class="line"><span class="cl">        mirrors.aliyun.com
+</span></span></code></pre></div><h4 id="解决-ssh-connection-closed-by-foreign-host-问题">解决 SSH Connection closed by foreign host 问题</h4>
+<p>可能是 SSH 服务器没有设置保活间隔，需要修改下面的配置文件：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">vi /etc/ssh/sshd_config
+</span></span></code></pre></div><p>添加两行，也可以直接去掉注释然后修改：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">ClientAliveInterval 60
+</span></span><span class="line"><span class="cl">ClientAliveCountMax 3
+</span></span></code></pre></div><blockquote>
+<p>这里的 ClientAliveInterval 数值为超时的秒数；ClientAliveCountMax 为允许超时的次数</p>
+</blockquote>
+<p>最后重启 SSH 服务：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">/etc/init.d/ssh restart
+</span></span><span class="line"><span class="cl">systemctl restart sshd
+</span></span></code></pre></div>
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2022 All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>

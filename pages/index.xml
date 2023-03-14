@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Pages on Zee Tsui</title>
+    <link>/pages/</link>
+    <description>Recent content in Pages on Zee Tsui</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language><atom:link href="/pages/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>404</title>
+      <link>/pages/404/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/404/</guid>
+      <description>Oops，这个页面不见了，要不再看看别的页面呢？ 可能是以前博客改版之后路径改了。</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>/pages/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/about/</guid>
+      <description>我是谁 江湖外号赵铁柱，某厂卑微后端打工人 业余摄影师，主风光建筑少拍人像，如今往 Photobash 方向靠近 德云社老票友，票龄估摸小十年 喜欢古典，年纪愈大愈喜欢听 喜欢轻量化和极简风，胸无点墨只能勉强做一些思考 患有轻微的数据丢失恐惧症，喜欢经常性备份数据 黄瓜味乐事和无糖可乐的坚定拥护者 志向于软硬件全栈的小菜鸟 关于这里 技术思考和总结，写写历程和发展路径 日常记录，心事想法和脑洞 联系方式 邮箱：echo Y2xhcmVuY2VlaHN1QDE2My5jb20K | base64 -d Github 博客信息 博客基于 Hugo 搭建，采用 Chic 主题进行深度定制
+Copyright (c) 2022 CC-BY-NC-4.0 LICENSE</description>
+    </item>
+    
+    <item>
+      <title>Gallery</title>
+      <link>/pages/gallery/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/pages/gallery/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
