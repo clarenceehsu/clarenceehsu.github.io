@@ -6,7 +6,24 @@
     <description>Recent content in Blog on Zee Tsui</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 29 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 15 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>基于 syncthing 的云盘容器搭建方案（发现 &#43; 中继 &#43; 同步）</title>
+      <link>/posts/2023/20230315-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</link>
+      <pubDate>Wed, 15 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230315-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</guid>
+      <description>最近因为个人的需求，需要搭建一个独立并且能够与 OneDrive 互通的一个网盘，用来代替同步全平台设备之间的文件。经过短暂的探索之后，我使用 Syncthing 完成了个人的最佳实践。
+此搭建方案中的流程并没有严格从 0 开始阐述，所以部分内容可能需要一定的 docker 和命令行基础。
+整体结构 Syncthing 本身做的是多端的设备文件同步，设备间掉线或者断开连接就会失去同步，这和传统意义上的云盘有些不同。由于我们需要实现的是云盘场景，所以自然需要在结构配置上满足一些基本特性。
+基本特性 一直在线：所以我们需要存在一台长期在线的机器作为中间设备，让其他设备实时同步文件； 跨系统：这一点 Syncthing 已经提供了几乎全平台的客户端，所以基本不需要我们做什么，按照平台下载软件即可； 暴露公网：此处方案就比较多样了，公网服务器的话可以直接搭建，本地可以通过 Nginx 反向代理 + FRP 实现公网暴露。 安全性 &amp;amp; 私密性：Syncthing 提供的发现服务和中继服务默认会暴露公网，变成公共服务吃池的一部分；所以如果完全个人使用需要的话，需要额外进行配置。 此时整体流程就清晰了起来：我们需要搭建一套 Syncthing 服务 + 中继 + 发现 一体的服务端当成实时在线的中心节点，并且部署在公网上；然后其他需要同步文件的设备（比如手机、笔记本、平板）只需安装 syncthing 的本体，然后将中继和远程设备配置到服务端，正常与服务端进行同步即可。
+这样虽然比其他的 Syncthing 同步方案稍显复杂，但是可以通过中心节点来避免设备下线就断开同步的问题，做到设备下线也不影响文件的同步。
+具体搭建操作 搭建操作主要围绕着上文提到的服务端，我们需要搭建。Syncthing 的主程序 syncthing、发现服务 stdiscov 和中继服务 strelay 都提供了容器化的解决方案，所以可以通过容器很方便地进行部署。
+拉取容器 首先通过一下命令拉取所需的三个容器：
+docker pull syncthing/syncthing docker pull syncthing/relaysrv docker pull syncthing/discosrv 命令行启动参数 因为个人单独写了一套类 Kubernetes 的单机配置方案，最终所有配置都会转化为命令行；如果有 docker-compose 相关的需要，可以直接通过命令行的参数进行等价转换。
+Syncthing docker run --rm -dit --name=syncthing \ -u $(id -u):$(id -g) \ # 设置容器内用户权限 --link relayserver --link discoverserver \ # 网桥搭桥，保证容器内能与 relay 和 disov 正常通信 -p &amp;lt;port&amp;gt;:8384 -p &amp;lt;port&amp;gt;:22000 \ # 8384 是前端页面端口，22000 是服务发现端口 -v &amp;lt;path_to_syncthing_config&amp;gt;:/var/syncthing/config \ # syncthing 配置文件路径映射 -v &amp;lt;path_to_syncthing_Sync&amp;gt;:/var/syncthing/Sync \ # syncthing 默认同步文件夹路径映射 syncthing/syncthing 如果基于本方案，那么流量会全部走 relay 中继，22000 可不用暴露公网使用。</description>
+    </item>
+    
     <item>
       <title>2022 年度总结</title>
       <link>/posts/2023/20230129-2022-%E5%B9%B4%E5%BA%A6%E6%80%BB%E7%BB%93/</link>
