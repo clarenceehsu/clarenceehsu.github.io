@@ -6,14 +6,14 @@
     <description>Recent content in Temps on Zee Tsui</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Feb 2023 00:00:00 +0000</lastBuildDate><atom:link href="/temp/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/temp/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>基于 syncthing 的云盘容器搭建方案（发现 &#43; 中继 &#43; 同步）</title>
-      <link>/temp/20230215-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</link>
-      <pubDate>Wed, 15 Feb 2023 00:00:00 +0000</pubDate>
+      <title>在汽车发明之前设计安全带？——我对 AGI 的思考</title>
+      <link>/temp/20230618-%E5%9C%A8%E6%B1%BD%E8%BD%A6%E5%8F%91%E6%98%8E%E4%B9%8B%E5%89%8D%E8%AE%BE%E8%AE%A1%E5%AE%89%E5%85%A8%E5%B8%A6%E6%88%91%E5%AF%B9-ai-%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Sun, 18 Jun 2023 00:00:00 +0000</pubDate>
       
-      <guid>/temp/20230215-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</guid>
-      <description>整体结构 遇到的问题 中继选择顺序 中继与发现服务 Nginx 反向代理 </description>
+      <guid>/temp/20230618-%E5%9C%A8%E6%B1%BD%E8%BD%A6%E5%8F%91%E6%98%8E%E4%B9%8B%E5%89%8D%E8%AE%BE%E8%AE%A1%E5%AE%89%E5%85%A8%E5%B8%A6%E6%88%91%E5%AF%B9-ai-%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>最近的一些大新闻 网友言论 我的看法 尾巴 </description>
     </item>
     
   </channel>

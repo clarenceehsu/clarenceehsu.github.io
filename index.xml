@@ -6,7 +6,16 @@
     <description>Recent content in Home on Zee Tsui</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 18 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>在汽车发明之前设计安全带？——我对 AGI 的思考</title>
+      <link>/temp/20230618-%E5%9C%A8%E6%B1%BD%E8%BD%A6%E5%8F%91%E6%98%8E%E4%B9%8B%E5%89%8D%E8%AE%BE%E8%AE%A1%E5%AE%89%E5%85%A8%E5%B8%A6%E6%88%91%E5%AF%B9-ai-%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Sun, 18 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/temp/20230618-%E5%9C%A8%E6%B1%BD%E8%BD%A6%E5%8F%91%E6%98%8E%E4%B9%8B%E5%89%8D%E8%AE%BE%E8%AE%A1%E5%AE%89%E5%85%A8%E5%B8%A6%E6%88%91%E5%AF%B9-ai-%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>最近的一些大新闻 网友言论 我的看法 尾巴 </description>
+    </item>
+    
     <item>
       <title>基于 syncthing 的云盘容器搭建方案（发现 &#43; 中继 &#43; 同步）</title>
       <link>/posts/2023/20230315-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</link>
@@ -1735,7 +1744,7 @@ Peace.</description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/pages/about/</guid>
-      <description>我是谁 江湖外号赵铁柱，某厂卑微后端打工人 业余摄影师，主风光建筑少拍人像，如今往 Photobash 方向靠近 德云社老票友，票龄估摸小十年 喜欢古典，年纪愈大愈喜欢听 喜欢轻量化和极简风，胸无点墨只能勉强做一些思考 患有轻微的数据丢失恐惧症，喜欢经常性备份数据 黄瓜味乐事和无糖可乐的坚定拥护者 志向于软硬件全栈的小菜鸟 关于这里 技术思考和总结，写写历程和发展路径 日常记录，心事想法和脑洞 联系方式 邮箱：echo Y2xhcmVuY2VlaHN1QDE2My5jb20K | base64 -d Github 博客信息 博客基于 Hugo 搭建，采用 Chic 主题进行深度定制
+      <description>我是谁 江湖外号赵铁柱，某厂卑微后端 业余摄影师，主风光建筑少拍人像，如今往 Photobash 方向靠近 Stable Diffusion 探路者，目前在探索图像生成和 AI 辅助后期 喜欢古典、德云社老票友，票龄估摸小十年 喜欢轻量化和极简风，胸无点墨只能勉强做一些思考 黄瓜味乐事和无糖可乐的坚定拥护者 关于这里 技术思考和总结，写写历程和发展路径 日常记录，心事想法和脑洞 联系方式 邮箱：echo Y2xhcmVuY2VlaHN1QDE2My5jb20K | base64 -d Github 博客信息 博客基于 Hugo 搭建，采用 Winston 主题进行深度定制
 Copyright (c) 2022 CC-BY-NC-4.0 LICENSE</description>
     </item>
     
