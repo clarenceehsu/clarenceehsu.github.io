@@ -914,11 +914,11 @@ Peace.</description>
       <pubDate>Wed, 06 Feb 2019 00:00:00 +0000</pubDate>
       
       <guid>/posts/2019/20190206-%E8%A7%A3%E5%86%B3-xshell-%E4%B8%AD-jobs-%E5%91%BD%E4%BB%A4%E4%B8%8D%E6%98%BE%E7%A4%BA%E5%90%8E%E5%8F%B0%E4%BB%BB%E5%8A%A1/</guid>
-      <description>在踩了很多坑后，分享一下我在XShell中用Nohup等命令执行后台操作之后将任务释放掉的方法。
-之前在折腾服务器的时候，在服务器上挂了一个 Hexo 网站，后来因为网络原因 XShell 直接断连了。好不容易解决了网络问题之后，登录服务器，输入jobs发现 Hexo 并没有出现在列表里面。
+      <description>在踩了很多坑后，分享一下我在 XShell 中用 Nohup 等命令执行后台操作之后将任务释放掉的方法。
+之前在折腾服务器的时候，在服务器上挂了一个 Hexo 网站，后来因为网络原因 XShell 直接断连了。好不容易解决了网络问题之后，登录服务器，输入 jobs 发现 Hexo 并没有出现在列表里面。
 后来差了一些资料发现，jobs 命令只能查看当前 XShell 连接服务器窗口创建的任务。由于我并没有用 nohup 去启动后台任务，所以控制台没有显示。
-所以后来我采用的方法是使用ps aux命令，然后可以查看服务器的进程情况。
-找到想要释放的进程名以及其对应的PID号，然后kill -9 pid号将进程杀死即可（也可以直接kill pid）。
+所以后来我采用的方法是使用 ps aux 命令，然后可以查看服务器的进程情况。
+找到想要释放的进程名以及其对应的 PID 号，然后 kill -9 pid 号将进程杀死即可（也可以直接 kill pid）。
 Peace.</description>
     </item>
     
