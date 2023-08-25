@@ -6,7 +6,40 @@
     <description>Recent content in Blog on Zee Tsui</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Curse of Recursion 论文复现：Stable Diffusion 自回归问题</title>
+      <link>/posts/2023/20230821-the-curse-of-recursion-%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0stable-diffusion-%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Mon, 21 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230821-the-curse-of-recursion-%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0stable-diffusion-%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/</guid>
+      <description>相关论文：2305.17493.pdf (arxiv.org)
+自回归问题：GPT 或者 Diffusion 模型再进行训练或者 finetune 的时候，如果使用自己生成的数据来训练自己，则会使得最终训练出来的模型收到灾难性破坏，并影响最终生成效果。
+原理 从论文的描述可以得出如下结论，使用 AI 生成的数据来训练 AI 本身会导致“模型崩溃（model collapse）”，原因主要有两种：
+Statistical approximation error（统计逼近误差）：由于样本数量有限，因此训练本身会出现误差；当样本数量趋近于无穷大时，误差会消失。 Functional approximation error（函数逼近误差）：函数拟合能力不够强，模型误差也是不可避免。在没有统计误差的情况下，函数逼近误差只会发生在第一代。一旦新分布属于函数逼近器的图像，它在后续代中将保持完全相同。 具体复现流程 使用如下 AI 生成的人脸图作为数据集：
+部分原图示例：
+相关参数如下：
+# Train data path $pretrained_model = &amp;#34;xxx.safetensors&amp;#34; # base model path # Network settings $network_module = &amp;#34;networks.lora&amp;#34; $network_weights = &amp;#34;&amp;#34; # pretrained weights for LoRA network $network_dim = 128 # network dim $network_alpha = 128 # network alpha # Train related params $resolution = &amp;#34;512,512&amp;#34; # image resolution $batch_size = 1 # batch size $max_train_epoches = 10 # max train epoches $save_every_n_epochs = 1 # save every n epochs $train_unet_only = 0 # train U-Net only $train_text_encoder_only = 0 # train Text Encoder only $noise_offset = 0 # noise offset $keep_tokens = 0 # keep heading N tokens when shuffling caption tokens # Learning rate $lr = &amp;#34;1e-4&amp;#34; $unet_lr = &amp;#34;1e-4&amp;#34; $text_encoder_lr = &amp;#34;1e-5&amp;#34; $lr_scheduler = &amp;#34;cosine_with_restarts&amp;#34; # &amp;#34;linear&amp;#34;, &amp;#34;cosine&amp;#34;, &amp;#34;cosine_with_restarts&amp;#34;, &amp;#34;polynomial&amp;#34;, &amp;#34;constant&amp;#34;, &amp;#34;constant_with_warmup&amp;#34; $lr_warmup_steps = 0 # warmup steps $lr_restart_cycles = 1 # cosine_with_restarts restart cycles 训练完后进行图像生成，可以发现生成效果较差：</description>
+    </item>
+    
+    <item>
+      <title>在汽车发明之前设计安全带？——我对 AGI 的思考</title>
+      <link>/posts/2023/20230618-%E5%9C%A8%E6%B1%BD%E8%BD%A6%E5%8F%91%E6%98%8E%E4%B9%8B%E5%89%8D%E8%AE%BE%E8%AE%A1%E5%AE%89%E5%85%A8%E5%B8%A6%E6%88%91%E5%AF%B9-ai-%E7%9A%84%E6%80%9D%E8%80%83/</link>
+      <pubDate>Sun, 18 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230618-%E5%9C%A8%E6%B1%BD%E8%BD%A6%E5%8F%91%E6%98%8E%E4%B9%8B%E5%89%8D%E8%AE%BE%E8%AE%A1%E5%AE%89%E5%85%A8%E5%B8%A6%E6%88%91%E5%AF%B9-ai-%E7%9A%84%E6%80%9D%E8%80%83/</guid>
+      <description>写在前面 其实这一篇文章很早就在构思中，不过由于各种各样的因素，最终成稿的时间还是比预期稍晚了一些 （其实就是因为懒）。
+让我们把视角跨度放在去年的 12 月到今年的 6 月，这在任何历史上都是极短的一段时间，但对于 AI 工业应用来说，确实实在在多了很多里程碑事件（GPT3.5、Diffusion 等）。当然相比于基础设施级别的发展，更多的都是尝鲜探路者的追捧，来的快去得也快；而真正的刚需如“轻舟已过万重山”，在热潮过后继续把 AI 扩散到了产业的方方面面。
+相比于几个月之前的万人空巷，现在的人工智能的风口毫无疑问在渐渐退去。火热的 AI 领域进入到了平稳发展的“冷静期”。工业界目前也没有涌现特别多改变行业规则的玩法；早期很多挤破头去尝试 ChatGPT、Midjourney 的玩家，也在大量的使用中因为找不到合适的应用场景而逐渐脱敏，丢去了最初的兴致。Github Trending 也从年初的各种 LLaMA、ChatGLM 的衍生微调模型和 OpenAI 接口的二次开发，渐渐回归到了各种领域的百花齐放。
+因为我目前也在从事 AI 相关工作，对于行业动态自然在持续跟进；相关的论文也是尽量不落下，只要工作不忙就会摸鱼看看，主打一个休闲娱乐（误）。
+发展简记 这块越写越感觉没有必要占位置，最终还是删除了。（后续空了再补上吧）
+网友言论 网友的言论主要分为了如下两类：
+AI 神论者。他们普遍认为 AI 发展极其迅猛，以至于人类已经完全无法控制。未来一定会进化出无所不知无所不能的神，彼时祂会反过来指导，甚至奴役人类；最终像科幻片（如 《奥创纪元》）所描述的那样意识到人类的劣根性，然后企图从物种层面消灭。 机械主义者。他们普遍认为现在的 GPT 以及 Diffusion 之类的模型，本质上都是数学推理和概率的集合；它们不会思考，只能够根据特定的输入来计算出最大概率的输出罢了。人类拥有的灵魂和情感作为更抽象的存在，是难以被 AI 所学习的。 这两个言论都有点极端，有种把 AI 和人类的关系上升到哲学范畴的意味。其实相对于二者的任何一边，我更愿意把 AI（至少是当前阶段的 AI）仅仅作为一个更加智能化，门槛更低的工具。它基本可以优秀地帮我完成一些事情，比如写代码、做数据以及解答基本的搜索问题等——说一句题外话，大家都更倾向于用“做”、“写”这些动词来描述 AI 本身机械的生成行为，可以看出大家都会下意识地拟人化 ChatGPT 这类生成式 AI。
+我的看法 在不久之前，就已经出现过了一波由科学家和科技行业 CEO 带领的“反对并暂停训练生成式 AI”浪潮，这也吸引很多网友驻足和参与。我们是否需要去因为未来可能的“AI 神超过人类”而去停止对 AI 的训练和探索呢？我的看法是不需要，当然这并不意味着我认为那几千名支持暂停训练 AI 并署名的企业家和科学家们是错误的，他们的选择毕竟带着关乎自身利益的考量；另外从任何角度看，我似乎都完全没有任何评判的立场。
+从 Deep Learning 领域来说，目前的卷积神经网络模型是否是神经网络模型的最优解也存疑，而基于卷积神经网络搭建起来的 CNN、Transformers 自然也只是作为**卷积神经网络路线上的“工业界最佳实践”**而广为应用。对比起人脑极强的计算效率和卓越的功耗，硅基芯片在很多方面也确实有些被降维打击的感觉，因此对于“训练出无所不能的神”这个目标，我们可能还没有摸到起跑线。在技术探索和发展的初期，难道要为了一个遥远而宏大的可怕叙事而停止脚步吗？此时回到杨立昆所说的那句话正合适：我们“没有必要在骑车还没发明之前就涉及安全带”。
+在我看来，今年更值得关注的是 AI 大模型在其他行业中井喷式的应用。GPT like 和 Diffusion like 的模型已经在智能客服、AI 绘图修图、AI 数字人各种场景下应用了（虽然应用的效果差强人意，这些工业应用是会真真实实地影响到我们生活的里程碑式的科技进步。复读机 Siri 将会被 New Bing 那样真正有能力自然对话并解决问题的 AI 代替，并最终成为主流。届时模型的小型化需求则会更加凸显，目标就是未来在每个人的手机上运行一个小“ChatGPT”，其性能虽然不如大模型，但也至少比 Siri 更加智能和安全。</description>
+    </item>
+    
     <item>
       <title>基于 syncthing 的云盘容器搭建方案（发现 &#43; 中继 &#43; 同步）</title>
       <link>/posts/2023/20230315-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</link>

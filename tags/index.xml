@@ -6,11 +6,20 @@
     <description>Recent content in Tags on Zee Tsui</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 18 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI</title>
+      <link>/tags/ai/</link>
+      <pubDate>Mon, 21 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/ai/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>技术</title>
       <link>/tags/%E6%8A%80%E6%9C%AF/</link>
-      <pubDate>Sun, 18 Jun 2023 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 21 Aug 2023 00:00:00 +0000</pubDate>
       
       <guid>/tags/%E6%8A%80%E6%9C%AF/</guid>
       <description></description>

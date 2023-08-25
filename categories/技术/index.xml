@@ -6,7 +6,22 @@
     <description>Recent content in 技术 on Zee Tsui</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 15 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 21 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E6%8A%80%E6%9C%AF/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The Curse of Recursion 论文复现：Stable Diffusion 自回归问题</title>
+      <link>/posts/2023/20230821-the-curse-of-recursion-%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0stable-diffusion-%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/</link>
+      <pubDate>Mon, 21 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/2023/20230821-the-curse-of-recursion-%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0stable-diffusion-%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/</guid>
+      <description>相关论文：2305.17493.pdf (arxiv.org)
+自回归问题：GPT 或者 Diffusion 模型再进行训练或者 finetune 的时候，如果使用自己生成的数据来训练自己，则会使得最终训练出来的模型收到灾难性破坏，并影响最终生成效果。
+原理 从论文的描述可以得出如下结论，使用 AI 生成的数据来训练 AI 本身会导致“模型崩溃（model collapse）”，原因主要有两种：
+Statistical approximation error（统计逼近误差）：由于样本数量有限，因此训练本身会出现误差；当样本数量趋近于无穷大时，误差会消失。 Functional approximation error（函数逼近误差）：函数拟合能力不够强，模型误差也是不可避免。在没有统计误差的情况下，函数逼近误差只会发生在第一代。一旦新分布属于函数逼近器的图像，它在后续代中将保持完全相同。 具体复现流程 使用如下 AI 生成的人脸图作为数据集：
+部分原图示例：
+相关参数如下：
+# Train data path $pretrained_model = &amp;#34;xxx.safetensors&amp;#34; # base model path # Network settings $network_module = &amp;#34;networks.lora&amp;#34; $network_weights = &amp;#34;&amp;#34; # pretrained weights for LoRA network $network_dim = 128 # network dim $network_alpha = 128 # network alpha # Train related params $resolution = &amp;#34;512,512&amp;#34; # image resolution $batch_size = 1 # batch size $max_train_epoches = 10 # max train epoches $save_every_n_epochs = 1 # save every n epochs $train_unet_only = 0 # train U-Net only $train_text_encoder_only = 0 # train Text Encoder only $noise_offset = 0 # noise offset $keep_tokens = 0 # keep heading N tokens when shuffling caption tokens # Learning rate $lr = &amp;#34;1e-4&amp;#34; $unet_lr = &amp;#34;1e-4&amp;#34; $text_encoder_lr = &amp;#34;1e-5&amp;#34; $lr_scheduler = &amp;#34;cosine_with_restarts&amp;#34; # &amp;#34;linear&amp;#34;, &amp;#34;cosine&amp;#34;, &amp;#34;cosine_with_restarts&amp;#34;, &amp;#34;polynomial&amp;#34;, &amp;#34;constant&amp;#34;, &amp;#34;constant_with_warmup&amp;#34; $lr_warmup_steps = 0 # warmup steps $lr_restart_cycles = 1 # cosine_with_restarts restart cycles 训练完后进行图像生成，可以发现生成效果较差：</description>
+    </item>
+    
     <item>
       <title>基于 syncthing 的云盘容器搭建方案（发现 &#43; 中继 &#43; 同步）</title>
       <link>/posts/2023/20230315-%E5%9F%BA%E4%BA%8E-syncthing-%E7%9A%84%E4%BA%91%E7%9B%98%E6%96%B9%E6%A1%88%E5%8F%91%E7%8E%B0-&#43;-%E4%B8%AD%E7%BB%A7-&#43;-%E5%90%8C%E6%AD%A5/</link>

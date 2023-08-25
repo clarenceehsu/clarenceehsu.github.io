@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>The Curse of Recursion 论文复现：Stable Diffusion 自回归问题 - Zee Tsui</title>
+  <title>ZC 个人内容记录</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico">
+  <link rel="canonical" href="/posts/2023/20230821-the-curse-of-recursion-%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0stable-diffusion-%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/" />
+
+  
+  
+  <link rel="stylesheet" href="/css/style.min.c813c458db6847576b9bd786addc081f1f218bc0b99cdfe79f2daf35df2e453a.css">
+  
+
+  
+    
+    <meta property="og:title" content="The Curse of Recursion 论文复现：Stable Diffusion 自回归问题"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content="/posts/2023/20230821-the-curse-of-recursion-%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0stable-diffusion-%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/"/>
+    
+    
+    <meta name="twitter:card" content="summary"/>
+    <meta name="twitter:site" content="@zerostaticio"/>
+    <meta name="twitter:creator" content="@zerostaticio"/>
+  
+
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet"> 
+</head>
+
+
+
+
+<body class='page frame page-blog-single'>
+  <div id="menu-main-mobile" class="menu-main-mobile">
+    <ul class="menu">
+        
+        
+            
+                <li class="menu-item-home">
+                    <a href="/">Home</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-blog">
+                    <a href="/posts/">Blog</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-categories">
+                    <a href="/categories/">Categories</a>
+                </li>
+            
+        
+            
+            <li class="menu-item-gallery">
+                <a href="/gallery">Gallery</a>
+            </li>
+            
+        
+            
+                <li class="menu-item-log">
+                    <a href="/log/">Log</a>
+                </li>
+            
+        
+            
+                <li class="menu-item-about">
+                    <a href="/pages/about/">About</a>
+                </li>
+            
+        
+    </ul>
+</div>
+  <div id="wrapper" class="wrapper">
+    <div class='header'>
+  
+  <a></a>
+  <div class="menu-main">
+    <ul>
+      
+      
+      
+      <li class="menu-item-home">
+        <a href="/">
+          
+          <span>Home</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-blog">
+        <a href="/posts/">
+          
+          <span>Blog</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-categories">
+        <a href="/categories/">
+          
+          <span>Categories</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-gallery">
+        <a href="/gallery">
+          
+          <span>Gallery</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-log">
+        <a href="/log/">
+          
+          <span>Log</span>
+        </a>
+      </li>
+      
+      
+      
+      <li class="menu-item-about">
+        <a href="/pages/about/">
+          
+          <span>About</span>
+        </a>
+      </li>
+      
+      
+    </ul>
+  </div>
+  <div id="toggle-menu-main-mobile" class="hamburger-trigger">
+    <button class="hamburger">Menu</button>
+  </div>
+</div>
+    
+  <div class="blog">
+    <div class="intro-article">
+      <h1>The Curse of Recursion 论文复现：Stable Diffusion 自回归问题<span class="dot">.</span></h1>
+      
+    </div>
+    <div class="content">
+      <p>相关论文：<a href="https://arxiv.org/pdf/2305.17493.pdf">2305.17493.pdf (arxiv.org)</a></p>
+<blockquote>
+<p>自回归问题：GPT 或者 Diffusion 模型再进行训练或者 finetune 的时候，如果<strong>使用自己生成的数据来训练自己</strong>，则会使得<strong>最终训练出来的模型收到灾难性破坏</strong>，并影响最终生成效果。</p>
+</blockquote>
+<h2 id="原理">原理</h2>
+<p>从论文的描述可以得出如下结论，使用 AI 生成的数据来训练 AI 本身会导致“模型崩溃（model collapse）”，原因主要有两种：</p>
+<ul>
+<li>Statistical approximation error（统计逼近误差）：由于样本数量有限，因此训练本身会出现误差；当样本数量趋近于无穷大时，误差会消失。</li>
+<li>Functional approximation error（函数逼近误差）：函数拟合能力不够强，模型误差也是不可避免。在没有统计误差的情况下，函数逼近误差只会发生在第一代。一旦新分布属于函数逼近器的图像，它在后续代中将保持完全相同。</li>
+</ul>
+<h2 id="具体复现流程">具体复现流程</h2>
+<p>使用如下 AI 生成的人脸图作为数据集：</p>
+<p><img src="https://zeee.cc/pictures/blog/20230821_The_Curse_of_Recursion_%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0%EF%BC%9AStable_Diffusion_%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/1.png" alt="image"></p>
+<p>部分原图示例：</p>
+<p><img src="https://zeee.cc/pictures/blog/20230821_The_Curse_of_Recursion_%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0%EF%BC%9AStable_Diffusion_%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/2.png" alt="image"></p>
+<p><img src="https://zeee.cc/pictures/blog/20230821_The_Curse_of_Recursion_%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0%EF%BC%9AStable_Diffusion_%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/3.png" alt="image"></p>
+<p>相关参数如下：</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-powershell" data-lang="powershell"><span class="line"><span class="cl"><span class="c"># Train data path</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$pretrained_model</span> <span class="p">=</span> <span class="s2">&#34;xxx.safetensors&#34;</span> <span class="c"># base model path</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Network settings</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$network_module</span> <span class="p">=</span> <span class="s2">&#34;networks.lora&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$network_weights</span> <span class="p">=</span> <span class="s2">&#34;&#34;</span> <span class="c"># pretrained weights for LoRA network</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$network_dim</span> <span class="p">=</span> <span class="mf">128</span> <span class="c"># network dim</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$network_alpha</span> <span class="p">=</span> <span class="mf">128</span> <span class="c"># network alpha</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Train related params</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$resolution</span> <span class="p">=</span> <span class="s2">&#34;512,512&#34;</span> <span class="c"># image resolution</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$batch_size</span> <span class="p">=</span> <span class="mf">1</span> <span class="c"># batch size</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$max_train_epoches</span> <span class="p">=</span> <span class="mf">10</span> <span class="c"># max train epoches</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$save_every_n_epochs</span> <span class="p">=</span> <span class="mf">1</span> <span class="c"># save every n epochs</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">$train_unet_only</span> <span class="p">=</span> <span class="mf">0</span> <span class="c"># train U-Net only</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$train_text_encoder_only</span> <span class="p">=</span> <span class="mf">0</span> <span class="c"># train Text Encoder only</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">$noise_offset</span> <span class="p">=</span> <span class="mf">0</span> <span class="c"># noise offset</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$keep_tokens</span> <span class="p">=</span> <span class="mf">0</span> <span class="c"># keep heading N tokens when shuffling caption tokens</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c"># Learning rate</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$lr</span> <span class="p">=</span> <span class="s2">&#34;1e-4&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$unet_lr</span> <span class="p">=</span> <span class="s2">&#34;1e-4&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$text_encoder_lr</span> <span class="p">=</span> <span class="s2">&#34;1e-5&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$lr_scheduler</span> <span class="p">=</span> <span class="s2">&#34;cosine_with_restarts&#34;</span> <span class="c"># &#34;linear&#34;, &#34;cosine&#34;, &#34;cosine_with_restarts&#34;, &#34;polynomial&#34;, &#34;constant&#34;, &#34;constant_with_warmup&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$lr_warmup_steps</span> <span class="p">=</span> <span class="mf">0</span> <span class="c"># warmup steps</span>
+</span></span><span class="line"><span class="cl"><span class="nv">$lr_restart_cycles</span> <span class="p">=</span> <span class="mf">1</span> <span class="c"># cosine_with_restarts restart cycles</span>
+</span></span></code></pre></div><p>训练完后进行图像生成，可以发现生成效果较差：</p>
+<p><img src="https://zeee.cc/pictures/blog/20230821_The_Curse_of_Recursion_%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0%EF%BC%9AStable_Diffusion_%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/4.png" alt="image"></p>
+<p><img src="https://zeee.cc/pictures/blog/20230821_The_Curse_of_Recursion_%E8%AE%BA%E6%96%87%E5%A4%8D%E7%8E%B0%EF%BC%9AStable_Diffusion_%E8%87%AA%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98/5.png" alt="image"></p>
+<blockquote>
+<p>图像生成信息：<code>cinematic lighting, brown hair, (1girl:1.8), beautiful face, portrait, short hair, gorgeous clothes, smile, [lora:SkySewa-000002:1](lora:SkySewa-000002:1) Negative prompt: horny, sexy, wrong hand, bad framing, out of frame, deformed, cripple, old, fat, ugly, poor, missing arm, additional arms, additional legs, additional head, additional face, multiple people, group of people, (worst quality, low quality:1.4), (greyscale, monochrome:1.1), 3D face, cropped, lowres, text, jpeg artifacts, signature, watermark, username, blurry, artist name, trademark, watermark, title, multiple view, Reference sheet, ((5 fingers, 6 fingers)), ((hands, hand)) Steps: 50, Sampler: DPM++ 2M, CFG scale: 7, Seed: 3770394888, Size: 512x512, Model hash: f30196796e, Model: dalcefo_portrait</code></p>
+</blockquote>
+
+    </div>
+    
+    <link href="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/katex.min.js"></script>
+    <script src="https://cdn.bootcss.com/KaTeX/0.10.2/contrib/auto-render.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          renderMathInElement(document.body, {
+                  delimiters: [
+                      {left: "$$", right: "$$", display: true},
+                      {left: "$", right: "$", display: false}
+                  ]
+              });
+        });
+    </script>
+  </div>
+
+    <div class="footer">
+  <div class="footer-social">
+    <h1></h1>
+    <p>Copyright © 2023 CC-BY-NC-4.0 LICENSE All Rights Reserved. Built by Zee with ❤.</p>
+  </div>
+</div>
+  </div>
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/bundle.min.5993fcb11c07dea925a3fbd58c03c7f1857197c35fccce3aa963a12c0b3c9960.js"></script>
+  
+
+  
+  
+
+</body>
+</html>
